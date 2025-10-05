@@ -13,7 +13,7 @@ interface AnnonceDetailPageProps {
 }
 
 const AnnonceDetailPage: React.FC<AnnonceDetailPageProps> = ({ id, listings, profiles, navigateTo, currentUser, onStartConversation }) => {
-  const annonce = listings.find(a => a.id === id);
+  const annonce = listings.find(a => a.slug === id || a.id === id);
 
   if (!annonce) {
     return <div className="text-center py-20">Annonce non trouvée.</div>;

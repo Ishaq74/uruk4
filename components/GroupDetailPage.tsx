@@ -12,7 +12,7 @@ interface GroupDetailPageProps {
 }
 
 const GroupDetailPage: React.FC<GroupDetailPageProps> = ({ id, groups, profiles, navigateTo, currentUser, onToggleMembership }) => {
-  const group = groups.find(g => g.id === id);
+  const group = groups.find(g => g.slug === id || g.id === id);
 
   if (!group) {
     return <div className="text-center py-20">Groupe non trouvé.</div>;
