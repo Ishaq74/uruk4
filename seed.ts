@@ -23,7 +23,7 @@ import {
   LIVE_EVENTS,
   STATIC_PAGES_CONTENT,
   ANALYTICS_EVENTS,
-} from './constants.tsx';
+} from './seed-data';
 
 async function main() {
   console.log('🌱 Starting database seed...');

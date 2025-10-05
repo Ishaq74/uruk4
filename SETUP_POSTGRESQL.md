@@ -137,6 +137,42 @@ La base de données contient les tables suivantes :
 
 Voir `schema.ts` pour la définition complète du schéma.
 
+## 🔄 Flux des Données (Production)
+
+**Important** : En production, toutes les données viennent de PostgreSQL, pas de fichiers de code !
+
+```
+┌──────────────────┐
+│   PostgreSQL     │  ◄── Base de données (données réelles)
+│   Database       │
+└──────────────────┘
+        ↓
+┌──────────────────┐
+│   server.ts      │  ◄── API REST (22 endpoints)
+│   Express API    │      GET /api/places, /api/events, etc.
+└──────────────────┘
+        ↓
+┌──────────────────┐
+│  useApiData.ts   │  ◄── React Hooks
+│  Custom Hooks    │      usePlaces(), useEvents(), etc.
+└──────────────────┘
+        ↓
+┌──────────────────┐
+│    App.tsx       │  ◄── Charge les données via hooks
+│  React App       │      const { data } = usePlaces()
+└──────────────────┘
+        ↓
+┌──────────────────┐
+│   Components     │  ◄── Reçoivent les données via props
+│   UI Layer       │
+└──────────────────┘
+```
+
+**Fichiers de données** :
+- `constants.tsx` - **SEULEMENT** configuration (icônes, catégories, enums) - PAS de données
+- `seed-data.ts` - Données de test initiales pour peupler la base (utilisé UNIQUEMENT par `npm run db:seed`)
+- Base de données PostgreSQL - **Source unique de vérité** pour toutes les données en production
+
 ## 📊 Outils de Développement
 
 ### Drizzle Studio (Interface graphique pour la BDD)
@@ -254,9 +290,20 @@ npm run db:seed
 
 1. **Le fichier `.env` n'est PAS commité** dans Git (il est dans `.gitignore`)
 2. **Changez `BETTER_AUTH_SECRET`** en production avec une valeur aléatoire de 32+ caractères
-3. **Les données de `constants.tsx`** sont maintenant uniquement des configurations (icônes, catégories, enums)
-4. **Toutes les données réelles** sont dans PostgreSQL
-5. **L'application ne fonctionnera pas** sans PostgreSQL configuré et en cours d'exécution
+3. **`constants.tsx`** contient UNIQUEMENT des configurations (icônes, catégories, enums) - **AUCUNE DONNÉE**
+4. **`seed-data.ts`** contient les données de test initiales pour peupler la base - utilisé UNIQUEMENT par `npm run db:seed`
+5. **Toutes les données réelles** sont dans PostgreSQL et chargées via l'API
+6. **L'application ne fonctionnera pas** sans PostgreSQL configuré et en cours d'exécution
+
+### Flux complet des données en production :
+1. L'utilisateur charge l'application React
+2. `App.tsx` utilise les hooks (`usePlaces()`, `useEvents()`, etc.)
+3. Les hooks appellent l'API REST (`GET /api/places`, etc.)
+4. Le serveur Express interroge PostgreSQL avec Drizzle ORM
+5. Les données sont retournées à l'application React
+6. Les composants affichent les données reçues via props
+
+**Aucune donnée n'est codée en dur dans l'application !** Tout vient de la base de données.
 
 ## 🚀 Déploiement en Production
 
