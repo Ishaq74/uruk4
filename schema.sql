@@ -166,6 +166,7 @@ CREATE TABLE organizations (
 -- Lieux (restaurants, hôtels, activités, commerces)
 CREATE TABLE places (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug VARCHAR(200) NOT NULL UNIQUE,
   name VARCHAR(200) NOT NULL,
   image_url TEXT NOT NULL,
   rating REAL NOT NULL DEFAULT 0,

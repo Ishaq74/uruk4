@@ -115,6 +115,7 @@ async function main() {
     placeIdMap[place.id] = newPlaceId;
     await db.insert(schema.places).values({
       id: newPlaceId,
+      slug: place.slug,
       name: place.name,
       imageUrl: place.imageUrl,
       rating: place.rating,

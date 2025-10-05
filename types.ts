@@ -103,6 +103,7 @@ export type Coordinates = { lat: number; lng: number; };
 
 export interface Place {
   id: string;
+  slug: string;
   name: string;
   imageUrl: string;
   rating: number;

@@ -4,6 +4,7 @@ import {
     Order, Booking, Comment, ContentStatus, UserLevel, Report, AnalyticsEvent, SubscriptionTier, ClaimStatus, OrderStatus, BookingStatus,
     LiveEvent, LiveEventType
 } from './types';
+import { generateSlug } from './utils/slug';
 
 
 export const USER_LEVELS: UserLevel[] = [
@@ -28,7 +29,7 @@ export const ORGANIZATIONS: Organization[] = [
 export const PLACES: Place[] = [
     // RESTAURANTS
     { 
-        id: 'r1', name: 'Le Belvédère', mainCategory: 'restauration', imageUrl: 'https://picsum.photos/seed/resto1/800/600', 
+        id: 'r1', slug: 'le-belvedere', name: 'Le Belvédère', mainCategory: 'restauration', imageUrl: 'https://picsum.photos/seed/resto1/800/600', 
         rating: 4.7, reviewCount: 125, category: 'Gastronomique', priceRange: '€€€€', attributes: ['Vue lac', 'Romantique'],
         description: 'Perché sur les hauteurs, Le Belvédère offre une cuisine raffinée et inventive avec une vue panoramique imprenable sur le lac d\'Annecy.',
         address: '7 Chemin du Belvédère, 74940 Annecy', phone: '04 50 45 23 05', website: 'lebelvedere-annecy.com',
@@ -41,49 +42,49 @@ export const PLACES: Place[] = [
         organization_id: 'org1', status: 'published'
     },
     { 
-        id: 'r2', name: 'Chez Pépé', mainCategory: 'restauration', imageUrl: 'https://picsum.photos/seed/resto2/800/600',
+        id: 'r2', slug: 'chez-pepe', name: 'Chez Pépé', mainCategory: 'restauration', imageUrl: 'https://picsum.photos/seed/resto2/800/600',
         rating: 4.2, reviewCount: 88, category: 'Savoyard', priceRange: '€€', attributes: ['Ambiance chalet', 'Dog-friendly'],
         description: 'L\'authentique restaurant savoyard au coeur de la vieille ville. Fondues, raclettes et tartiflettes comme à la maison.',
         address: '2 rue du Pâquier, 74000 Annecy', phone: '04 50 51 38 97', website: 'chezpepe-annecy.fr',
         coordinates: { lat: 45.899, lng: 6.128 }, openingHours: {}, reviews: [], status: 'published'
     },
     { 
-        id: 'r3', name: 'Le Rital', mainCategory: 'restauration', imageUrl: 'https://picsum.photos/seed/resto3/800/600',
+        id: 'r3', slug: 'le-rital', name: 'Le Rital', mainCategory: 'restauration', imageUrl: 'https://picsum.photos/seed/resto3/800/600',
         rating: 3.5, reviewCount: 45, category: 'Pizzeria', priceRange: '€€', attributes: [],
         description: 'Pizzas traditionnelles au feu de bois. Une adresse simple et efficace.',
         address: '1 Rue de la Gare, 74000 Annecy', phone: '04 50 51 52 53', website: 'lerital-annecy.fr',
         coordinates: { lat: 45.896, lng: 6.124 }, openingHours: {}, reviews: [], status: 'rejected', rejection_reason: 'Photo de mauvaise qualité.'
     },
     { 
-        id: 'r4', name: 'L\'Auberge du Lac', mainCategory: 'restauration', imageUrl: 'https://picsum.photos/seed/resto4/800/600',
+        id: 'r4', slug: 'auberge-du-lac', name: 'L\'Auberge du Lac', mainCategory: 'restauration', imageUrl: 'https://picsum.photos/seed/resto4/800/600',
         rating: 4.5, reviewCount: 156, category: 'Gastronomique', priceRange: '€€€', attributes: ['Vue lac', 'Romantique'],
         description: 'Cuisine française raffinée dans un cadre enchanteur au bord du lac. Terrasse ombragée l\'été.',
         address: '23 Avenue d\'Albigny, 74000 Annecy', phone: '04 50 23 87 90', website: 'auberge-lac-annecy.fr',
         coordinates: { lat: 45.902, lng: 6.135 }, openingHours: {}, reviews: [], status: 'published'
     },
     { 
-        id: 'r5', name: 'La Table de Marie', mainCategory: 'restauration', imageUrl: 'https://picsum.photos/seed/resto5/800/600',
+        id: 'r5', slug: 'la-table-de-marie', name: 'La Table de Marie', mainCategory: 'restauration', imageUrl: 'https://picsum.photos/seed/resto5/800/600',
         rating: 4.4, reviewCount: 98, category: 'Savoyard', priceRange: '€€', attributes: ['Dog-friendly'],
         description: 'Spécialités savoyardes et accueil chaleureux dans une ancienne ferme rénovée.',
         address: '15 Rue de la République, 74000 Annecy', phone: '04 50 45 12 34', website: 'table-marie.com',
         coordinates: { lat: 45.897, lng: 6.127 }, openingHours: {}, reviews: [], status: 'published'
     },
     { 
-        id: 'r6', name: 'Pizza Luna', mainCategory: 'restauration', imageUrl: 'https://picsum.photos/seed/resto6/800/600',
+        id: 'r6', slug: 'pizza-luna', name: 'Pizza Luna', mainCategory: 'restauration', imageUrl: 'https://picsum.photos/seed/resto6/800/600',
         rating: 4.3, reviewCount: 211, category: 'Pizzeria', priceRange: '€', attributes: ['Dog-friendly'],
         description: 'Pizzas napolitaines authentiques cuites au four à bois. Pâte faite maison tous les jours.',
         address: '8 Rue Vaugelas, 74000 Annecy', phone: '04 50 51 67 89', website: 'pizzaluna-annecy.fr',
         coordinates: { lat: 45.898, lng: 6.126 }, openingHours: {}, reviews: [], status: 'published'
     },
     { 
-        id: 'r7', name: 'Le Comptoir Savoyard', mainCategory: 'restauration', imageUrl: 'https://picsum.photos/seed/resto7/800/600',
+        id: 'r7', slug: 'le-comptoir-savoyard', name: 'Le Comptoir Savoyard', mainCategory: 'restauration', imageUrl: 'https://picsum.photos/seed/resto7/800/600',
         rating: 4.6, reviewCount: 187, category: 'Savoyard', priceRange: '€€', attributes: ['Ambiance chalet'],
         description: 'Le meilleur de la gastronomie savoyarde : tartiflette, fondue, raclette dans un décor montagnard.',
         address: '31 Rue Sommeiller, 74000 Annecy', phone: '04 50 45 78 90', website: 'comptoir-savoyard.com',
         coordinates: { lat: 45.900, lng: 6.129 }, openingHours: {}, reviews: [], status: 'published'
     },
     { 
-        id: 'r8', name: 'Le Jardin Secret', mainCategory: 'restauration', imageUrl: 'https://picsum.photos/seed/resto8/800/600',
+        id: 'r8', slug: 'le-jardin-secret', name: 'Le Jardin Secret', mainCategory: 'restauration', imageUrl: 'https://picsum.photos/seed/resto8/800/600',
         rating: 4.8, reviewCount: 142, category: 'Gastronomique', priceRange: '€€€€', attributes: ['Romantique'],
         description: 'Restaurant gastronomique étoilé au guide Michelin. Cuisine créative et produits de saison.',
         address: '5 Passage de l\'Évêché, 74000 Annecy', phone: '04 50 23 45 78', website: 'jardinsecret-annecy.fr',
@@ -92,42 +93,42 @@ export const PLACES: Place[] = [
     
     // HÉBERGEMENTS
     { 
-        id: 'h1', name: 'Hôtel du Lac', mainCategory: 'hebergement', imageUrl: 'https://picsum.photos/seed/hotel1/800/600', 
+        id: 'h1', slug: 'hotel-du-lac', name: 'Hôtel du Lac', mainCategory: 'hebergement', imageUrl: 'https://picsum.photos/seed/hotel1/800/600', 
         rating: 4.9, reviewCount: 340, category: 'Hôtel ★★★★★', priceRange: '€€€€', attributes: ['Vue lac', 'Piscine', 'SPA'],
         description: 'Un établissement 5 étoiles offrant un service irréprochable, des chambres luxueuses avec vue sur le lac, et un espace bien-être complet.',
         address: '12 Quai de la Tournette, 74000 Annecy', phone: '04 50 23 45 67', website: 'hoteldulac-annecy.com',
         coordinates: { lat: 45.895, lng: 6.132 }, openingHours: {}, reviews: [], organization_id: 'org2', status: 'published'
     },
     { 
-        id: 'h2', name: 'Le Palace de Menthon', mainCategory: 'hebergement', imageUrl: 'https://picsum.photos/seed/hotel2/800/600',
+        id: 'h2', slug: 'le-palace-de-menthon', name: 'Le Palace de Menthon', mainCategory: 'hebergement', imageUrl: 'https://picsum.photos/seed/hotel2/800/600',
         rating: 4.8, reviewCount: 287, category: 'Hôtel ★★★★★', priceRange: '€€€€', attributes: ['Vue lac', 'Piscine', 'SPA'],
         description: 'Hôtel de luxe historique dans un château du XIXe siècle. Service de conciergerie 24/7.',
         address: 'Allée du Château, 74290 Menthon-Saint-Bernard', phone: '04 50 60 12 34', website: 'palace-menthon.com',
         coordinates: { lat: 45.862, lng: 6.196 }, openingHours: {}, reviews: [], status: 'published'
     },
     { 
-        id: 'h3', name: 'Hôtel des Alpes', mainCategory: 'hebergement', imageUrl: 'https://picsum.photos/seed/hotel3/800/600',
+        id: 'h3', slug: 'hotel-des-alpes', name: 'Hôtel des Alpes', mainCategory: 'hebergement', imageUrl: 'https://picsum.photos/seed/hotel3/800/600',
         rating: 4.3, reviewCount: 178, category: 'Hôtel ★★★★', priceRange: '€€€', attributes: ['Vue lac'],
         description: 'Hôtel 4 étoiles au cœur de la vieille ville. Chambres confortables avec vue sur les canaux.',
         address: '12 Rue de la Poste, 74000 Annecy', phone: '04 50 45 67 89', website: 'hotel-alpes-annecy.fr',
         coordinates: { lat: 45.899, lng: 6.127 }, openingHours: {}, reviews: [], status: 'published'
     },
     { 
-        id: 'h4', name: 'Résidence Les Terrasses', mainCategory: 'hebergement', imageUrl: 'https://picsum.photos/seed/hotel4/800/600',
+        id: 'h4', slug: 'residence-les-terrasses', name: 'Résidence Les Terrasses', mainCategory: 'hebergement', imageUrl: 'https://picsum.photos/seed/hotel4/800/600',
         rating: 4.5, reviewCount: 124, category: 'Appartement', priceRange: '€€', attributes: ['Piscine'],
         description: 'Appartements tout équipés avec cuisine, idéal pour les familles. Piscine chauffée et parking.',
         address: '45 Avenue de Genève, 74000 Annecy', phone: '04 50 23 98 76', website: 'les-terrasses-annecy.com',
         coordinates: { lat: 45.894, lng: 6.118 }, openingHours: {}, reviews: [], status: 'published'
     },
     { 
-        id: 'h5', name: 'Chalet du Semnoz', mainCategory: 'hebergement', imageUrl: 'https://picsum.photos/seed/hotel5/800/600',
+        id: 'h5', slug: 'chalet-du-semnoz', name: 'Chalet du Semnoz', mainCategory: 'hebergement', imageUrl: 'https://picsum.photos/seed/hotel5/800/600',
         rating: 4.4, reviewCount: 89, category: 'Hôtel ★★★★', priceRange: '€€', attributes: ['SPA'],
         description: 'Chalet confortable en altitude avec vue panoramique. Parfait pour les amoureux de la montagne.',
         address: 'Route du Semnoz, 74000 Annecy', phone: '04 50 01 23 45', website: 'chalet-semnoz.fr',
         coordinates: { lat: 45.808, lng: 6.104 }, openingHours: {}, reviews: [], status: 'published'
     },
     { 
-        id: 'h6', name: 'Appartements du Paquier', mainCategory: 'hebergement', imageUrl: 'https://picsum.photos/seed/hotel6/800/600',
+        id: 'h6', slug: 'appartements-du-paquier', name: 'Appartements du Paquier', mainCategory: 'hebergement', imageUrl: 'https://picsum.photos/seed/hotel6/800/600',
         rating: 4.2, reviewCount: 156, category: 'Appartement', priceRange: '€€', attributes: [],
         description: 'Studios et appartements moderne en plein centre-ville, à deux pas du lac.',
         address: '8 Rue du Paquier, 74000 Annecy', phone: '04 50 45 32 10', website: 'appart-paquier.com',
@@ -136,42 +137,42 @@ export const PLACES: Place[] = [
     
     // ACTIVITÉS
     { 
-        id: 'a1', name: 'Parapente Annecy', mainCategory: 'activites', imageUrl: 'https://picsum.photos/seed/activity1/800/600', 
+        id: 'a1', slug: 'parapente-annecy', name: 'Parapente Annecy', mainCategory: 'activites', imageUrl: 'https://picsum.photos/seed/activity1/800/600', 
         rating: 4.8, reviewCount: 212, category: 'Sports Aériens', priceRange: '€€€', attributes: ['Sensations fortes', 'Vue lac'],
         description: 'Envolez-vous pour un baptême de parapente inoubliable au-dessus du lac le plus pur d\'Europe.',
         address: 'Col de la Forclaz, 74210 Talloires-Montmin', phone: '04 50 60 70 80', website: 'parapente-annecy.com',
         coordinates: { lat: 45.818, lng: 6.223 }, openingHours: {}, reviews: [], status: 'published'
     },
     { 
-        id: 'a2', name: 'Location de Kayak', mainCategory: 'activites', imageUrl: 'https://picsum.photos/seed/activity2/800/600',
+        id: 'a2', slug: 'location-de-kayak', name: 'Location de Kayak', mainCategory: 'activites', imageUrl: 'https://picsum.photos/seed/activity2/800/600',
         rating: 4.5, reviewCount: 167, category: 'Sports Nautiques', priceRange: '€€', attributes: ['Vue lac'],
         description: 'Louez un kayak et explorez le lac d\'Annecy à votre rythme. Circuits guidés disponibles.',
         address: '3 Avenue du Petit Port, 74000 Annecy', phone: '04 50 23 56 78', website: 'kayak-annecy.fr',
         coordinates: { lat: 45.893, lng: 6.145 }, openingHours: {}, reviews: [], status: 'published'
     },
     { 
-        id: 'a3', name: 'Escalade & Via Ferrata', mainCategory: 'activites', imageUrl: 'https://picsum.photos/seed/activity3/800/600',
+        id: 'a3', slug: 'escalade-via-ferrata', name: 'Escalade & Via Ferrata', mainCategory: 'activites', imageUrl: 'https://picsum.photos/seed/activity3/800/600',
         rating: 4.7, reviewCount: 98, category: 'Sports de Montagne', priceRange: '€€', attributes: ['Sensations fortes'],
         description: 'Parcours d\'escalade et via ferrata pour tous les niveaux. Encadrement professionnel.',
         address: 'Château de Montrottier, 74330 Lovagny', phone: '04 50 46 78 90', website: 'escalade-annecy.com',
         coordinates: { lat: 45.896, lng: 6.048 }, openingHours: {}, reviews: [], status: 'published'
     },
     { 
-        id: 'a4', name: 'Croisière Lac d\'Annecy', mainCategory: 'activites', imageUrl: 'https://picsum.photos/seed/activity4/800/600',
+        id: 'a4', slug: 'croisiere-lac-annecy', name: 'Croisière Lac d\'Annecy', mainCategory: 'activites', imageUrl: 'https://picsum.photos/seed/activity4/800/600',
         rating: 4.6, reviewCount: 321, category: 'Croisières', priceRange: '€€', attributes: ['Vue lac'],
         description: 'Découvrez le lac d\'Annecy à bord de nos bateaux. Plusieurs circuits disponibles.',
         address: '2 Place aux Bois, 74000 Annecy', phone: '04 50 51 08 40', website: 'croisiere-annecy.com',
         coordinates: { lat: 45.902, lng: 6.129 }, openingHours: {}, reviews: [], status: 'published'
     },
     { 
-        id: 'a5', name: 'VTT Montagne', mainCategory: 'activites', imageUrl: 'https://picsum.photos/seed/activity5/800/600',
+        id: 'a5', slug: 'vtt-montagne', name: 'VTT Montagne', mainCategory: 'activites', imageUrl: 'https://picsum.photos/seed/activity5/800/600',
         rating: 4.4, reviewCount: 76, category: 'Cyclisme', priceRange: '€€', attributes: ['Sensations fortes'],
         description: 'Location de VTT électriques et classiques. Parcours balisés et cartes fournies.',
         address: '18 Avenue de Genève, 74000 Annecy', phone: '04 50 23 45 67', website: 'vtt-annecy.com',
         coordinates: { lat: 45.895, lng: 6.120 }, openingHours: {}, reviews: [], status: 'published'
     },
     { 
-        id: 'a6', name: 'Spa Thermal', mainCategory: 'activites', imageUrl: 'https://picsum.photos/seed/activity6/800/600',
+        id: 'a6', slug: 'spa-thermal', name: 'Spa Thermal', mainCategory: 'activites', imageUrl: 'https://picsum.photos/seed/activity6/800/600',
         rating: 4.9, reviewCount: 234, category: 'Bien-être', priceRange: '€€€', attributes: [],
         description: 'Centre thermal et spa avec piscines, saunas, hammams et soins du corps.',
         address: '32 Rue des Bains, 74000 Annecy', phone: '04 50 23 78 90', website: 'spa-annecy.fr',
@@ -180,35 +181,35 @@ export const PLACES: Place[] = [
     
     // COMMERCES
     { 
-        id: 'c1', name: 'Fromagerie Pierre Gay', mainCategory: 'commerces', imageUrl: 'https://picsum.photos/seed/shop1/800/600',
+        id: 'c1', slug: 'fromagerie-pierre-gay', name: 'Fromagerie Pierre Gay', mainCategory: 'commerces', imageUrl: 'https://picsum.photos/seed/shop1/800/600',
         rating: 4.9, reviewCount: 95, category: 'Produits du terroir', priceRange: '€€', attributes: ['Artisanat', 'MOF'],
         description: 'Pierre Gay, Meilleur Ouvrier de France, vous propose une sélection exceptionnelle de fromages affinés dans ses caves.',
         address: '47 Rue Carnot, 74000 Annecy', phone: '04 50 45 07 21', website: 'fromagerie-gay.com',
         coordinates: { lat: 45.900, lng: 6.125 }, openingHours: {}, reviews: [], organization_id: 'org3', status: 'published'
     },
     { 
-        id: 'c2', name: 'Boulangerie Dupont', mainCategory: 'commerces', imageUrl: 'https://picsum.photos/seed/shop2/800/600',
+        id: 'c2', slug: 'boulangerie-dupont', name: 'Boulangerie Dupont', mainCategory: 'commerces', imageUrl: 'https://picsum.photos/seed/shop2/800/600',
         rating: 4.7, reviewCount: 142, category: 'Produits du terroir', priceRange: '€', attributes: ['Artisanat'],
         description: 'Boulangerie artisanale depuis 1950. Pain au levain naturel et pâtisseries maison.',
         address: '12 Rue Sainte-Claire, 74000 Annecy', phone: '04 50 45 23 45', website: 'boulangerie-dupont.fr',
         coordinates: { lat: 45.898, lng: 6.126 }, openingHours: {}, reviews: [], status: 'published'
     },
     { 
-        id: 'c3', name: 'Boutique Montagne', mainCategory: 'commerces', imageUrl: 'https://picsum.photos/seed/shop3/800/600',
+        id: 'c3', slug: 'boutique-montagne', name: 'Boutique Montagne', mainCategory: 'commerces', imageUrl: 'https://picsum.photos/seed/shop3/800/600',
         rating: 4.5, reviewCount: 87, category: 'Équipement sportif', priceRange: '€€€', attributes: [],
         description: 'Équipement de montagne, randonnée, ski et alpinisme. Conseil par des experts.',
         address: '25 Rue Royale, 74000 Annecy', phone: '04 50 51 34 56', website: 'boutique-montagne.com',
         coordinates: { lat: 45.901, lng: 6.128 }, openingHours: {}, reviews: [], status: 'published'
     },
     { 
-        id: 'c4', name: 'Cave à Vins', mainCategory: 'commerces', imageUrl: 'https://picsum.photos/seed/shop4/800/600',
+        id: 'c4', slug: 'cave-a-vins', name: 'Cave à Vins', mainCategory: 'commerces', imageUrl: 'https://picsum.photos/seed/shop4/800/600',
         rating: 4.8, reviewCount: 112, category: 'Produits du terroir', priceRange: '€€', attributes: ['Artisanat'],
         description: 'Sélection de vins de Savoie et de France. Conseils personnalisés et dégustations.',
         address: '8 Rue Perrière, 74000 Annecy', phone: '04 50 45 67 89', website: 'cave-annecy.fr',
         coordinates: { lat: 45.899, lng: 6.127 }, openingHours: {}, reviews: [], status: 'published'
     },
     { 
-        id: 'c5', name: 'Librairie du Lac', mainCategory: 'commerces', imageUrl: 'https://picsum.photos/seed/shop5/800/600',
+        id: 'c5', slug: 'librairie-du-lac', name: 'Librairie du Lac', mainCategory: 'commerces', imageUrl: 'https://picsum.photos/seed/shop5/800/600',
         rating: 4.6, reviewCount: 156, category: 'Culture', priceRange: '€€', attributes: [],
         description: 'Librairie indépendante avec un grand choix de livres sur la région et événements culturels.',
         address: '15 Rue Sommeiller, 74000 Annecy', phone: '04 50 23 45 67', website: 'librairie-lac.com',
