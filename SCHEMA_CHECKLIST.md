@@ -72,7 +72,7 @@ Ce document confirme que **TOUTES** les entités TypeScript de `types.ts` ont é
 
 ### 📊 Résumé des Statistiques
 
-```
+```md
 TypeScript (types.ts):
 - 35 types/interfaces/enums définis
 - 3 types UI-only (ContentCard, Category, FilterOption)
@@ -93,28 +93,28 @@ TOTAL: 37 tables PostgreSQL pour 32 entités métier
 
 | Parent | Enfant | Statut |
 |--------|--------|--------|
-| user_levels → profiles | ✅ |
-| profiles → reviews | ✅ |
-| profiles → articles | ✅ |
-| profiles → comments | ✅ |
-| profiles → listings | ✅ |
-| profiles → live_events | ✅ |
-| profiles → forum_threads | ✅ |
-| profiles → forum_posts | ✅ |
-| profiles → messages | ✅ |
-| profiles → orders | ✅ |
-| profiles → bookings | ✅ |
-| places → reviews | ✅ |
-| organizations → places | ✅ |
-| organizations → products | ✅ |
-| organizations → services | ✅ |
-| organizations → orders | ✅ |
-| organizations → bookings | ✅ |
-| forum_categories → forum_threads | ✅ |
-| forum_threads → forum_posts | ✅ |
-| conversations → messages | ✅ |
-| live_events → live_event_votes | ✅ |
-| groups → group_members | ✅ |
+| user_levels → profiles | profiles.user_level_id | ✅ |
+| profiles → reviews | reviews.profile_id | ✅ |
+| profiles → articles | articles.profile_id | ✅ |
+| profiles → comments | comments.profile_id | ✅ |
+| profiles → listings | listings.profile_id | ✅ |
+| profiles → live_events | live_events.profile_id | ✅ |
+| profiles → forum_threads | forum_threads.profile_id | ✅ |
+| profiles → forum_posts | forum_posts.profile_id | ✅ |
+| profiles → messages | messages.profile_id | ✅ |
+| profiles → orders | orders.profile_id | ✅ |
+| profiles → bookings | bookings.profile_id | ✅ |
+| places → reviews | reviews.place_id | ✅ |
+| organizations → places | places.organization_id | ✅ |
+| organizations → products | products.organization_id | ✅ |
+| organizations → services | services.organization_id | ✅ |
+| organizations → orders | orders.organization_id | ✅ |
+| organizations → bookings | bookings.organization_id | ✅ |
+| forum_categories → forum_threads | forum_threads.category_id | ✅ |
+| forum_threads → forum_posts | forum_posts.thread_id | ✅ |
+| conversations → messages | messages.conversation_id | ✅ |
+| live_events → live_event_votes | live_event_votes.live_event_id | ✅ |
+| groups → group_members | group_members.group_id | ✅ |
 
 ### ✅ Relations Many-to-Many (N:M)
 
@@ -141,6 +141,7 @@ TOTAL: 37 tables PostgreSQL pour 32 entités métier
 ## 📝 Vérification des Fonctionnalités
 
 ### ✅ Authentification & Utilisateurs
+
 - [x] Niveaux de gamification (user_levels)
 - [x] Profils utilisateurs (profiles)
 - [x] Lieux favoris (user_favorite_places)
@@ -148,6 +149,7 @@ TOTAL: 37 tables PostgreSQL pour 32 entités métier
 - [x] Vérification de compte
 
 ### ✅ Gestion de Contenu
+
 - [x] Lieux avec géolocalisation (places)
 - [x] Avis et notations (reviews)
 - [x] Événements (events)
@@ -161,6 +163,7 @@ TOTAL: 37 tables PostgreSQL pour 32 entités métier
 - [x] Modération et rejet
 
 ### ✅ Communauté
+
 - [x] Forums avec catégories (forum_categories, forum_threads, forum_posts)
 - [x] Réponses imbriquées (parent_post_id)
 - [x] Groupes d'intérêt (groups, group_members)
@@ -169,6 +172,7 @@ TOTAL: 37 tables PostgreSQL pour 32 entités métier
 - [x] Participants aux conversations (conversation_participants)
 
 ### ✅ Fonctionnalités Professionnelles
+
 - [x] Organisations/Entreprises (organizations)
 - [x] Niveaux d'abonnement (free, pro, premium)
 - [x] Réclamation de lieux (place_claims)
@@ -179,6 +183,7 @@ TOTAL: 37 tables PostgreSQL pour 32 entités métier
 - [x] Intégration Stripe prévue
 
 ### ✅ Système & Administration
+
 - [x] Signalements (reports)
 - [x] Analytiques (analytics_events)
 - [x] Pages statiques CMS (static_page_content)
@@ -194,7 +199,7 @@ TOTAL: 37 tables PostgreSQL pour 32 entités métier
 | `schema.sql` | 667 | Schéma SQL PostgreSQL pur | ✅ Complet |
 | `drizzle.config.ts` | 11 | Configuration Drizzle | ✅ Complet |
 
-### ✅ Documentation
+### ✅ Documentation des Fichiers
 
 | Fichier | Lignes | Description | Statut |
 |---------|--------|-------------|--------|
@@ -207,12 +212,14 @@ TOTAL: 37 tables PostgreSQL pour 32 entités métier
 ## 🔍 Vérification Finale
 
 ### ✅ Conformité TypeScript
+
 - [x] Tous les types correspondent aux tables
 - [x] Toutes les interfaces ont leurs tables
 - [x] Tous les enums sont définis
 - [x] Relations TypeScript → SQL correctes
 
 ### ✅ Optimisations
+
 - [x] Index sur colonnes fréquentes
 - [x] Contraintes d'intégrité
 - [x] Valeurs par défaut
@@ -220,12 +227,14 @@ TOTAL: 37 tables PostgreSQL pour 32 entités métier
 - [x] UUID pour clés primaires
 
 ### ✅ Sécurité
+
 - [x] Préparation Better-Auth
 - [x] Contraintes de validation
 - [x] Suppression en cascade configurée
 - [x] Champs sensibles identifiés
 
 ### ✅ Documentation
+
 - [x] Tables documentées
 - [x] Relations expliquées
 - [x] Diagrammes fournis
@@ -235,6 +244,7 @@ TOTAL: 37 tables PostgreSQL pour 32 entités métier
 ## ✨ Résultat Final
 
 ### 🎯 Objectif de l'Issue
+
 > "Il faut avoir le schéma complet et intégral pour l'intégration future !!!! NE RIEN OMETTRE !"
 
 ### ✅ Livrables
@@ -264,7 +274,7 @@ TOTAL: 37 tables PostgreSQL pour 32 entités métier
 
 ## 📊 Mapping Visuel
 
-```
+```md
 types.ts (35 types)
     ├── 3 types UI-only
     │   ├── ContentCard ────────> (Utilisé uniquement en frontend)
