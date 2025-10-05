@@ -30,6 +30,7 @@ async function main() {
 
   // 1. Insert user levels first
   console.log('📊 Seeding user levels...');
+  await db.delete(schema.userLevels);
   await db.insert(schema.userLevels).values(USER_LEVELS);
 
   // 2. Create Better-Auth users and profiles
@@ -39,11 +40,11 @@ async function main() {
     const userId = crypto.randomUUID();
     await db.insert(schema.user).values({
       id: userId,
-      name: profile.full_name,
+      name: profile.fullName,
       email: `${profile.username}@example.com`,
       emailVerified: true,
-      image: profile.avatar_url,
-      createdAt: new Date(profile.join_date),
+      image: profile.avatarUrl,
+      createdAt: new Date(profile.joinDate),
       updatedAt: new Date(),
     });
 
@@ -52,13 +53,13 @@ async function main() {
       id: profile.id,
       userId: userId,
       username: profile.username,
-      fullName: profile.full_name,
-      avatarUrl: profile.avatar_url,
-      coverImageUrl: profile.cover_image_url,
+      fullName: profile.fullName,
+      avatarUrl: profile.avatarUrl,
+      coverImageUrl: profile.coverImageUrl,
       bio: profile.bio,
-      levelId: profile.level_id,
-      joinDate: new Date(profile.join_date),
-      isVerified: profile.is_verified,
+      levelId: profile.levelId,
+      joinDate: isValidDate(profile.joinDate) ? new Date(profile.joinDate) : new Date(),
+      isVerified: profile.isVerified,
       points: profile.points,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -285,3 +286,9 @@ main().catch((err) => {
   console.error('Seed error:', err);
   process.exit(1);
 });
+
+function isValidDate(joinDate: string): boolean {
+  const date = new Date(joinDate);
+  return !isNaN(date.getTime());
+}
+
