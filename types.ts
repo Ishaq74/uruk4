@@ -71,6 +71,7 @@ export interface Profile {
   isVerified?: boolean;
   points: number;
   favoritePlaceIds?: string[];
+  role?: 'user' | 'moderator' | 'admin';
 }
 
 export interface Category {

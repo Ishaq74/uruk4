@@ -107,10 +107,23 @@ export const groupRoleEnum = pgEnum('group_role', [
   'member'
 ]);
 
+export const organizationRoleEnum = pgEnum('organization_role', [
+  'owner',
+  'admin',
+  'editor',
+  'viewer'
+]);
+
 export const analyticsEventNameEnum = pgEnum('analytics_event_name', [
   'view_place',
   'click_phone',
   'click_website'
+]);
+
+export const userRoleEnum = pgEnum('user_role', [
+  'user',
+  'moderator',
+  'admin'
 ]);
 
 // ============================================================================
@@ -131,6 +144,7 @@ export const user = pgTable('user', {
   email: text('email').notNull().unique(),
   emailVerified: boolean('email_verified').notNull().default(false),
   image: text('image'),
+  role: userRoleEnum('role').notNull().default('user'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
@@ -542,6 +556,19 @@ export const placeClaims = pgTable('place_claims', {
   resolvedAt: timestamp('resolved_at'),
   resolvedBy: uuid('resolved_by').references(() => profiles.id),
   rejectionReason: text('rejection_reason'),
+});
+
+/**
+ * Organization Members - Users who have access to an organization
+ */
+export const organizationMembers = pgTable('organization_members', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  organizationId: uuid('organization_id').references(() => organizations.id, { onDelete: 'cascade' }).notNull(),
+  profileId: uuid('profile_id').references(() => profiles.id, { onDelete: 'cascade' }).notNull(),
+  role: organizationRoleEnum('role').notNull().default('viewer'),
+  invitedBy: uuid('invited_by').references(() => profiles.id),
+  invitedAt: timestamp('invited_at').defaultNow().notNull(),
+  acceptedAt: timestamp('accepted_at'),
 });
 
 // ============================================================================
