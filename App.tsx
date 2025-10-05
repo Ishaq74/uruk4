@@ -1,54 +1,57 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import HomePage from './components/HomePage';
 import PlaceListPage from './components/PlaceListPage';
-import PlaceDetailPage from './components/PlaceDetailPage';
-import ProfilePage from './components/ProfilePage';
-import AnnoncesListPage from './components/AnnoncesListPage';
-import AnnonceDetailPage from './components/AnnonceDetailPage';
-import ArticleListPage from './components/ArticleListPage';
-import ArticleDetailPage from './components/ArticleDetailPage';
 import EventListPage from './components/EventListPage';
-import EventDetailPage from './components/EventDetailPage';
 import TrailListPage from './components/TrailListPage';
-import TrailDetailPage from './components/TrailDetailPage';
-import FavoritesPage from './components/FavoritesPage';
-import DashboardPage from './components/DashboardPage';
+import ArticleListPage from './components/ArticleListPage';
+import AnnoncesListPage from './components/AnnoncesListPage';
 import ForumListPage from './components/ForumListPage';
-import ForumCategoryPage from './components/ForumCategoryPage';
-import ForumThreadPage from './components/ForumThreadPage';
 import NewThreadPage from './components/NewThreadPage';
 import GroupListPage from './components/GroupListPage';
-import GroupDetailPage from './components/GroupDetailPage';
 import NewGroupPage from './components/NewGroupPage';
 import MemberListPage from './components/MemberListPage';
-import SearchPage from './components/SearchPage';
+import FavoritesPage from './components/FavoritesPage';
+import DashboardPage from './components/DashboardPage';
 import ProposeContentPage from './components/ProposeContentPage';
 import ProposePlaceForm from './components/propose/ProposePlaceForm';
 import ProposeEventForm from './components/propose/ProposeEventForm';
 import ProposeTrailForm from './components/propose/ProposeTrailForm';
 import ProposeListingForm from './components/propose/ProposeListingForm';
 import ConversationsListPage from './components/ConversationsListPage';
-import ConversationDetailPage from './components/ConversationDetailPage';
 import SettingsPage from './components/SettingsPage';
-import StaticPage from './components/StaticPage';
 import EspaceProPage from './components/EspaceProPage';
-import ManagePlacePage from './components/ManagePlacePage';
-import PlaceAnalyticsPage from './components/PlaceAnalyticsPage';
-import CookieBanner from './components/CookieBanner';
-import ManageProductsPage from './components/ManageProductsPage';
-import ManageServicesPage from './components/ManageServicesPage';
-import OrdersListPage from './components/OrdersListPage';
-import BookingsListPage from './components/BookingsListPage';
 import ClaimPlacePage from './components/ClaimPlacePage';
 import AdCampaignsPage from './components/AdCampaignsPage';
+import CookieBanner from './components/CookieBanner';
 import ReportModal from './components/ReportModal';
 import LivePage from './components/LivePage';
 import LoginModal from './components/auth/LoginModal';
 import RegisterModal from './components/auth/RegisterModal';
 import AdminDashboard from './components/AdminDashboard';
+import {
+  PlaceDetailWrapper,
+  EventDetailWrapper,
+  TrailDetailWrapper,
+  ArticleDetailWrapper,
+  AnnonceDetailWrapper,
+  ForumCategoryWrapper,
+  ForumThreadWrapper,
+  GroupDetailWrapper,
+  ConversationDetailWrapper,
+  ProfileWrapper,
+  ManagePlaceWrapper,
+  PlaceAnalyticsWrapper,
+  ManageProductsWrapper,
+  ManageServicesWrapper,
+  OrdersListWrapper,
+  BookingsListWrapper,
+  StaticPageWrapper,
+  SearchPageWrapper
+} from './components/RouteWrappers';
 
 import { authClient } from './auth-client';
 import { 
@@ -61,17 +64,8 @@ import {
 import { Place, Profile, Review, ForumPost, Message, ForumThread, Order, Booking, Comment, PlaceClaim, Group, Report, Event, Trail, Listing, LiveEvent, Conversation } from './types';
 import { ANALYTICS_EVENTS } from './constants';
 
-type Route = {
-  page: string;
-  id?: string;
-  mainCategory?: Place['mainCategory'];
-  query?: string;
-  slug?: string;
-  filter?: 'my-listings' | 'my-groups';
-}
-
 const App: React.FC = () => {
-  const [route, setRoute] = useState<Route>({ page: 'home' });
+  const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState<Profile | null>(null);
   const [authUser, setAuthUser] = useState<any | null>(null);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -242,10 +236,60 @@ const App: React.FC = () => {
     setShowCookieBanner(false);
   }
 
-  const navigateTo = (page: string, id?: string, mainCategory?: Place['mainCategory'], query?: string, slug?: string, filter?: 'my-listings' | 'my-groups') => {
-    setRoute({ page, id, mainCategory, query, slug, filter });
+  const navigateTo = useCallback((page: string, id?: string, mainCategory?: Place['mainCategory'], query?: string, slug?: string, filter?: 'my-listings' | 'my-groups') => {
     window.scrollTo(0, 0);
-  };
+    
+    // Map old page names to new URL routes
+    switch (page) {
+      case 'home': navigate('/'); break;
+      case 'live': navigate('/live'); break;
+      case 'restaurants': navigate('/restaurants'); break;
+      case 'hebergements': navigate('/hebergements'); break;
+      case 'activites': navigate('/activites'); break;
+      case 'commerces': navigate('/commerces'); break;
+      case 'place-detail': navigate(`/place/${id}`); break;
+      case 'events': navigate('/events'); break;
+      case 'event-detail': navigate(`/event/${id}`); break;
+      case 'trails': navigate('/trails'); break;
+      case 'trail-detail': navigate(`/trail/${id}`); break;
+      case 'articles': navigate('/articles'); break;
+      case 'article-detail': navigate(`/article/${id}`); break;
+      case 'annonces': navigate(filter === 'my-listings' ? '/mes-annonces' : '/annonces'); break;
+      case 'annonce-detail': navigate(`/annonce/${id}`); break;
+      case 'forums': navigate('/forums'); break;
+      case 'forum-category': navigate(`/forum/category/${id}`); break;
+      case 'forum-thread': navigate(`/forum/thread/${id}`); break;
+      case 'new-thread': navigate(`/forum/new-thread${id ? `?category=${id}` : ''}`); break;
+      case 'groupes': navigate(filter === 'my-groups' ? '/mes-groupes' : '/groupes'); break;
+      case 'group-detail': navigate(`/groupe/${id}`); break;
+      case 'new-group': navigate('/nouveau-groupe'); break;
+      case 'membres': navigate('/membres'); break;
+      case 'conversations': navigate('/conversations'); break;
+      case 'conversation-detail': navigate(`/conversation/${id}`); break;
+      case 'profile': navigate(slug ? `/profil/${slug}` : `/profil/${id}`); break;
+      case 'favorites': navigate('/favoris'); break;
+      case 'dashboard': navigate('/dashboard'); break;
+      case 'propose': navigate('/proposer'); break;
+      case 'propose-place': navigate('/proposer/lieu'); break;
+      case 'propose-event': navigate('/proposer/evenement'); break;
+      case 'propose-trail': navigate('/proposer/sentier'); break;
+      case 'propose-listing': navigate('/proposer/annonce'); break;
+      case 'settings': navigate('/parametres'); break;
+      case 'espace-pro': navigate('/espace-pro'); break;
+      case 'manage-place': navigate(`/espace-pro/lieu/${id}`); break;
+      case 'place-analytics': navigate(`/espace-pro/analytics/${id}`); break;
+      case 'manage-products': navigate(`/espace-pro/produits/${id}`); break;
+      case 'manage-services': navigate(`/espace-pro/services/${id}`); break;
+      case 'pro-orders': navigate(`/espace-pro/commandes/${id}`); break;
+      case 'pro-bookings': navigate(`/espace-pro/reservations/${id}`); break;
+      case 'claim-place': navigate('/revendiquer-lieu'); break;
+      case 'ad-campaigns': navigate('/campagnes-pub'); break;
+      case 'admin': navigate('/admin'); break;
+      case 'search': navigate(`/recherche?q=${query || ''}`); break;
+      case 'static': navigate(`/page/${slug}`); break;
+      default: navigate('/');
+    }
+  }, [navigate]);
 
   const handleOpenReportModal = (targetId: string, targetType: string) => { setReportModalInfo({ isOpen: true, targetId, targetType }); };
   const handleCloseReportModal = () => { setReportModalInfo({ isOpen: false, targetId: '', targetType: '' }); };
@@ -485,83 +529,99 @@ const App: React.FC = () => {
     alert('Événement rejeté');
   }, []);
 
-  const renderPage = () => {
-    switch (route.page) {
-      // Discovery
-      case 'live': return <LivePage liveEvents={liveEvents} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} onAddEvent={handleAddLiveEvent} onVote={handleVoteLiveEvent} onLogin={handleOpenLogin} />;
-      case 'restaurants': return <PlaceListPage places={places} navigateTo={navigateTo} mainCategory="restauration" />;
-      case 'hebergements': return <PlaceListPage places={places} navigateTo={navigateTo} mainCategory="hebergement" />;
-      case 'activites': return <PlaceListPage places={places} navigateTo={navigateTo} mainCategory="activites" />;
-      case 'commerces': return <PlaceListPage places={places} navigateTo={navigateTo} mainCategory="commerces" />;
-      case 'place-detail': return <PlaceDetailPage id={route.id!} places={places} profiles={profiles} organizations={organizations} products={products} services={services} navigateTo={navigateTo} currentUser={currentUser} toggleFavorite={toggleFavorite} addReview={handleAddReview} onLogin={handleOpenLogin} onAddOrder={handleAddOrder} onAddBooking={handleAddBooking} onOpenReportModal={handleOpenReportModal} />;
-      case 'events': return <EventListPage events={events} navigateTo={navigateTo} />;
-      case 'event-detail': return <EventDetailPage id={route.id!} events={events} navigateTo={navigateTo} currentUser={currentUser} />;
-      case 'trails': return <TrailListPage trails={trails} navigateTo={navigateTo} />;
-      case 'trail-detail': return <TrailDetailPage id={route.id!} trails={trails} navigateTo={navigateTo} />;
-      case 'articles': return <ArticleListPage articles={articles} profiles={profiles} navigateTo={navigateTo} />;
-      case 'article-detail': return <ArticleDetailPage id={route.id!} articles={articles} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} onAddComment={handleAddComment} onLogin={handleOpenLogin} onOpenReportModal={handleOpenReportModal} />;
-      
-      // Community & Services
-      case 'annonces': return <AnnoncesListPage listings={allListings} navigateTo={navigateTo} currentUser={currentUser} filter={route.filter} />;
-      case 'annonce-detail': return <AnnonceDetailPage id={route.id!} listings={allListings} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} onStartConversation={handleStartConversation} />;
-      case 'forums': return <ForumListPage threads={forumThreads} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} />;
-      case 'forum-category': return <ForumCategoryPage categoryId={route.id!} threads={forumThreads} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} />;
-      case 'forum-thread': return <ForumThreadPage id={route.id!} threads={forumThreads} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} addPost={handleAddPostToThread} onOpenReportModal={handleOpenReportModal} />;
-      case 'new-thread': return <NewThreadPage categoryId={route.id} navigateTo={navigateTo} currentUser={currentUser} onAddThread={handleAddThread} />;
-      case 'groupes': return <GroupListPage groups={groups} navigateTo={navigateTo} currentUser={currentUser} filter={route.filter} onAddGroup={() => navigateTo('new-group')} />;
-      case 'group-detail': return <GroupDetailPage id={route.id!} groups={groups} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} onToggleMembership={(groupId) => currentUser && handleJoinGroup(groupId, currentUser.id)} />;
-      case 'new-group': return <NewGroupPage navigateTo={navigateTo} currentUser={currentUser} onAddGroup={(group) => currentUser && handleAddGroup(group, currentUser.id)} />;
-      case 'membres': return <MemberListPage profiles={profiles} navigateTo={navigateTo} />;
-      case 'conversations': return <ConversationsListPage conversations={conversations} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} />
-      case 'conversation-detail': return <ConversationDetailPage id={route.id!} conversations={conversations} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} onSendMessage={handleSendMessage} />
-
-      // User Actions
-      case 'profile': return <ProfilePage id={route.id!} slug={route.slug} profiles={profiles} places={places} articles={articles} navigateTo={navigateTo} currentUser={currentUser} onStartConversation={handleStartConversation} />;
-      case 'favorites': return <FavoritesPage places={places} navigateTo={navigateTo} currentUser={currentUser} />;
-      case 'dashboard': return <DashboardPage navigateTo={navigateTo} currentUser={currentUser} />;
-      case 'propose': return <ProposeContentPage navigateTo={navigateTo} currentUser={currentUser} />;
-      case 'propose-place': return <ProposePlaceForm navigateTo={navigateTo} currentUser={currentUser} onAddPlace={handleAddPlace} />;
-      case 'propose-event': return <ProposeEventForm navigateTo={navigateTo} currentUser={currentUser} onAddEvent={handleAddEvent} />;
-      case 'propose-trail': return <ProposeTrailForm navigateTo={navigateTo} currentUser={currentUser} onAddTrail={handleAddTrail} />;
-      case 'propose-listing': return <ProposeListingForm navigateTo={navigateTo} currentUser={currentUser} onAddListing={handleAddListing} />;
-
-      // Settings & Pro
-      case 'settings': return <SettingsPage currentUser={currentUser} navigateTo={navigateTo} onUpdateProfile={handleUpdateProfile} onRequestDataExport={requestDataExport} onDeleteAccount={deleteAccount} />;
-      case 'espace-pro': return <EspaceProPage currentUser={currentUser} navigateTo={navigateTo} organizations={organizations} places={places} claims={claims} />;
-      case 'manage-place': return <ManagePlacePage id={route.id!} currentUser={currentUser} navigateTo={navigateTo} onUpdatePlace={handleUpdatePlace} places={places} />;
-      case 'place-analytics': return <PlaceAnalyticsPage id={route.id!} currentUser={currentUser} navigateTo={navigateTo} places={places} />;
-      case 'manage-products': return <ManageProductsPage orgId={route.id!} currentUser={currentUser} navigateTo={navigateTo} organizations={organizations} products={products} />;
-      case 'manage-services': return <ManageServicesPage orgId={route.id!} currentUser={currentUser} navigateTo={navigateTo} organizations={organizations} services={services} />;
-      case 'pro-orders': return <OrdersListPage orgId={route.id!} currentUser={currentUser} navigateTo={navigateTo} organizations={organizations} orders={orders} profiles={profiles} />;
-      case 'pro-bookings': return <BookingsListPage orgId={route.id!} currentUser={currentUser} navigateTo={navigateTo} organizations={organizations} bookings={bookings} profiles={profiles} />;
-      case 'claim-place': return <ClaimPlacePage currentUser={currentUser} navigateTo={navigateTo} onClaim={handleClaimPlace} places={places} organizations={organizations} />;
-      case 'ad-campaigns': return <AdCampaignsPage currentUser={currentUser} navigateTo={navigateTo} />;
-
-      // Admin
-      case 'admin': return <AdminDashboard 
-        currentUser={currentUser} 
-        navigateTo={navigateTo}
-        pendingPlaces={places.filter(p => p.status === 'pending_review')}
-        pendingEvents={events.filter(e => e.status === 'pending_review')}
-        pendingReports={reports.filter(r => r.status === 'pending')}
-        onApprovePlace={handleApprovePlace}
-        onRejectPlace={handleRejectPlace}
-        onApproveEvent={handleApproveEvent}
-        onRejectEvent={handleRejectEvent}
-      />;
-      
-      // System Pages
-      case 'search': return <SearchPage query={route.query || ''} places={places} articles={articles} trails={trails} navigateTo={navigateTo} />;
-      case 'static-page': return <StaticPage slug={route.slug!} navigateTo={navigateTo} />;
-      case 'home': default: return <HomePage places={places} events={events} trails={trails} articles={articles} listings={allListings} navigateTo={navigateTo} onSearch={handleSearch} />;
-    }
-  };
-
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
       <Header navigateTo={navigateTo} currentUser={currentUser} onLogin={handleOpenLogin} onLogout={handleLogout} onSearch={handleSearch} />
       <main className="flex-grow">
-        {renderPage()}
+        <Routes>
+          {/* Home */}
+          <Route path="/" element={<HomePage places={places} events={events} trails={trails} articles={articles} listings={allListings} navigateTo={navigateTo} onSearch={handleSearch} />} />
+          
+          {/* Discovery Pages */}
+          <Route path="/live" element={<LivePage liveEvents={liveEvents} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} onAddEvent={handleAddLiveEvent} onVote={handleVoteLiveEvent} onLogin={handleOpenLogin} />} />
+          <Route path="/restaurants" element={<PlaceListPage places={places} navigateTo={navigateTo} mainCategory="restauration" />} />
+          <Route path="/hebergements" element={<PlaceListPage places={places} navigateTo={navigateTo} mainCategory="hebergement" />} />
+          <Route path="/activites" element={<PlaceListPage places={places} navigateTo={navigateTo} mainCategory="activites" />} />
+          <Route path="/commerces" element={<PlaceListPage places={places} navigateTo={navigateTo} mainCategory="commerces" />} />
+          <Route path="/place/:id" element={<PlaceDetailWrapper places={places} profiles={profiles} organizations={organizations} products={products} services={services} navigateTo={navigateTo} currentUser={currentUser} toggleFavorite={toggleFavorite} addReview={handleAddReview} onLogin={handleOpenLogin} onAddOrder={handleAddOrder} onAddBooking={handleAddBooking} onOpenReportModal={handleOpenReportModal} />} />
+          
+          {/* Events */}
+          <Route path="/events" element={<EventListPage events={events} navigateTo={navigateTo} />} />
+          <Route path="/event/:id" element={<EventDetailWrapper events={events} navigateTo={navigateTo} currentUser={currentUser} />} />
+          
+          {/* Trails */}
+          <Route path="/trails" element={<TrailListPage trails={trails} navigateTo={navigateTo} />} />
+          <Route path="/trail/:id" element={<TrailDetailWrapper trails={trails} navigateTo={navigateTo} />} />
+          
+          {/* Articles */}
+          <Route path="/articles" element={<ArticleListPage articles={articles} profiles={profiles} navigateTo={navigateTo} />} />
+          <Route path="/article/:id" element={<ArticleDetailWrapper articles={articles} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} onAddComment={handleAddComment} onLogin={handleOpenLogin} onOpenReportModal={handleOpenReportModal} />} />
+          
+          {/* Annonces */}
+          <Route path="/annonces" element={<AnnoncesListPage listings={allListings} navigateTo={navigateTo} currentUser={currentUser} />} />
+          <Route path="/mes-annonces" element={<AnnoncesListPage listings={allListings} navigateTo={navigateTo} currentUser={currentUser} filter="my-listings" />} />
+          <Route path="/annonce/:id" element={<AnnonceDetailWrapper listings={allListings} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} onStartConversation={handleStartConversation} />} />
+          
+          {/* Forums */}
+          <Route path="/forums" element={<ForumListPage threads={forumThreads} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} />} />
+          <Route path="/forum/category/:id" element={<ForumCategoryWrapper threads={forumThreads} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} />} />
+          <Route path="/forum/thread/:id" element={<ForumThreadWrapper threads={forumThreads} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} addPost={handleAddPostToThread} onOpenReportModal={handleOpenReportModal} />} />
+          <Route path="/forum/new-thread" element={<NewThreadPage categoryId={new URLSearchParams(window.location.search).get('category') || undefined} navigateTo={navigateTo} currentUser={currentUser} onAddThread={handleAddThread} />} />
+          
+          {/* Groups */}
+          <Route path="/groupes" element={<GroupListPage groups={groups} navigateTo={navigateTo} currentUser={currentUser} onAddGroup={() => navigateTo('new-group')} />} />
+          <Route path="/mes-groupes" element={<GroupListPage groups={groups} navigateTo={navigateTo} currentUser={currentUser} filter="my-groups" onAddGroup={() => navigateTo('new-group')} />} />
+          <Route path="/groupe/:id" element={<GroupDetailWrapper groups={groups} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} onToggleMembership={(groupId) => currentUser && handleJoinGroup(groupId, currentUser.id)} />} />
+          <Route path="/nouveau-groupe" element={<NewGroupPage navigateTo={navigateTo} currentUser={currentUser} onAddGroup={(group) => currentUser && handleAddGroup(group, currentUser.id)} />} />
+          
+          {/* Members & Conversations */}
+          <Route path="/membres" element={<MemberListPage profiles={profiles} navigateTo={navigateTo} />} />
+          <Route path="/conversations" element={<ConversationsListPage conversations={conversations} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} />} />
+          <Route path="/conversation/:id" element={<ConversationDetailWrapper conversations={conversations} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} onSendMessage={handleSendMessage} />} />
+          
+          {/* User Profile & Actions */}
+          <Route path="/profil/:slug" element={<ProfileWrapper profiles={profiles} places={places} articles={articles} navigateTo={navigateTo} currentUser={currentUser} onStartConversation={handleStartConversation} />} />
+          <Route path="/favoris" element={<FavoritesPage places={places} navigateTo={navigateTo} currentUser={currentUser} />} />
+          <Route path="/dashboard" element={<DashboardPage navigateTo={navigateTo} currentUser={currentUser} />} />
+          
+          {/* Propose Content */}
+          <Route path="/proposer" element={<ProposeContentPage navigateTo={navigateTo} currentUser={currentUser} />} />
+          <Route path="/proposer/lieu" element={<ProposePlaceForm navigateTo={navigateTo} currentUser={currentUser} onAddPlace={handleAddPlace} />} />
+          <Route path="/proposer/evenement" element={<ProposeEventForm navigateTo={navigateTo} currentUser={currentUser} onAddEvent={handleAddEvent} />} />
+          <Route path="/proposer/sentier" element={<ProposeTrailForm navigateTo={navigateTo} currentUser={currentUser} onAddTrail={handleAddTrail} />} />
+          <Route path="/proposer/annonce" element={<ProposeListingForm navigateTo={navigateTo} currentUser={currentUser} onAddListing={handleAddListing} />} />
+          
+          {/* Settings */}
+          <Route path="/parametres" element={<SettingsPage currentUser={currentUser} navigateTo={navigateTo} onUpdateProfile={handleUpdateProfile} onRequestDataExport={requestDataExport} onDeleteAccount={deleteAccount} />} />
+          
+          {/* Espace Pro */}
+          <Route path="/espace-pro" element={<EspaceProPage currentUser={currentUser} navigateTo={navigateTo} organizations={organizations} places={places} claims={claims} />} />
+          <Route path="/espace-pro/lieu/:id" element={<ManagePlaceWrapper currentUser={currentUser} navigateTo={navigateTo} onUpdatePlace={handleUpdatePlace} places={places} />} />
+          <Route path="/espace-pro/analytics/:id" element={<PlaceAnalyticsWrapper currentUser={currentUser} navigateTo={navigateTo} places={places} />} />
+          <Route path="/espace-pro/produits/:id" element={<ManageProductsWrapper currentUser={currentUser} navigateTo={navigateTo} organizations={organizations} products={products} />} />
+          <Route path="/espace-pro/services/:id" element={<ManageServicesWrapper currentUser={currentUser} navigateTo={navigateTo} organizations={organizations} services={services} />} />
+          <Route path="/espace-pro/commandes/:id" element={<OrdersListWrapper currentUser={currentUser} navigateTo={navigateTo} organizations={organizations} orders={orders} profiles={profiles} />} />
+          <Route path="/espace-pro/reservations/:id" element={<BookingsListWrapper currentUser={currentUser} navigateTo={navigateTo} organizations={organizations} bookings={bookings} profiles={profiles} />} />
+          <Route path="/revendiquer-lieu" element={<ClaimPlacePage currentUser={currentUser} navigateTo={navigateTo} onClaim={handleClaimPlace} places={places} organizations={organizations} />} />
+          <Route path="/campagnes-pub" element={<AdCampaignsPage currentUser={currentUser} navigateTo={navigateTo} />} />
+          
+          {/* Admin */}
+          <Route path="/admin" element={<AdminDashboard 
+            currentUser={currentUser} 
+            navigateTo={navigateTo}
+            pendingPlaces={places.filter(p => p.status === 'pending_review')}
+            pendingEvents={events.filter(e => e.status === 'pending_review')}
+            pendingReports={reports.filter(r => r.status === 'pending')}
+            onApprovePlace={handleApprovePlace}
+            onRejectPlace={handleRejectPlace}
+            onApproveEvent={handleApproveEvent}
+            onRejectEvent={handleRejectEvent}
+          />} />
+          
+          {/* Search & Static Pages */}
+          <Route path="/recherche" element={<SearchPageWrapper places={places} articles={articles} trails={trails} navigateTo={navigateTo} />} />
+          <Route path="/page/:slug" element={<StaticPageWrapper navigateTo={navigateTo} />} />
+        </Routes>
       </main>
       <Footer navigateTo={navigateTo} onOpenReportModal={() => handleOpenReportModal('site-general', 'Platform')} />
       {showCookieBanner && <CookieBanner onAccept={handleCookieAccept} />}
