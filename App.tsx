@@ -374,6 +374,26 @@ const App: React.FC = () => {
   const requestDataExport = (userId: string) => alert(`Une demande d'export de données a été enregistrée.`);
   const deleteAccount = (userId: string) => { if (confirm(`Êtes-vous sûr de vouloir supprimer votre compte ?`)) { alert(`Le compte a été marqué pour suppression.`); }};
 
+  const handleApprovePlace = useCallback((placeId: string) => {
+    setPlaces(prev => prev.map(p => p.id === placeId ? { ...p, status: 'published' as const } : p));
+    alert('Lieu approuvé avec succès');
+  }, []);
+
+  const handleRejectPlace = useCallback((placeId: string, reason: string) => {
+    setPlaces(prev => prev.map(p => p.id === placeId ? { ...p, status: 'rejected' as const, rejection_reason: reason } : p));
+    alert('Lieu rejeté');
+  }, []);
+
+  const handleApproveEvent = useCallback((eventId: string) => {
+    setEvents(prev => prev.map(e => e.id === eventId ? { ...e, status: 'published' as const } : e));
+    alert('Événement approuvé avec succès');
+  }, []);
+
+  const handleRejectEvent = useCallback((eventId: string, reason: string) => {
+    setEvents(prev => prev.map(e => e.id === eventId ? { ...e, status: 'rejected' as const, rejection_reason: reason } : e));
+    alert('Événement rejeté');
+  }, []);
+
   const renderPage = () => {
     switch (route.page) {
       // Discovery
