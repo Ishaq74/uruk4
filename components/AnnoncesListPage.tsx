@@ -10,10 +10,10 @@ interface AnnoncesListPageProps {
   filter?: 'my-listings' | 'my-groups';
 }
 
-const ListingCard: React.FC<{ item: Listing, navigateTo: (page: string, id: string) => void }> = ({ item, navigateTo }) => {
+const ListingCard: React.FC<{ item: Listing, navigateTo: (page: string, id: string, mainCategory?: Place['mainCategory'], query?: string, slug?: string) => void }> = ({ item, navigateTo }) => {
     const iconInfo = LISTING_ICONS[item.type as ListingType];
     return (
-        <div onClick={() => navigateTo('annonce-detail', item.id)} className="group flex bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer">
+        <div onClick={() => navigateTo('annonce-detail', item.id, undefined, undefined, item.slug)} className="group flex bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer">
             {item.imageUrl && (
                 <div className="flex-shrink-0 w-32 md:w-48">
                     <img className="h-full w-full object-cover" src={item.imageUrl} alt={item.title} />

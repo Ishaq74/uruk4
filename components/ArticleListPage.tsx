@@ -9,11 +9,11 @@ interface ArticleListPageProps {
   navigateTo: (page: string, id?: string, mainCategory?: Place['mainCategory'], query?: string) => void;
 }
 
-const ArticleCard: React.FC<{ article: Article; author: Profile | undefined; navigateTo: (page: string, id: string) => void }> = ({ article, author, navigateTo }) => {
+const ArticleCard: React.FC<{ article: Article; author: Profile | undefined; navigateTo: (page: string, id: string, mainCategory?: Place['mainCategory'], query?: string, slug?: string) => void }> = ({ article, author, navigateTo }) => {
     return (
         <a 
-            href="/articles" 
-            onClick={(e) => { e.preventDefault(); navigateTo('article-detail', article.id); }} 
+            href={article.slug ? `/article/${article.slug}` : `/article/${article.id}`}
+            onClick={(e) => { e.preventDefault(); navigateTo('article-detail', article.id, undefined, undefined, article.slug); }} 
             className="group flex flex-col bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300"
         >
             <div className="h-56">

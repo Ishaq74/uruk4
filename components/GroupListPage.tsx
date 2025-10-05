@@ -10,10 +10,10 @@ interface GroupListPageProps {
   onAddGroup: () => void;
 }
 
-const GroupCard: React.FC<{ group: Group; navigateTo: (page: string, id: string) => void }> = ({ group, navigateTo }) => {
+const GroupCard: React.FC<{ group: Group; navigateTo: (page: string, id: string, mainCategory?: Place['mainCategory'], query?: string, slug?: string) => void }> = ({ group, navigateTo }) => {
   return (
     <div 
-        onClick={() => navigateTo('group-detail', group.id)}
+        onClick={() => navigateTo('group-detail', group.id, undefined, undefined, group.slug)}
         className="group bg-white rounded-xl shadow-sm border hover:border-sky-500 hover:shadow-lg transition-all duration-300 cursor-pointer"
     >
       <div className="h-32 bg-slate-200">
