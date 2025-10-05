@@ -37,6 +37,7 @@ import {
   PlaceDetailWrapper,
   PlaceListCategoryWrapper,
   EventDetailWrapper,
+  EventListCategoryWrapper,
   TrailDetailWrapper,
   ArticleDetailWrapper,
   AnnonceDetailWrapper,
@@ -287,7 +288,7 @@ const App: React.FC = () => {
       case 'annonces': navigate(filter === 'my-listings' ? '/mes-annonces' : '/annonces'); break;
       case 'annonce-detail': navigate(slug ? `/annonce/${slug}` : `/annonce/${id}`); break;
       case 'forums': navigate('/forums'); break;
-      case 'forum-category': navigate(`/forum/category/${id}`); break;
+      case 'forum-category': navigate(slug ? `/forum/categorie/${slug}` : `/forum/category/${id}`); break;
       case 'forum-thread': navigate(slug ? `/forum/${slug}` : `/forum/thread/${id}`); break;
       case 'new-thread': navigate(`/forum/new-thread${id ? `?category=${id}` : ''}`); break;
       case 'groupes': navigate(filter === 'my-groups' ? '/mes-groupes' : '/groupes'); break;
@@ -590,6 +591,7 @@ const App: React.FC = () => {
           
           {/* Events */}
           <Route path="/events" element={<EventListPage events={events} navigateTo={navigateTo} />} />
+          <Route path="/events/:categorySlug" element={<EventListCategoryWrapper events={events} navigateTo={navigateTo} />} />
           <Route path="/evenement/:slug" element={<EventDetailWrapper events={events} navigateTo={navigateTo} currentUser={currentUser} />} />
           <Route path="/event/:id" element={<EventDetailWrapper events={events} navigateTo={navigateTo} currentUser={currentUser} />} />
           
@@ -610,6 +612,7 @@ const App: React.FC = () => {
           
           {/* Forums */}
           <Route path="/forums" element={<ForumListPage threads={forumThreads} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} />} />
+          <Route path="/forum/categorie/:slug" element={<ForumCategoryWrapper threads={forumThreads} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} />} />
           <Route path="/forum/category/:id" element={<ForumCategoryWrapper threads={forumThreads} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} />} />
           <Route path="/forum/:slug" element={<ForumThreadWrapper threads={forumThreads} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} addPost={handleAddPostToThread} onOpenReportModal={handleOpenReportModal} />} />
           <Route path="/forum/thread/:id" element={<ForumThreadWrapper threads={forumThreads} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} addPost={handleAddPostToThread} onOpenReportModal={handleOpenReportModal} />} />

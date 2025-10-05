@@ -12,8 +12,9 @@ interface ForumCategoryPageProps {
 }
 
 const ForumCategoryPage: React.FC<ForumCategoryPageProps> = ({ categoryId, threads: allThreads, profiles, navigateTo, currentUser }) => {
-  const category = Array.isArray(FORUM_CATEGORIES) ? FORUM_CATEGORIES.find(c => c.id === categoryId) : undefined;
-  const threads = Array.isArray(allThreads) ? allThreads.filter(t => t.categoryId === categoryId) : [];
+  // Find category by slug or id for backward compatibility
+  const category = Array.isArray(FORUM_CATEGORIES) ? FORUM_CATEGORIES.find(c => c.slug === categoryId || c.id === categoryId) : undefined;
+  const threads = Array.isArray(allThreads) ? allThreads.filter(t => t.categoryId === category?.id) : [];
 
   if (!category) {
     return <div className="text-center py-20">Catégorie de forum non trouvée.</div>;

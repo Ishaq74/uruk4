@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import PlaceDetailPage from './PlaceDetailPage';
 import PlaceListPage from './PlaceListPage';
 import EventDetailPage from './EventDetailPage';
+import EventListPage from './EventListPage';
 import TrailDetailPage from './TrailDetailPage';
 import ArticleDetailPage from './ArticleDetailPage';
 import AnnonceDetailPage from './AnnonceDetailPage';
@@ -54,6 +55,14 @@ export const EventDetailWrapper: React.FC<{
   return <EventDetailPage {...props} id={slug || id || ''} />;
 };
 
+export const EventListCategoryWrapper: React.FC<{
+  events: Event[];
+  navigateTo: (page: string, id?: string, mainCategory?: Place['mainCategory'], query?: string, slug?: string, filter?: 'my-listings' | 'my-groups') => void;
+}> = (props) => {
+  const { categorySlug } = useParams<{ categorySlug: string }>();
+  return <EventListPage {...props} categorySlug={categorySlug} />;
+};
+
 export const TrailDetailWrapper: React.FC<{
   trails: Trail[];
   navigateTo: (page: string, id?: string) => void;
@@ -101,8 +110,9 @@ export const ForumCategoryWrapper: React.FC<{
   navigateTo: (page: string, id?: string) => void;
   currentUser: Profile | null;
 }> = (props) => {
-  const { id } = useParams<{ id: string }>();
-  return <ForumCategoryPage {...props} categoryId={id || ''} />;
+  const { slug, id } = useParams<{ slug?: string; id?: string }>();
+  // Prefer slug over id for new URLs
+  return <ForumCategoryPage {...props} categoryId={slug || id || ''} />;
 };
 
 export const ForumThreadWrapper: React.FC<{
