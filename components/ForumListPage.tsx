@@ -32,7 +32,7 @@ const CategoryRow: React.FC<{ category: any, navigateTo: (page: string, id: stri
                 <>
                     <img src={category.latestThread.authorAvatar} alt={category.latestThread.authorName} className="w-10 h-10 rounded-full flex-shrink-0" />
                     <div className="min-w-0">
-                        <a href={`/forum-thread/${category.latestThread.id}`} onClick={(e) => { e.preventDefault(); navigateTo('forum-thread', category.latestThread.id)}} className="font-semibold text-sm text-gray-700 hover:underline truncate block">{category.latestThread.title}</a>
+                        <a href={category.latestThread.slug ? `/forum/${category.latestThread.slug}` : `/forum/thread/${category.latestThread.id}`} onClick={(e) => { e.preventDefault(); navigateTo('forum-thread', category.latestThread.id, undefined, undefined, category.latestThread.slug)}} className="font-semibold text-sm text-gray-700 hover:underline truncate block">{category.latestThread.title}</a>
                         <p className="text-xs text-gray-500">par {category.latestThread.authorName}</p>
                     </div>
                 </>
@@ -55,6 +55,7 @@ const ForumListPage: React.FC<ForumListPageProps> = ({ threads, profiles, naviga
             postCount: postCount,
             latestThread: latestThreadData && author ? {
                 id: latestThreadData.id,
+                slug: latestThreadData.slug,
                 title: latestThreadData.title,
                 authorName: author.fullName,
                 authorAvatar: author.avatarUrl,

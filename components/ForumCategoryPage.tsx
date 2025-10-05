@@ -50,7 +50,7 @@ const ForumCategoryPage: React.FC<ForumCategoryPageProps> = ({ categoryId, threa
                     <Icon name="hash" className="w-6 h-6 text-slate-400" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <a href={`/forum-thread/${thread.id}`} onClick={(e) => {e.preventDefault(); navigateTo('forum-thread', thread.id)}} className="text-base font-bold text-gray-800 hover:text-sky-600 truncate block">
+                    <a href={thread.slug ? `/forum/${thread.slug}` : `/forum/thread/${thread.id}`} onClick={(e) => {e.preventDefault(); navigateTo('forum-thread', thread.id, undefined, undefined, thread.slug)}} className="text-base font-bold text-gray-800 hover:text-sky-600 truncate block">
                       {thread.title}
                     </a>
                     <p className="text-sm text-gray-500">

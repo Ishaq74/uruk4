@@ -22,7 +22,7 @@ const InfoCard: React.FC<{ icon: string, label: string, children: React.ReactNod
 );
 
 const EventDetailPage: React.FC<EventDetailPageProps> = ({ id, events, navigateTo, currentUser }) => {
-  const event = Array.isArray(events) ? events.find(e => e.id === id) : undefined;
+  const event = Array.isArray(events) ? events.find(e => e.slug === id || e.id === id) : undefined;
 
   if (!event) {
     return <div className="text-center py-20">Événement non trouvé.</div>;

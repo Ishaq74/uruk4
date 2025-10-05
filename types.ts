@@ -126,6 +126,7 @@ export interface Place {
 
 export interface Event {
   id: string;
+  slug?: string;
   date: string;
   title: string;
   location: string;
@@ -140,6 +141,7 @@ export interface Event {
 
 export interface Trail {
     id: string;
+    slug?: string;
     name: string;
     imageUrl: string;
     distanceKm: number;
@@ -156,6 +158,7 @@ export interface Trail {
 
 export interface Listing {
   id: string;
+  slug?: string;
   title: string;
   type: ListingType;
   price?: string;
@@ -171,6 +174,7 @@ export interface Listing {
 
 export interface Article {
   id:string;
+  slug?: string;
   imageUrl: string;
   title: string;
   excerpt: string;
@@ -194,6 +198,7 @@ export interface ForumPost {
 
 export interface ForumThread {
     id: string;
+    slug?: string;
     categoryId: string;
     title: string;
     authorId: string;
@@ -212,6 +217,7 @@ export interface ForumCategory {
 
 export interface Group {
     id: string;
+    slug?: string;
     name: string;
     bannerUrl: string;
     avatarUrl: string;

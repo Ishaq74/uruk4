@@ -4,8 +4,9 @@ import {
     RESTAURATION_ATTRIBUTES,
     HEBERGEMENT_CATEGORIES,
     HEBERGEMENT_ATTRIBUTES,
-    COMMERCES_CATEGORIES,
-    ACTIVITES_ATTRIBUTES
+    ACTIVITES_CATEGORIES,
+    ACTIVITES_ATTRIBUTES,
+    COMMERCES_CATEGORIES
 } from '../constants';
 import { Place, FilterOption } from '../types';
 import StarRating from './StarRating';
@@ -93,8 +94,9 @@ const FilterPanel: React.FC<{
             attributeTitle = 'Équipements';
             break;
         case 'activites':
+            categories = ACTIVITES_CATEGORIES;
             attributes = ACTIVITES_ATTRIBUTES;
-            attributeTitle = 'Type d\'activité';
+            categoryTitle = 'Type d\'activité';
             break;
         case 'commerces':
             categories = COMMERCES_CATEGORIES;

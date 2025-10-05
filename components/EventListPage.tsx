@@ -11,10 +11,10 @@ interface EventListPageProps {
   navigateTo: (page: string, id?: string, mainCategory?: Place['mainCategory'], query?: string, slug?: string, filter?: 'my-listings' | 'my-groups') => void;
 }
 
-const EventCard: React.FC<{ item: Event; navigateTo: (page: string, id: string) => void }> = ({ item, navigateTo }) => {
+const EventCard: React.FC<{ item: Event; navigateTo: (page: string, id: string, mainCategory?: Place['mainCategory'], query?: string, slug?: string) => void }> = ({ item, navigateTo }) => {
     return (
         <div 
-            onClick={() => navigateTo('event-detail', item.id)}
+            onClick={() => navigateTo('event-detail', item.id, undefined, undefined, item.slug)}
             className="group flex flex-col sm:flex-row bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer"
         >
             <div className="flex-shrink-0 w-full sm:w-48">

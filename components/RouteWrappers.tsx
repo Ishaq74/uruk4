@@ -49,16 +49,16 @@ export const EventDetailWrapper: React.FC<{
   navigateTo: (page: string, id?: string) => void;
   currentUser: Profile | null;
 }> = (props) => {
-  const { id } = useParams<{ id: string }>();
-  return <EventDetailPage {...props} id={id || ''} />;
+  const { id, slug } = useParams<{ id?: string; slug?: string }>();
+  return <EventDetailPage {...props} id={slug || id || ''} />;
 };
 
 export const TrailDetailWrapper: React.FC<{
   trails: Trail[];
   navigateTo: (page: string, id?: string) => void;
 }> = (props) => {
-  const { id } = useParams<{ id: string }>();
-  return <TrailDetailPage {...props} id={id || ''} />;
+  const { id, slug } = useParams<{ id?: string; slug?: string }>();
+  return <TrailDetailPage {...props} id={slug || id || ''} />;
 };
 
 export const ArticleDetailWrapper: React.FC<{
@@ -70,8 +70,8 @@ export const ArticleDetailWrapper: React.FC<{
   onLogin: () => void;
   onOpenReportModal: (targetId: string, targetType: string) => void;
 }> = (props) => {
-  const { id } = useParams<{ id: string }>();
-  return <ArticleDetailPage {...props} id={id || ''} />;
+  const { id, slug } = useParams<{ id?: string; slug?: string }>();
+  return <ArticleDetailPage {...props} id={slug || id || ''} />;
 };
 
 export const AnnonceDetailWrapper: React.FC<{
@@ -81,8 +81,8 @@ export const AnnonceDetailWrapper: React.FC<{
   currentUser: Profile | null;
   onStartConversation: (recipientId: string) => void;
 }> = (props) => {
-  const { id } = useParams<{ id: string }>();
-  return <AnnonceDetailPage {...props} id={id || ''} />;
+  const { id, slug } = useParams<{ id?: string; slug?: string }>();
+  return <AnnonceDetailPage {...props} id={slug || id || ''} />;
 };
 
 export const ForumCategoryWrapper: React.FC<{
@@ -103,8 +103,8 @@ export const ForumThreadWrapper: React.FC<{
   addPost: (threadId: string, post: Omit<ForumPost, 'id' | 'createdAt'>) => void;
   onOpenReportModal: (targetId: string, targetType: string) => void;
 }> = (props) => {
-  const { id } = useParams<{ id: string }>();
-  return <ForumThreadPage {...props} id={id || ''} />;
+  const { id, slug } = useParams<{ id?: string; slug?: string }>();
+  return <ForumThreadPage {...props} id={slug || id || ''} />;
 };
 
 export const GroupDetailWrapper: React.FC<{
@@ -114,8 +114,8 @@ export const GroupDetailWrapper: React.FC<{
   currentUser: Profile | null;
   onToggleMembership: (groupId: string) => void;
 }> = (props) => {
-  const { id } = useParams<{ id: string }>();
-  return <GroupDetailPage {...props} id={id || ''} />;
+  const { id, slug } = useParams<{ id?: string; slug?: string }>();
+  return <GroupDetailPage {...props} id={slug || id || ''} />;
 };
 
 export const ConversationDetailWrapper: React.FC<{

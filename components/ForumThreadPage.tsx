@@ -59,7 +59,7 @@ const PostCard: React.FC<{ post: ForumPost, profiles: Profile[], isOP: boolean, 
 };
 
 const ForumThreadPage: React.FC<ForumThreadPageProps> = ({ id, threads, profiles, navigateTo, currentUser, addPost, onOpenReportModal }) => {
-    const thread = Array.isArray(threads) ? threads.find(t => t.id === id) : undefined;
+    const thread = Array.isArray(threads) ? threads.find(t => t.slug === id || t.id === id) : undefined;
     const [replyContent, setReplyContent] = useState('');
     const replyTextareaRef = useRef<HTMLTextAreaElement>(null);
 

@@ -278,19 +278,19 @@ const App: React.FC = () => {
         }
         break;
       case 'events': navigate('/events'); break;
-      case 'event-detail': navigate(`/event/${id}`); break;
+      case 'event-detail': navigate(slug ? `/evenement/${slug}` : `/event/${id}`); break;
       case 'trails': navigate('/trails'); break;
-      case 'trail-detail': navigate(`/trail/${id}`); break;
+      case 'trail-detail': navigate(slug ? `/sentier/${slug}` : `/trail/${id}`); break;
       case 'articles': navigate('/articles'); break;
-      case 'article-detail': navigate(`/article/${id}`); break;
+      case 'article-detail': navigate(slug ? `/article/${slug}` : `/article/${id}`); break;
       case 'annonces': navigate(filter === 'my-listings' ? '/mes-annonces' : '/annonces'); break;
-      case 'annonce-detail': navigate(`/annonce/${id}`); break;
+      case 'annonce-detail': navigate(slug ? `/annonce/${slug}` : `/annonce/${id}`); break;
       case 'forums': navigate('/forums'); break;
       case 'forum-category': navigate(`/forum/category/${id}`); break;
-      case 'forum-thread': navigate(`/forum/thread/${id}`); break;
+      case 'forum-thread': navigate(slug ? `/forum/${slug}` : `/forum/thread/${id}`); break;
       case 'new-thread': navigate(`/forum/new-thread${id ? `?category=${id}` : ''}`); break;
       case 'groupes': navigate(filter === 'my-groups' ? '/mes-groupes' : '/groupes'); break;
-      case 'group-detail': navigate(`/groupe/${id}`); break;
+      case 'group-detail': navigate(slug ? `/groupe/${slug}` : `/groupe/${id}`); break;
       case 'new-group': navigate('/nouveau-groupe'); break;
       case 'membres': navigate('/membres'); break;
       case 'conversations': navigate('/conversations'); break;
@@ -589,31 +589,34 @@ const App: React.FC = () => {
           
           {/* Events */}
           <Route path="/events" element={<EventListPage events={events} navigateTo={navigateTo} />} />
+          <Route path="/evenement/:slug" element={<EventDetailWrapper events={events} navigateTo={navigateTo} currentUser={currentUser} />} />
           <Route path="/event/:id" element={<EventDetailWrapper events={events} navigateTo={navigateTo} currentUser={currentUser} />} />
           
           {/* Trails */}
           <Route path="/trails" element={<TrailListPage trails={trails} navigateTo={navigateTo} />} />
+          <Route path="/sentier/:slug" element={<TrailDetailWrapper trails={trails} navigateTo={navigateTo} />} />
           <Route path="/trail/:id" element={<TrailDetailWrapper trails={trails} navigateTo={navigateTo} />} />
           
           {/* Articles */}
           <Route path="/articles" element={<ArticleListPage articles={articles} profiles={profiles} navigateTo={navigateTo} />} />
-          <Route path="/article/:id" element={<ArticleDetailWrapper articles={articles} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} onAddComment={handleAddComment} onLogin={handleOpenLogin} onOpenReportModal={handleOpenReportModal} />} />
+          <Route path="/article/:slug" element={<ArticleDetailWrapper articles={articles} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} onAddComment={handleAddComment} onLogin={handleOpenLogin} onOpenReportModal={handleOpenReportModal} />} />
           
           {/* Annonces */}
           <Route path="/annonces" element={<AnnoncesListPage listings={allListings} navigateTo={navigateTo} currentUser={currentUser} />} />
           <Route path="/mes-annonces" element={<AnnoncesListPage listings={allListings} navigateTo={navigateTo} currentUser={currentUser} filter="my-listings" />} />
-          <Route path="/annonce/:id" element={<AnnonceDetailWrapper listings={allListings} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} onStartConversation={handleStartConversation} />} />
+          <Route path="/annonce/:slug" element={<AnnonceDetailWrapper listings={allListings} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} onStartConversation={handleStartConversation} />} />
           
           {/* Forums */}
           <Route path="/forums" element={<ForumListPage threads={forumThreads} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} />} />
           <Route path="/forum/category/:id" element={<ForumCategoryWrapper threads={forumThreads} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} />} />
+          <Route path="/forum/:slug" element={<ForumThreadWrapper threads={forumThreads} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} addPost={handleAddPostToThread} onOpenReportModal={handleOpenReportModal} />} />
           <Route path="/forum/thread/:id" element={<ForumThreadWrapper threads={forumThreads} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} addPost={handleAddPostToThread} onOpenReportModal={handleOpenReportModal} />} />
           <Route path="/forum/new-thread" element={<NewThreadPage categoryId={new URLSearchParams(window.location.search).get('category') || undefined} navigateTo={navigateTo} currentUser={currentUser} onAddThread={handleAddThread} />} />
           
           {/* Groups */}
           <Route path="/groupes" element={<GroupListPage groups={groups} navigateTo={navigateTo} currentUser={currentUser} onAddGroup={() => navigateTo('new-group')} />} />
           <Route path="/mes-groupes" element={<GroupListPage groups={groups} navigateTo={navigateTo} currentUser={currentUser} filter="my-groups" onAddGroup={() => navigateTo('new-group')} />} />
-          <Route path="/groupe/:id" element={<GroupDetailWrapper groups={groups} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} onToggleMembership={(groupId) => currentUser && handleJoinGroup(groupId, currentUser.id)} />} />
+          <Route path="/groupe/:slug" element={<GroupDetailWrapper groups={groups} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} onToggleMembership={(groupId) => currentUser && handleJoinGroup(groupId, currentUser.id)} />} />
           <Route path="/nouveau-groupe" element={<NewGroupPage navigateTo={navigateTo} currentUser={currentUser} onAddGroup={(group) => currentUser && handleAddGroup(group, currentUser.id)} />} />
           
           {/* Members & Conversations */}

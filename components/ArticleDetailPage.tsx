@@ -49,7 +49,7 @@ const CommentItem: React.FC<{ comment: Comment; profiles: Profile[], navigateTo:
 }
 
 const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ id, articles, profiles, navigateTo, currentUser, onAddComment, onLogin, onOpenReportModal }) => {
-    const article = articles.find(a => a.id === id);
+    const article = articles.find(a => a.slug === id || a.id === id);
     const [commentContent, setCommentContent] = useState('');
     
     if (!article) {

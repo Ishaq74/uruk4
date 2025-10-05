@@ -21,11 +21,11 @@ const getDifficultyClass = (difficulty: TrailDifficulty) => {
     }
 };
 
-const TrailCard: React.FC<{ item: Trail; navigateTo: (page: string, id: string) => void }> = ({ item, navigateTo }) => {
+const TrailCard: React.FC<{ item: Trail; navigateTo: (page: string, id: string, mainCategory?: Place['mainCategory'], query?: string, slug?: string) => void }> = ({ item, navigateTo }) => {
     return (
         <a 
-            href={`/trail/${item.id}`}
-            onClick={(e) => { e.preventDefault(); navigateTo('trail-detail', item.id); }}
+            href={item.slug ? `/sentier/${item.slug}` : `/trail/${item.id}`}
+            onClick={(e) => { e.preventDefault(); navigateTo('trail-detail', item.id, undefined, undefined, item.slug); }}
             className="group flex flex-col bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300"
         >
             <div className="h-56 relative">
