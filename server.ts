@@ -81,50 +81,9 @@ app.get('/api/auth/me', async (req, res) => {
   }
 });
 
-// Admin: Update user role
-app.post('/api/admin/users/:userId/role', async (req, res) => {
-  try {
-  const session = await auth.api.getSession({ request: req });
-    
-    if (!session || session.user.role !== 'admin') {
-      return res.status(403).json({ error: 'Accès refusé' });
-    }
-
-    const { userId } = req.params;
-    const { role } = req.body;
-
-    if (!['user', 'moderator', 'admin'].includes(role)) {
-      return res.status(400).json({ error: 'Rôle invalide' });
-    }
-
-    await db.update(schema.user)
-      .set({ role: role as any })
-      .where(eq(schema.user.id, userId));
-
-    res.json({ success: true });
-  } catch (error) {
-    console.error('Error updating role:', error);
-    res.status(500).json({ error: 'Erreur serveur' });
-  }
-});
-
-// Admin: Get all users
-app.get('/api/admin/users', async (req, res) => {
-  try {
-  const session = await auth.api.getSession({ request: req });
-    
-    if (!session || (session.user.role !== 'admin' && session.user.role !== 'moderator')) {
-      return res.status(403).json({ error: 'Accès refusé' });
-    }
-
-    const users = await db.query.user.findMany();
-
-    res.json(users);
-  } catch (error) {
-    console.error('Error getting users:', error);
-    res.status(500).json({ error: 'Erreur serveur' });
-  }
-});
+// NOTE: User management endpoints (list users, update roles, ban/unban) are now
+// handled by Better Auth Admin Plugin at /api/auth/* routes.
+// See ADMIN_PLUGIN_GUIDE.md for usage.
 
 // Admin: Approve place
 app.post('/api/admin/places/:placeId/approve', async (req, res) => {

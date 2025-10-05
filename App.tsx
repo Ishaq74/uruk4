@@ -423,7 +423,10 @@ const App: React.FC = () => {
         pendingPlaces={places.filter(p => p.status === 'pending_review')}
         pendingEvents={events.filter(e => e.status === 'pending_review')}
         pendingReports={reports.filter(r => r.status === 'pending')}
-        users={profiles}
+        onApprovePlace={handleApprovePlace}
+        onRejectPlace={handleRejectPlace}
+        onApproveEvent={handleApproveEvent}
+        onRejectEvent={handleRejectEvent}
       />;
       
       // System Pages
