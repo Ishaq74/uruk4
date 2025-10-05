@@ -1,16 +1,17 @@
 import React from 'react';
 import { Profile, Organization, Product } from '../types';
-import { ORGANIZATIONS, PRODUCTS } from '../constants';
 
 interface ManageProductsPageProps {
   orgId: string;
   currentUser: Profile | null;
   navigateTo: (page: string) => void;
+  organizations: Organization[];
+  products: Product[];
 }
 
-const ManageProductsPage: React.FC<ManageProductsPageProps> = ({ orgId, currentUser, navigateTo }) => {
-  const organization = ORGANIZATIONS.find(org => org.id === orgId);
-  const products = PRODUCTS.filter(p => p.organization_id === orgId);
+const ManageProductsPage: React.FC<ManageProductsPageProps> = ({ orgId, currentUser, navigateTo, organizations, products }) => {
+  const organization = organizations.find(org => org.id === orgId);
+  const orgProducts = products.filter(p => p.organization_id === orgId);
 
   if (!currentUser || currentUser.id !== organization?.primary_owner_id) {
     return <div className="text-center py-20">Accès non autorisé.</div>;
@@ -40,7 +41,7 @@ const ManageProductsPage: React.FC<ManageProductsPageProps> = ({ orgId, currentU
                     </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                    {products.map((product) => (
+                    {orgProducts.map((product) => (
                     <tr key={product.id}>
                         <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">

@@ -1,16 +1,17 @@
 import React from 'react';
 import { Profile, Service, Organization } from '../types';
-import { ORGANIZATIONS, SERVICES } from '../constants';
 
 interface ManageServicesPageProps {
   orgId: string;
   currentUser: Profile | null;
   navigateTo: (page: string) => void;
+  organizations: Organization[];
+  services: Service[];
 }
 
-const ManageServicesPage: React.FC<ManageServicesPageProps> = ({ orgId, currentUser, navigateTo }) => {
-  const organization = ORGANIZATIONS.find(org => org.id === orgId);
-  const services = SERVICES.filter(s => s.organization_id === orgId);
+const ManageServicesPage: React.FC<ManageServicesPageProps> = ({ orgId, currentUser, navigateTo, organizations, services }) => {
+  const organization = organizations.find(org => org.id === orgId);
+  const orgServices = services.filter(s => s.organization_id === orgId);
 
   if (!currentUser || currentUser.id !== organization?.primary_owner_id) {
     return <div className="text-center py-20">Accès non autorisé.</div>;
@@ -40,7 +41,7 @@ const ManageServicesPage: React.FC<ManageServicesPageProps> = ({ orgId, currentU
                     </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                    {services.map((service) => (
+                    {orgServices.map((service) => (
                     <tr key={service.id}>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{service.name}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{service.duration_minutes} min</td>

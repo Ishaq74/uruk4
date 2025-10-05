@@ -51,13 +51,15 @@ import RegisterModal from './components/auth/RegisterModal';
 import AdminDashboard from './components/AdminDashboard';
 
 import { authClient } from './auth-client';
+import { 
+  usePlaces, useEvents, useTrails, useArticles, useListings, 
+  useForumThreads, useGroups, useProfiles, useConversations,
+  useOrganizations, useProducts, useServices, useOrders, useBookings,
+  useClaims, useReports, useLiveEvents
+} from './hooks/useApiData';
 
 import { Place, Profile, Review, ForumPost, Message, ForumThread, Order, Booking, Comment, PlaceClaim, Group, Report, Event, Trail, Listing, LiveEvent, Conversation } from './types';
-import { 
-    PROFILES, PLACES, EVENTS, TRAILS, ALL_LISTINGS, MAGAZINE_ARTICLES,
-    FORUM_THREADS, GROUPS, CONVERSATIONS, ORGANIZATIONS, PRODUCTS, SERVICES,
-    ORDERS, BOOKINGS, CLAIMS, REPORTS, LIVE_EVENTS, ANALYTICS_EVENTS
-} from './constants';
+import { ANALYTICS_EVENTS } from './constants';
 
 type Route = {
   page: string;
@@ -75,25 +77,114 @@ const App: React.FC = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   
-  // State Management
-  const [profiles, setProfiles] = useState(PROFILES);
-  const [places, setPlaces] = useState(PLACES);
-  const [events, setEvents] = useState(EVENTS);
-  const [trails, setTrails] = useState(TRAILS);
-  const [allListings, setAllListings] = useState(ALL_LISTINGS);
-  const [articles, setArticles] = useState(MAGAZINE_ARTICLES);
-  const [forumThreads, setForumThreads] = useState(FORUM_THREADS);
-  const [groups, setGroups] = useState(GROUPS);
-  const [conversations, setConversations] = useState(CONVERSATIONS);
-  const [organizations, setOrganizations] = useState(ORGANIZATIONS);
-  const [products, setProducts] = useState(PRODUCTS);
-  const [services, setServices] = useState(SERVICES);
-  const [orders, setOrders] = useState(ORDERS);
-  const [bookings, setBookings] = useState(BOOKINGS);
-  const [claims, setClaims] = useState(CLAIMS);
-  const [reports, setReports] = useState(REPORTS);
-  const [liveEvents, setLiveEvents] = useState(LIVE_EVENTS);
+  // Fetch data from API
+  const { data: placesData, loading: placesLoading } = usePlaces();
+  const { data: eventsData, loading: eventsLoading } = useEvents();
+  const { data: trailsData, loading: trailsLoading } = useTrails();
+  const { data: articlesData, loading: articlesLoading } = useArticles();
+  const { data: listingsData, loading: listingsLoading } = useListings();
+  const { data: profilesData, loading: profilesLoading } = useProfiles();
+  const { data: forumThreadsData, loading: forumThreadsLoading } = useForumThreads();
+  const { data: groupsData, loading: groupsLoading } = useGroups();
+  const { data: conversationsData, loading: conversationsLoading } = useConversations();
+  const { data: organizationsData, loading: organizationsLoading } = useOrganizations();
+  const { data: productsData, loading: productsLoading } = useProducts();
+  const { data: servicesData, loading: servicesLoading } = useServices();
+  const { data: ordersData, loading: ordersLoading } = useOrders();
+  const { data: bookingsData, loading: bookingsLoading } = useBookings();
+  const { data: claimsData, loading: claimsLoading } = useClaims();
+  const { data: reportsData, loading: reportsLoading } = useReports();
+  const { data: liveEventsData, loading: liveEventsLoading } = useLiveEvents();
+  
+  // State Management (fallback to empty arrays if data is null)
+  const [profiles, setProfiles] = useState<Profile[]>([]);
+  const [places, setPlaces] = useState<Place[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
+  const [trails, setTrails] = useState<Trail[]>([]);
+  const [allListings, setAllListings] = useState<Listing[]>([]);
+  const [articles, setArticles] = useState<any[]>([]);
+  const [forumThreads, setForumThreads] = useState<ForumThread[]>([]);
+  const [groups, setGroups] = useState<Group[]>([]);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [organizations, setOrganizations] = useState<any[]>([]);
+  const [products, setProducts] = useState<any[]>([]);
+  const [services, setServices] = useState<any[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [claims, setClaims] = useState<PlaceClaim[]>([]);
+  const [reports, setReports] = useState<Report[]>([]);
+  const [liveEvents, setLiveEvents] = useState<LiveEvent[]>([]);
   const [analyticsEvents, setAnalyticsEvents] = useState(ANALYTICS_EVENTS);
+
+  // Update state when data loads
+  useEffect(() => {
+    if (placesData) setPlaces(placesData);
+  }, [placesData]);
+
+  useEffect(() => {
+    if (eventsData) setEvents(eventsData);
+  }, [eventsData]);
+
+  useEffect(() => {
+    if (trailsData) setTrails(trailsData);
+  }, [trailsData]);
+
+  useEffect(() => {
+    if (articlesData) setArticles(articlesData);
+  }, [articlesData]);
+
+  useEffect(() => {
+    if (listingsData) setAllListings(listingsData);
+  }, [listingsData]);
+
+  useEffect(() => {
+    if (profilesData) setProfiles(profilesData);
+  }, [profilesData]);
+
+  useEffect(() => {
+    if (forumThreadsData) setForumThreads(forumThreadsData);
+  }, [forumThreadsData]);
+
+  useEffect(() => {
+    if (groupsData) setGroups(groupsData);
+  }, [groupsData]);
+
+  useEffect(() => {
+    if (conversationsData) setConversations(conversationsData);
+  }, [conversationsData]);
+
+  useEffect(() => {
+    if (organizationsData) setOrganizations(organizationsData);
+  }, [organizationsData]);
+
+  useEffect(() => {
+    if (productsData) setProducts(productsData);
+  }, [productsData]);
+
+  useEffect(() => {
+    if (servicesData) setServices(servicesData);
+  }, [servicesData]);
+
+  useEffect(() => {
+    if (ordersData) setOrders(ordersData);
+  }, [ordersData]);
+
+  useEffect(() => {
+    if (bookingsData) setBookings(bookingsData);
+  }, [bookingsData]);
+
+  useEffect(() => {
+    if (claimsData) setClaims(claimsData);
+  }, [claimsData]);
+
+  useEffect(() => {
+    if (reportsData) setReports(reportsData);
+  }, [reportsData]);
+
+  useEffect(() => {
+    if (liveEventsData) setLiveEvents(liveEventsData);
+  }, [liveEventsData]);
+
 
   const [showCookieBanner, setShowCookieBanner] = useState(false);
   const [reportModalInfo, setReportModalInfo] = useState<{ isOpen: boolean, targetId: string, targetType: string }>({ isOpen: false, targetId: '', targetType: '' });
@@ -436,14 +527,14 @@ const App: React.FC = () => {
 
       // Settings & Pro
       case 'settings': return <SettingsPage currentUser={currentUser} navigateTo={navigateTo} onUpdateProfile={handleUpdateProfile} onRequestDataExport={requestDataExport} onDeleteAccount={deleteAccount} />;
-      case 'espace-pro': return <EspaceProPage currentUser={currentUser} navigateTo={navigateTo} />;
-      case 'manage-place': return <ManagePlacePage id={route.id!} currentUser={currentUser} navigateTo={navigateTo} onUpdatePlace={handleUpdatePlace} />;
-      case 'place-analytics': return <PlaceAnalyticsPage id={route.id!} currentUser={currentUser} navigateTo={navigateTo} />;
-      case 'manage-products': return <ManageProductsPage orgId={route.id!} currentUser={currentUser} navigateTo={navigateTo} />;
-      case 'manage-services': return <ManageServicesPage orgId={route.id!} currentUser={currentUser} navigateTo={navigateTo} />;
-      case 'pro-orders': return <OrdersListPage orgId={route.id!} currentUser={currentUser} navigateTo={navigateTo} />;
-      case 'pro-bookings': return <BookingsListPage orgId={route.id!} currentUser={currentUser} navigateTo={navigateTo} />;
-      case 'claim-place': return <ClaimPlacePage currentUser={currentUser} navigateTo={navigateTo} onClaim={handleClaimPlace} />;
+      case 'espace-pro': return <EspaceProPage currentUser={currentUser} navigateTo={navigateTo} organizations={organizations} places={places} claims={claims} />;
+      case 'manage-place': return <ManagePlacePage id={route.id!} currentUser={currentUser} navigateTo={navigateTo} onUpdatePlace={handleUpdatePlace} places={places} />;
+      case 'place-analytics': return <PlaceAnalyticsPage id={route.id!} currentUser={currentUser} navigateTo={navigateTo} places={places} />;
+      case 'manage-products': return <ManageProductsPage orgId={route.id!} currentUser={currentUser} navigateTo={navigateTo} organizations={organizations} products={products} />;
+      case 'manage-services': return <ManageServicesPage orgId={route.id!} currentUser={currentUser} navigateTo={navigateTo} organizations={organizations} services={services} />;
+      case 'pro-orders': return <OrdersListPage orgId={route.id!} currentUser={currentUser} navigateTo={navigateTo} organizations={organizations} orders={orders} profiles={profiles} />;
+      case 'pro-bookings': return <BookingsListPage orgId={route.id!} currentUser={currentUser} navigateTo={navigateTo} organizations={organizations} bookings={bookings} profiles={profiles} />;
+      case 'claim-place': return <ClaimPlacePage currentUser={currentUser} navigateTo={navigateTo} onClaim={handleClaimPlace} places={places} organizations={organizations} />;
       case 'ad-campaigns': return <AdCampaignsPage currentUser={currentUser} navigateTo={navigateTo} />;
 
       // Admin

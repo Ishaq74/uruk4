@@ -471,6 +471,303 @@ app.delete('/api/organizations/:orgId/members/:memberId', async (req, res) => {
   }
 });
 
+// ============================================================================
+// PUBLIC API ENDPOINTS FOR CONTENT
+// ============================================================================
+
+// Get all places (with optional filters)
+app.get('/api/places', async (req, res) => {
+  try {
+    const { mainCategory, status } = req.query;
+    let query = db.query.places;
+    
+    const places = await query.findMany({
+      where: status ? eq(schema.places.status, status as any) : undefined,
+    });
+    
+    // Filter by mainCategory if provided
+    const filteredPlaces = mainCategory 
+      ? places.filter(p => p.mainCategory === mainCategory)
+      : places;
+    
+    res.json(filteredPlaces);
+  } catch (error) {
+    console.error('Error getting places:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// Get all events
+app.get('/api/events', async (req, res) => {
+  try {
+    const events = await db.query.events.findMany();
+    res.json(events);
+  } catch (error) {
+    console.error('Error getting events:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// Get all trails
+app.get('/api/trails', async (req, res) => {
+  try {
+    const trails = await db.query.trails.findMany();
+    res.json(trails);
+  } catch (error) {
+    console.error('Error getting trails:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// Get all articles
+app.get('/api/articles', async (req, res) => {
+  try {
+    const articles = await db.query.articles.findMany();
+    res.json(articles);
+  } catch (error) {
+    console.error('Error getting articles:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// Get all listings
+app.get('/api/listings', async (req, res) => {
+  try {
+    const listings = await db.query.listings.findMany();
+    res.json(listings);
+  } catch (error) {
+    console.error('Error getting listings:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// Get all forum categories
+app.get('/api/forum/categories', async (req, res) => {
+  try {
+    const categories = await db.query.forumCategories.findMany();
+    res.json(categories);
+  } catch (error) {
+    console.error('Error getting forum categories:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// Get all forum threads
+app.get('/api/forum/threads', async (req, res) => {
+  try {
+    const threads = await db.query.forumThreads.findMany();
+    res.json(threads);
+  } catch (error) {
+    console.error('Error getting forum threads:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// Get all groups
+app.get('/api/groups', async (req, res) => {
+  try {
+    const groups = await db.query.groups.findMany();
+    res.json(groups);
+  } catch (error) {
+    console.error('Error getting groups:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// Get all profiles
+app.get('/api/profiles', async (req, res) => {
+  try {
+    const profiles = await db.query.profiles.findMany();
+    res.json(profiles);
+  } catch (error) {
+    console.error('Error getting profiles:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// Get all conversations (for authenticated user)
+app.get('/api/conversations', async (req, res) => {
+  try {
+    const session = await auth.api.getSession({ headers: req.headers as any });
+    
+    if (!session) {
+      return res.status(401).json({ error: 'Non authentifié' });
+    }
+
+    const profile = await db.query.profiles.findFirst({
+      where: eq(schema.profiles.userId, session.user.id),
+    });
+
+    if (!profile) {
+      return res.json([]);
+    }
+
+    const conversations = await db.query.conversations.findMany();
+    
+    // Filter conversations where user is a participant
+    const userConversations = conversations.filter(c => 
+      c.participantIds.includes(profile.id)
+    );
+    
+    res.json(userConversations);
+  } catch (error) {
+    console.error('Error getting conversations:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// Get all products
+app.get('/api/products', async (req, res) => {
+  try {
+    const products = await db.query.products.findMany();
+    res.json(products);
+  } catch (error) {
+    console.error('Error getting products:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// Get all services
+app.get('/api/services', async (req, res) => {
+  try {
+    const services = await db.query.services.findMany();
+    res.json(services);
+  } catch (error) {
+    console.error('Error getting services:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// Get all orders (for authenticated user)
+app.get('/api/orders', async (req, res) => {
+  try {
+    const session = await auth.api.getSession({ headers: req.headers as any });
+    
+    if (!session) {
+      return res.status(401).json({ error: 'Non authentifié' });
+    }
+
+    const profile = await db.query.profiles.findFirst({
+      where: eq(schema.profiles.userId, session.user.id),
+    });
+
+    if (!profile) {
+      return res.json([]);
+    }
+
+    const orders = await db.query.orders.findMany({
+      where: eq(schema.orders.customerId, profile.id),
+    });
+    
+    res.json(orders);
+  } catch (error) {
+    console.error('Error getting orders:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// Get all bookings (for authenticated user)
+app.get('/api/bookings', async (req, res) => {
+  try {
+    const session = await auth.api.getSession({ headers: req.headers as any });
+    
+    if (!session) {
+      return res.status(401).json({ error: 'Non authentifié' });
+    }
+
+    const profile = await db.query.profiles.findFirst({
+      where: eq(schema.profiles.userId, session.user.id),
+    });
+
+    if (!profile) {
+      return res.json([]);
+    }
+
+    const bookings = await db.query.bookings.findMany({
+      where: eq(schema.bookings.customerId, profile.id),
+    });
+    
+    res.json(bookings);
+  } catch (error) {
+    console.error('Error getting bookings:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// Get all claims
+app.get('/api/claims', async (req, res) => {
+  try {
+    const claims = await db.query.placeClaims.findMany();
+    res.json(claims);
+  } catch (error) {
+    console.error('Error getting claims:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// Get all reports (admin/moderator only)
+app.get('/api/reports', async (req, res) => {
+  try {
+    const session = await auth.api.getSession({ headers: req.headers as any });
+    
+    if (!session || (session.user.role !== 'admin' && session.user.role !== 'moderator')) {
+      return res.status(403).json({ error: 'Accès refusé' });
+    }
+
+    const reports = await db.query.reports.findMany();
+    res.json(reports);
+  } catch (error) {
+    console.error('Error getting reports:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// Get all live events
+app.get('/api/live-events', async (req, res) => {
+  try {
+    const liveEvents = await db.query.liveEvents.findMany();
+    
+    // Filter out expired events
+    const now = new Date();
+    const activeEvents = liveEvents.filter(e => new Date(e.expiresAt) > now);
+    
+    res.json(activeEvents);
+  } catch (error) {
+    console.error('Error getting live events:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// Get all organizations
+app.get('/api/organizations', async (req, res) => {
+  try {
+    const organizations = await db.query.organizations.findMany();
+    res.json(organizations);
+  } catch (error) {
+    console.error('Error getting organizations:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// Get static page content
+app.get('/api/static-pages/:slug', async (req, res) => {
+  try {
+    const { slug } = req.params;
+    const page = await db.query.staticPageContent.findFirst({
+      where: eq(schema.staticPageContent.slug, slug),
+    });
+    
+    if (!page) {
+      return res.status(404).json({ error: 'Page non trouvée' });
+    }
+    
+    res.json(page);
+  } catch (error) {
+    console.error('Error getting static page:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
 const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {

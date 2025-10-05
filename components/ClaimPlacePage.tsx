@@ -1,18 +1,19 @@
 import React, { useState, useMemo } from 'react';
 import { Place, Profile, PlaceClaim, Organization } from '../types';
-import { PLACES, ORGANIZATIONS } from '../constants';
 
 interface ClaimPlacePageProps {
   currentUser: Profile | null;
   navigateTo: (page: string, id?: string) => void;
   onClaim: (claim: Omit<PlaceClaim, 'id' | 'status'>) => void;
+  places: Place[];
+  organizations: Organization[];
 }
 
-const ClaimPlacePage: React.FC<ClaimPlacePageProps> = ({ currentUser, navigateTo, onClaim }) => {
+const ClaimPlacePage: React.FC<ClaimPlacePageProps> = ({ currentUser, navigateTo, onClaim, places, organizations }) => {
   const [selectedPlaceId, setSelectedPlaceId] = useState('');
   const [proof, setProof] = useState('');
   
-  const userOrganization = useMemo(() => ORGANIZATIONS.find(org => org.primary_owner_id === currentUser?.id), [currentUser]);
+  const userOrganization = useMemo(() => organizations.find(org => org.primary_owner_id === currentUser?.id), [currentUser, organizations]);
 
   if (!currentUser || !userOrganization) {
     return (
@@ -26,8 +27,8 @@ const ClaimPlacePage: React.FC<ClaimPlacePageProps> = ({ currentUser, navigateTo
     );
   }
 
-  const alreadyOwnedPlaceIds = ORGANIZATIONS.flatMap(org => org.place_ids);
-  const unclaimedPlaces = PLACES.filter(p => !alreadyOwnedPlaceIds.includes(p.id));
+  const alreadyOwnedPlaceIds = organizations.flatMap(org => org.place_ids);
+  const unclaimedPlaces = places.filter(p => !alreadyOwnedPlaceIds.includes(p.id));
   
   const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault();

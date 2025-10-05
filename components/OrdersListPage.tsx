@@ -1,16 +1,18 @@
 import React from 'react';
 import { Profile, Order, Organization } from '../types';
-import { ORGANIZATIONS, ORDERS, PROFILES } from '../constants';
 
 interface OrdersListPageProps {
   orgId: string;
   currentUser: Profile | null;
   navigateTo: (page: string, id?: string) => void;
+  organizations: Organization[];
+  orders: Order[];
+  profiles: Profile[];
 }
 
-const OrdersListPage: React.FC<OrdersListPageProps> = ({ orgId, currentUser, navigateTo }) => {
-  const organization = ORGANIZATIONS.find(org => org.id === orgId);
-  const orders = ORDERS.filter(o => o.organization_id === orgId);
+const OrdersListPage: React.FC<OrdersListPageProps> = ({ orgId, currentUser, navigateTo, organizations, orders, profiles }) => {
+  const organization = organizations.find(org => org.id === orgId);
+  const orgOrders = orders.filter(o => o.organization_id === orgId);
 
   if (!currentUser || currentUser.id !== organization?.primary_owner_id) {
     return <div className="text-center py-20">Accès non autorisé.</div>;
@@ -50,8 +52,8 @@ const OrdersListPage: React.FC<OrdersListPageProps> = ({ orgId, currentUser, nav
                     </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                    {orders.map((order) => {
-                        const customer = PROFILES.find(p => p.id === order.customer_id);
+                    {orgOrders.map((order) => {
+                        const customer = profiles.find(p => p.id === order.customer_id);
                         return (
                              <tr key={order.id}>
                                 <td className="px-6 py-4 whitespace-nowrap">

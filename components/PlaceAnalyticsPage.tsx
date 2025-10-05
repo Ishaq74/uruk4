@@ -1,12 +1,13 @@
 import React from 'react';
 import { Place, Profile, AnalyticsEvent } from '../types';
-import { PLACES, ANALYTICS_EVENTS } from '../constants';
+import { ANALYTICS_EVENTS } from '../constants';
 import Icon from './Icon';
 
 interface PlaceAnalyticsPageProps {
   id: string;
   currentUser: Profile | null;
   navigateTo: (page: string, id?: string) => void;
+  places: Place[];
 }
 
 const StatCard: React.FC<{ icon: string, value: string, label: string, color: string }> = ({ icon, value, label, color }) => (
@@ -21,8 +22,8 @@ const StatCard: React.FC<{ icon: string, value: string, label: string, color: st
     </div>
 );
 
-const PlaceAnalyticsPage: React.FC<PlaceAnalyticsPageProps> = ({ id, currentUser, navigateTo }) => {
-  const place = PLACES.find(p => p.id === id);
+const PlaceAnalyticsPage: React.FC<PlaceAnalyticsPageProps> = ({ id, currentUser, navigateTo, places }) => {
+  const place = places.find(p => p.id === id);
 
   if (!currentUser) {
     return <div className="text-center py-20">Accès non autorisé.</div>;
