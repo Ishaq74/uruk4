@@ -95,13 +95,21 @@ export const HEBERGEMENT_ATTRIBUTES: FilterOption[] = [
 ];
 
 // Filter Options for Activites
+export const ACTIVITES_CATEGORIES: FilterOption[] = [
+    { id: 'cat_sports_aeriens', label: 'Sports aériens' },
+    { id: 'cat_nautique', label: 'Activités nautiques' },
+    { id: 'cat_montagne', label: 'Montagne & Randonnée' },
+];
+
 export const ACTIVITES_ATTRIBUTES: FilterOption[] = [
     { id: 'attr_sensation', label: 'Sensations fortes' },
 ];
 
 // Filter Options for Commerces
 export const COMMERCES_CATEGORIES: FilterOption[] = [
-    { id: 'attr_terroir', label: 'Produits du terroir' },
+    { id: 'cat_terroir', label: 'Produits du terroir' },
+    { id: 'cat_artisanat', label: 'Artisanat local' },
+    { id: 'cat_mode', label: 'Mode & Accessoires' },
 ];
 
 // Attribute Icons Mapping

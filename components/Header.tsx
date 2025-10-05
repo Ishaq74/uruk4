@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Icon from './Icon';
 import { Place, Profile } from '../types';
+import { 
+    RESTAURATION_CATEGORIES, 
+    HEBERGEMENT_CATEGORIES, 
+    ACTIVITES_CATEGORIES,
+    COMMERCES_CATEGORIES 
+} from '../constants';
+import { generateCategorySlug } from '../utils/slug';
 
 const MobileCollapsible: React.FC<{ title: string; children: React.ReactNode; }> = ({ title, children }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -91,6 +98,12 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentUser, onLogin, onLog
       if (isMobileMenuOpen) setIsMobileMenuOpen(false);
   };
   
+  // Helper to navigate to a category page by path
+  const navToPath = (path: string) => {
+      window.location.href = path;
+      if (isMobileMenuOpen) setIsMobileMenuOpen(false);
+  };
+  
   const MobileMenu = () => (
       <div className="fixed inset-0 z-40 bg-white md:hidden">
           <div className="pt-20 h-full overflow-y-auto">
@@ -118,10 +131,38 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentUser, onLogin, onLog
                             </span>
                         </div>
                     </DropdownItem>
-                    <DropdownItem isMobile onClick={() => navClick('restaurants')}>Où Manger ?</DropdownItem>
-                    <DropdownItem isMobile onClick={() => navClick('hebergements')}>Où Dormir ?</DropdownItem>
-                    <DropdownItem isMobile onClick={() => navClick('activites')}>Quoi Faire ?</DropdownItem>
-                    <DropdownItem isMobile onClick={() => navClick('commerces')}>Shopping & Services</DropdownItem>
+                    <DropdownItem isMobile onClick={() => navClick('restaurants')}>
+                        <div className="font-semibold">Où Manger ?</div>
+                    </DropdownItem>
+                    {RESTAURATION_CATEGORIES.map(cat => (
+                        <DropdownItem key={cat.id} isMobile onClick={() => navToPath(`/restaurants/${generateCategorySlug(cat.label)}`)}>
+                            <div className="pl-4 text-gray-600">• {cat.label}</div>
+                        </DropdownItem>
+                    ))}
+                    <DropdownItem isMobile onClick={() => navClick('hebergements')}>
+                        <div className="font-semibold">Où Dormir ?</div>
+                    </DropdownItem>
+                    {HEBERGEMENT_CATEGORIES.map(cat => (
+                        <DropdownItem key={cat.id} isMobile onClick={() => navToPath(`/hebergements/${generateCategorySlug(cat.label)}`)}>
+                            <div className="pl-4 text-gray-600">• {cat.label}</div>
+                        </DropdownItem>
+                    ))}
+                    <DropdownItem isMobile onClick={() => navClick('activites')}>
+                        <div className="font-semibold">Quoi Faire ?</div>
+                    </DropdownItem>
+                    {ACTIVITES_CATEGORIES.map(cat => (
+                        <DropdownItem key={cat.id} isMobile onClick={() => navToPath(`/activites/${generateCategorySlug(cat.label)}`)}>
+                            <div className="pl-4 text-gray-600">• {cat.label}</div>
+                        </DropdownItem>
+                    ))}
+                    <DropdownItem isMobile onClick={() => navClick('commerces')}>
+                        <div className="font-semibold">Shopping & Services</div>
+                    </DropdownItem>
+                    {COMMERCES_CATEGORIES.map(cat => (
+                        <DropdownItem key={cat.id} isMobile onClick={() => navToPath(`/commerces/${generateCategorySlug(cat.label)}`)}>
+                            <div className="pl-4 text-gray-600">• {cat.label}</div>
+                        </DropdownItem>
+                    ))}
                     <DropdownItem isMobile onClick={() => navClick('events')}>Agenda</DropdownItem>
                     <DropdownItem isMobile onClick={() => navClick('trails')}>Sentiers</DropdownItem>
                     <DropdownItem isMobile onClick={() => navClick('articles')}>Magazine</DropdownItem>
@@ -183,10 +224,42 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentUser, onLogin, onLog
                         </div>
                     </DropdownItem>
                     <div className="border-t my-1"></div>
-                    <DropdownItem onClick={() => navClick('restaurants')}>Où Manger ?</DropdownItem>
-                    <DropdownItem onClick={() => navClick('hebergements')}>Où Dormir ?</DropdownItem>
-                    <DropdownItem onClick={() => navClick('activites')}>Quoi Faire ?</DropdownItem>
-                    <DropdownItem onClick={() => navClick('commerces')}>Shopping & Services</DropdownItem>
+                    <DropdownItem onClick={() => navClick('restaurants')}>
+                        <div className="font-semibold">Où Manger ?</div>
+                    </DropdownItem>
+                    {RESTAURATION_CATEGORIES.map(cat => (
+                        <DropdownItem key={cat.id} onClick={() => navToPath(`/restaurants/${generateCategorySlug(cat.label)}`)}>
+                            <div className="pl-4 text-gray-600">• {cat.label}</div>
+                        </DropdownItem>
+                    ))}
+                    <div className="border-t my-1"></div>
+                    <DropdownItem onClick={() => navClick('hebergements')}>
+                        <div className="font-semibold">Où Dormir ?</div>
+                    </DropdownItem>
+                    {HEBERGEMENT_CATEGORIES.map(cat => (
+                        <DropdownItem key={cat.id} onClick={() => navToPath(`/hebergements/${generateCategorySlug(cat.label)}`)}>
+                            <div className="pl-4 text-gray-600">• {cat.label}</div>
+                        </DropdownItem>
+                    ))}
+                    <div className="border-t my-1"></div>
+                    <DropdownItem onClick={() => navClick('activites')}>
+                        <div className="font-semibold">Quoi Faire ?</div>
+                    </DropdownItem>
+                    {ACTIVITES_CATEGORIES.map(cat => (
+                        <DropdownItem key={cat.id} onClick={() => navToPath(`/activites/${generateCategorySlug(cat.label)}`)}>
+                            <div className="pl-4 text-gray-600">• {cat.label}</div>
+                        </DropdownItem>
+                    ))}
+                    <div className="border-t my-1"></div>
+                    <DropdownItem onClick={() => navClick('commerces')}>
+                        <div className="font-semibold">Shopping & Services</div>
+                    </DropdownItem>
+                    {COMMERCES_CATEGORIES.map(cat => (
+                        <DropdownItem key={cat.id} onClick={() => navToPath(`/commerces/${generateCategorySlug(cat.label)}`)}>
+                            <div className="pl-4 text-gray-600">• {cat.label}</div>
+                        </DropdownItem>
+                    ))}
+                    <div className="border-t my-1"></div>
                     <DropdownItem onClick={() => navClick('events')}>Agenda</DropdownItem>
                     <DropdownItem onClick={() => navClick('trails')}>Sentiers</DropdownItem>
                     <DropdownItem onClick={() => navClick('articles')}>Magazine</DropdownItem>
