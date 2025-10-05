@@ -201,10 +201,12 @@ export interface ForumThread {
 }
 
 export interface ForumCategory {
-    id: string;
-    title: string;
-    description: string;
-    icon: string;
+  id: string;
+  name: string;
+  title: string;
+  description: string;
+  icon: string;
+  slug: string;
 }
 
 export interface Group {

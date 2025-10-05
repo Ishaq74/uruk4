@@ -40,7 +40,9 @@ const FavoritesPage: React.FC<FavoritesPageProps> = ({ currentUser, places, navi
     );
   }
 
-  const favoritePlaces = places.filter(place => currentUser.favoritePlaceIds?.includes(place.id));
+  const favoritePlaces = Array.isArray(places) && Array.isArray(currentUser?.favoritePlaceIds)
+    ? places.filter(place => currentUser.favoritePlaceIds.includes(place.id))
+    : [];
 
   return (
     <div className="bg-slate-100">
@@ -52,11 +54,11 @@ const FavoritesPage: React.FC<FavoritesPageProps> = ({ currentUser, places, navi
           </p>
         </div>
 
-        {favoritePlaces.length > 0 ? (
+  {Array.isArray(favoritePlaces) && favoritePlaces.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {favoritePlaces.map(item => (
+            {Array.isArray(favoritePlaces) ? favoritePlaces.map(item => (
               <PlaceCard key={item.id} item={item} navigateTo={navigateTo} />
-            ))}
+            )) : null}
           </div>
         ) : (
           <div className="text-center py-20 bg-white rounded-xl shadow-sm">

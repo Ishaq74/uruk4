@@ -34,15 +34,15 @@ const ConversationsListPage: React.FC<ConversationsListPageProps> = ({ conversat
 
                     if (!otherParticipant) return null;
 
-                    return (
-                         <li key={convo.id} onClick={() => navigateTo('conversation-detail', convo.id)} className="p-4 sm:p-6 hover:bg-slate-50 cursor-pointer transition-colors">
+            return (
+               <li key={convo?.id || Math.random()} onClick={() => navigateTo('conversation-detail', convo.id)} className="p-4 sm:p-6 hover:bg-slate-50 cursor-pointer transition-colors">
                             <div className="flex items-center space-x-4">
                                 <div className="flex-shrink-0">
                                     <img className="h-12 w-12 rounded-full" src={otherParticipant.avatarUrl} alt={otherParticipant.fullName} />
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-bold text-gray-800 truncate">{otherParticipant.fullName}</p>
-                                    <p className="text-sm text-gray-500 truncate">{lastMessage?.senderId === currentUser.id ? 'Vous: ' : ''}{lastMessage?.content || 'Aucun message'}</p>
+                    <p className="text-sm font-bold text-gray-800 truncate">{otherParticipant.fullName}</p>
+                    <p className="text-sm text-gray-500 truncate">{lastMessage?.senderId === currentUser.id ? 'Vous: ' : ''}{lastMessage?.content || 'Aucun message'}</p>
                                 </div>
                                 <div className="text-xs text-gray-400 self-start">
                                     {lastMessage?.createdAt}

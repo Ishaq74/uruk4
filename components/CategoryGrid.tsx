@@ -9,7 +9,7 @@ interface CategoryGridProps {
 }
 
 const CategoryCard: React.FC<{ category: Category, navigateTo: (page: string, id?: string, mainCategory?: Place['mainCategory'], query?: string) => void }> = ({ category, navigateTo }) => (
-    <a href="#" onClick={(e) => { e.preventDefault(); navigateTo(category.target); }} className="group flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-md hover:shadow-xl hover:bg-sky-50 transition-all duration-300 transform hover:-translate-y-1">
+  <a href={`/${category.target}`} onClick={(e) => { e.preventDefault(); navigateTo(category.target); }} className="group flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-md hover:shadow-xl hover:bg-sky-50 transition-all duration-300 transform hover:-translate-y-1">
         <Icon name={category.icon.name} className={category.icon.className} />
         <h4 className="mt-4 font-bold text-lg text-gray-800 group-hover:text-sky-600 transition-colors">{category.name}</h4>
     </a>

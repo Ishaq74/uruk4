@@ -10,7 +10,7 @@ interface ArticleListPageProps {
 const ArticleCard: React.FC<{ article: Article; author: Profile | undefined; navigateTo: (page: string, id: string) => void }> = ({ article, author, navigateTo }) => {
     return (
         <a 
-            href="#" 
+            href="/articles" 
             onClick={(e) => { e.preventDefault(); navigateTo('article-detail', article.id); }} 
             className="group flex flex-col bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300"
         >
@@ -61,8 +61,8 @@ const ArticleListPage: React.FC<ArticleListPageProps> = ({ articles, profiles, n
                 
                 {/* A simple pagination placeholder */}
                 <nav className="mt-12 flex items-center justify-center border-t border-gray-200 pt-8">
-                     <a href="#" className="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Précédent</a>
-                     <a href="#" className="relative inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Suivant</a>
+                     <a href="/articles?page=prev" className="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Précédent</a>
+                     <a href="/articles?page=next" className="relative inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Suivant</a>
                 </nav>
             </div>
         </div>

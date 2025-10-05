@@ -81,7 +81,10 @@ app.get('/api/auth/me', async (req, res) => {
   const start = Date.now();
   console.log('[GET] /api/auth/me');
   try {
-  const session = await auth.api.getSession({ headers: req.headers as any });
+  const session = await auth.api.getSession({
+    headers: req.headers as any,
+    query: { disableCookieCache: true }
+  });
     
     if (!session) {
       return res.status(401).json({ error: 'Non authentifié' });
@@ -602,8 +605,16 @@ app.get('/api/forum/threads', async (req, res) => {
 // Get all groups
 app.get('/api/groups', async (req, res) => {
   try {
+    // Get all groups
     const groups = await db.query.groups.findMany();
-    res.json(groups);
+    // Get all group members
+    const allMembers = await db.query.groupMembers.findMany();
+    // Attach members to each group
+    const groupsWithMembers = groups.map(group => ({
+      ...group,
+      members: allMembers.filter(m => m.groupId === group.id)
+    }));
+    res.json(groupsWithMembers);
   } catch (error) {
     console.error('Error getting groups:', error);
     res.status(500).json({ error: 'Erreur serveur' });
@@ -641,9 +652,10 @@ app.get('/api/conversations', async (req, res) => {
     const conversations = await db.query.conversations.findMany();
     
     // Filter conversations where user is a participant
-    const userConversations = conversations.filter(c => 
-      c.participantIds.includes(profile.id)
-    );
+    const userConversations = conversations.filter(c => {
+      const ids = Array.isArray(c.participantIds) ? c.participantIds : [];
+      return ids.includes(profile.id);
+    });
     
     res.json(userConversations);
   } catch (error) {
@@ -765,7 +777,12 @@ app.get('/api/live-events', async (req, res) => {
     
     // Filter out expired events
     const now = new Date();
-    const activeEvents = liveEvents.filter(e => new Date(e.expiresAt) > now);
+    const activeEvents = liveEvents.filter(e => {
+      if (typeof e.expiresAt === 'string' || typeof e.expiresAt === 'number' || e.expiresAt instanceof Date) {
+        return new Date(e.expiresAt) > now;
+      }
+      return false;
+    });
     
     res.json(activeEvents);
   } catch (error) {

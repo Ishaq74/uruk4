@@ -11,8 +11,8 @@ interface OrdersListPageProps {
 }
 
 const OrdersListPage: React.FC<OrdersListPageProps> = ({ orgId, currentUser, navigateTo, organizations, orders, profiles }) => {
-  const organization = organizations.find(org => org.id === orgId);
-  const orgOrders = orders.filter(o => o.organization_id === orgId);
+  const organization = Array.isArray(organizations) ? organizations.find(org => org.id === orgId) : undefined;
+  const orgOrders = Array.isArray(orders) ? orders.filter(o => o.organization_id === orgId) : [];
 
   if (!currentUser || currentUser.id !== organization?.primary_owner_id) {
     return <div className="text-center py-20">Accès non autorisé.</div>;
@@ -35,7 +35,7 @@ const OrdersListPage: React.FC<OrdersListPageProps> = ({ orgId, currentUser, nav
     <div className="bg-slate-100 min-h-screen">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8">
-            <a href="#" onClick={(e) => {e.preventDefault(); navigateTo('espace-pro');}} className="text-sm text-sky-600 hover:underline">&larr; Retour à l'Espace Pro</a>
+            <a href="/espace-pro" onClick={(e) => {e.preventDefault(); navigateTo('espace-pro');}} className="text-sm text-sky-600 hover:underline">&larr; Retour à l'Espace Pro</a>
             <h1 className="mt-2 text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">Historique des Commandes</h1>
             <p className="mt-2 text-lg text-gray-600">Suivez toutes les commandes passées pour vos produits.</p>
         </div>
@@ -52,35 +52,35 @@ const OrdersListPage: React.FC<OrdersListPageProps> = ({ orgId, currentUser, nav
                     </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                    {orgOrders.map((order) => {
-                        const customer = profiles.find(p => p.id === order.customer_id);
-                        return (
-                             <tr key={order.id}>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="flex items-center">
-                                        {customer && (
-                                            <>
-                                                <div className="flex-shrink-0 h-10 w-10">
-                                                    <img className="h-10 w-10 rounded-full" src={customer.avatarUrl} alt={customer.fullName} />
-                                                </div>
-                                                <div className="ml-4">
-                                                    <div className="text-sm font-medium text-gray-900">{customer.fullName}</div>
-                                                </div>
-                                            </>
-                                        )}
-                                    </div>
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{order.product_name}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.ordered_at}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-semibold">{order.total_price.toFixed(2)}€</td>
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusClass(order.status)}`}>
-                                        {order.status}
-                                    </span>
-                                </td>
-                            </tr>
-                        )
-                    })}
+      {Array.isArray(orgOrders) ? orgOrders.map((order) => {
+      const customer = Array.isArray(profiles) ? profiles.find(p => p.id === order.customer_id) : undefined;
+      return ( 
+               <tr key={order.id}>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="flex items-center">
+                    {customer && (
+                      <>
+                        <div className="flex-shrink-0 h-10 w-10">
+                          <img className="h-10 w-10 rounded-full" src={customer.avatarUrl} alt={customer.fullName} />
+                        </div>
+                        <div className="ml-4">
+                          <div className="text-sm font-medium text-gray-900">{customer.fullName}</div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{order.product_name}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.ordered_at}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-semibold">{order.total_price.toFixed(2)}€</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusClass(order.status)}`}>
+                    {order.status}
+                  </span>
+                </td>
+              </tr>
+            );
+          }) : null}
                 </tbody>
             </table>
         </div>

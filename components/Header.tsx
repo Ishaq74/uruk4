@@ -164,7 +164,7 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentUser, onLogin, onLog
         <div className="flex items-center justify-between h-20">
           
           <div className="flex items-center space-x-8">
-            <a href="#" onClick={(e) => {e.preventDefault(); navigateTo('home')}} className="text-2xl font-extrabold text-slate-800">
+            <a href="/" onClick={(e) => {e.preventDefault(); navigateTo('home')}} className="text-2xl font-extrabold text-slate-800">
               Salut <span className="text-sky-500">Annecy</span>
             </a>
             <nav className="hidden md:flex items-center space-x-2">
@@ -207,7 +207,7 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentUser, onLogin, onLog
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
-             <a href="#" onClick={(e) => { e.preventDefault(); navClick('propose') }} className="text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition-colors">
+             <a href="/propose" onClick={(e) => { e.preventDefault(); navClick('propose') }} className="text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition-colors">
               Proposer un contenu
             </a>
              <div className="h-6 w-px bg-gray-200"></div>

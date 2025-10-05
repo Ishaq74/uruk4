@@ -10,8 +10,8 @@ interface ManageProductsPageProps {
 }
 
 const ManageProductsPage: React.FC<ManageProductsPageProps> = ({ orgId, currentUser, navigateTo, organizations, products }) => {
-  const organization = organizations.find(org => org.id === orgId);
-  const orgProducts = products.filter(p => p.organization_id === orgId);
+  const organization = Array.isArray(organizations) ? organizations.find(org => org.id === orgId) : undefined;
+  const orgProducts = Array.isArray(products) ? products.filter(p => p.organization_id === orgId) : [];
 
   if (!currentUser || currentUser.id !== organization?.primary_owner_id) {
     return <div className="text-center py-20">Accès non autorisé.</div>;
@@ -25,7 +25,7 @@ const ManageProductsPage: React.FC<ManageProductsPageProps> = ({ orgId, currentU
     <div className="bg-slate-100 min-h-screen">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8">
-            <a href="#" onClick={(e) => {e.preventDefault(); navigateTo('espace-pro');}} className="text-sm text-sky-600 hover:underline">&larr; Retour à l'Espace Pro</a>
+            <a href="/espace-pro" onClick={(e) => {e.preventDefault(); navigateTo('espace-pro');}} className="text-sm text-sky-600 hover:underline">&larr; Retour à l'Espace Pro</a>
             <h1 className="mt-2 text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">Gérer mes Produits</h1>
             <p className="mt-2 text-lg text-gray-600">Consultez la liste de vos produits disponibles à la vente.</p>
         </div>
@@ -41,7 +41,7 @@ const ManageProductsPage: React.FC<ManageProductsPageProps> = ({ orgId, currentU
                     </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                    {orgProducts.map((product) => (
+                    {Array.isArray(orgProducts) ? orgProducts.map((product) => (
                     <tr key={product.id}>
                         <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">
@@ -56,10 +56,10 @@ const ManageProductsPage: React.FC<ManageProductsPageProps> = ({ orgId, currentU
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.price.toFixed(2)}€</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.stock}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <a href="#" className="text-indigo-600 hover:text-indigo-900">Modifier</a>
+                            <a href="/modifier-produit" className="text-indigo-600 hover:text-indigo-900">Modifier</a>
                         </td>
                     </tr>
-                    ))}
+                    )) : null}
                 </tbody>
             </table>
         </div>

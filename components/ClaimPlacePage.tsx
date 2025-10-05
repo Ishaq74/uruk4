@@ -49,7 +49,7 @@ const ClaimPlacePage: React.FC<ClaimPlacePageProps> = ({ currentUser, navigateTo
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="max-w-3xl mx-auto">
           <div className="text-left mb-12">
-            <a href="#" onClick={(e) => { e.preventDefault(); navigateTo('espace-pro'); }} className="text-sm text-sky-600 hover:underline">&larr; Retour à l'Espace Pro</a>
+            <a href="/espace-pro" onClick={(e) => { e.preventDefault(); navigateTo('espace-pro'); }} className="text-sm text-sky-600 hover:underline">&larr; Retour à l'Espace Pro</a>
             <h1 className="mt-2 text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">Revendiquer un Établissement</h1>
             <p className="mt-4 text-xl text-gray-600">
               Votre établissement est déjà sur Salut Annecy ? Revendiquez sa propriété pour en prendre le contrôle.

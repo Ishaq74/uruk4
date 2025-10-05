@@ -51,7 +51,7 @@ const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ id, articles, pro
     const [commentContent, setCommentContent] = useState('');
     
     if (!article) {
-        return <div className="text-center py-20">Article non trouvé. <a href="#" onClick={(e) => { e.preventDefault(); navigateTo('home')}} className="text-sky-600">Retour à l'accueil</a></div>;
+    return <div className="text-center py-20">Article non trouvé. <a href="/" onClick={(e) => { e.preventDefault(); navigateTo('home')}} className="text-sky-600">Retour à l'accueil</a></div>;
     }
     
     const author = profiles.find(p => p.id === article.authorId);
@@ -77,7 +77,7 @@ const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ id, articles, pro
 
             <div className="container mx-auto -mt-24 relative z-10 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-3xl mx-auto bg-white rounded-t-xl shadow-xl p-6 md:p-10">
-                    <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900">{article.title}</h1>
+                    <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900">{article?.title || 'Titre inconnu'}</h1>
                     <div className="mt-6 flex items-center space-x-4">
                         {author && (
                             <div 
@@ -100,7 +100,7 @@ const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ id, articles, pro
                     {/* Article Content */}
                     <div
                         className="prose prose-lg max-w-none text-gray-700"
-                        dangerouslySetInnerHTML={{ __html: article.content }}
+                        dangerouslySetInnerHTML={{ __html: article?.content || 'Contenu indisponible' }}
                     />
 
                     {/* Comment Section */}
@@ -138,7 +138,7 @@ const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ id, articles, pro
                         <h2 className="text-2xl font-bold text-gray-800 mb-6">À lire aussi</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             {similarArticles.map(item => (
-                                <a key={item.id} href="#" onClick={(e) => { e.preventDefault(); navigateTo('article-detail', item.id); }} className="group block">
+                                <a key={item.id} href={`/article/${item.id}`} onClick={(e) => { e.preventDefault(); navigateTo('article-detail', item.id); }} className="group block">
                                     <img src={item.imageUrl} alt={item.title} className="h-48 w-full object-cover rounded-lg shadow-md" />
                                     <h3 className="mt-4 font-bold text-lg text-gray-900 group-hover:text-sky-600">{item.title}</h3>
                                     <p className="text-sm text-gray-500 mt-1">{item.excerpt.substring(0, 80)}...</p>

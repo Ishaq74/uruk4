@@ -20,7 +20,7 @@ const InfoCard: React.FC<{ icon: string, label: string, children: React.ReactNod
 );
 
 const EventDetailPage: React.FC<EventDetailPageProps> = ({ id, events, navigateTo, currentUser }) => {
-  const event = events.find(e => e.id === id);
+  const event = Array.isArray(events) ? events.find(e => e.id === id) : undefined;
 
   if (!event) {
     return <div className="text-center py-20">Événement non trouvé.</div>;
@@ -70,11 +70,11 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ id, events, navigateT
               {/* Map */}
               <div className="bg-white rounded-xl shadow-sm overflow-hidden border">
                 <h3 className="text-lg font-bold text-gray-800 p-4 border-b">Localisation</h3>
-                 <img 
-                    src={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/pin-s+f74444(${event.coordinates.lng},${event.coordinates.lat})/${event.coordinates.lng},${event.coordinates.lat},13,0/400x300?access_token=pk.eyJ1IjoiZmFicmljOCIsImEiOiJjaWc5aTd2ZzUwMDk1bHNrdDR2d3p3bmVoIn0.p-b4-dlBS_G87-O3T5M0gQ`}
-                    alt={`Carte pour ${event.title}`}
-                    className="w-full h-56 object-cover" 
-                />
+                {event?.coordinates && typeof event.coordinates.lng === 'number' && typeof event.coordinates.lat === 'number' ? (
+                  <img src={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/pin-s+f74444(${event.coordinates.lng},${event.coordinates.lat})/${event.coordinates.lng},${event.coordinates.lat},13,0/400x300?access_token=pk.eyJ1IjoiZmFicmljOCIsImEiOiJjaWc5aTd2ZzUwMDk1bHNrdDR2d3p3bmVoIn0.p-b4-dlBS_G87-O3T5M0gQ`} alt={`Carte pour ${event.title || ''}`} className="w-full h-56 object-cover" />
+                ) : (
+                  <div className="w-full h-56 flex items-center justify-center bg-slate-100 text-slate-400">Coordonnées non disponibles</div>
+                )}
                  <div className="p-4 bg-slate-50">
                     <a href={`https://www.google.com/maps/dir/?api=1&destination=${event.coordinates.lat},${event.coordinates.lng}`} target="_blank" rel="noopener noreferrer" className="mt-1 block text-center w-full bg-slate-200 text-slate-800 font-semibold py-2 rounded-lg hover:bg-slate-300 transition-colors">
                         S'y rendre

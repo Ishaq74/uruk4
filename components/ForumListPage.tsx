@@ -16,7 +16,7 @@ const CategoryRow: React.FC<{ category: any, navigateTo: (page: string, id: stri
             <Icon name={category.icon} className="w-6 h-6 text-slate-500" />
         </div>
         <div className="flex-1 min-w-0">
-            <a href="#" onClick={(e) => { e.preventDefault(); navigateTo('forum-category', category.id); }} className="font-bold text-lg text-gray-800 hover:text-sky-600 transition-colors truncate">{category.title}</a>
+            <a href={`/forum-category/${category.id}`} onClick={(e) => { e.preventDefault(); navigateTo('forum-category', category.id); }} className="font-bold text-lg text-gray-800 hover:text-sky-600 transition-colors truncate">{category.title}</a>
             <p className="text-sm text-gray-500">{category.description}</p>
         </div>
         <div className="hidden sm:flex flex-col text-center w-24">
@@ -32,7 +32,7 @@ const CategoryRow: React.FC<{ category: any, navigateTo: (page: string, id: stri
                 <>
                     <img src={category.latestThread.authorAvatar} alt={category.latestThread.authorName} className="w-10 h-10 rounded-full flex-shrink-0" />
                     <div className="min-w-0">
-                        <a href="#" onClick={(e) => { e.preventDefault(); navigateTo('forum-thread', category.latestThread.id)}} className="font-semibold text-sm text-gray-700 hover:underline truncate block">{category.latestThread.title}</a>
+                        <a href={`/forum-thread/${category.latestThread.id}`} onClick={(e) => { e.preventDefault(); navigateTo('forum-thread', category.latestThread.id)}} className="font-semibold text-sm text-gray-700 hover:underline truncate block">{category.latestThread.title}</a>
                         <p className="text-xs text-gray-500">par {category.latestThread.authorName}</p>
                     </div>
                 </>

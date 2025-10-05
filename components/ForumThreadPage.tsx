@@ -16,9 +16,9 @@ interface ForumThreadPageProps {
 }
 
 const PostCard: React.FC<{ post: ForumPost, profiles: Profile[], isOP: boolean, navigateTo: (page: string, id: string) => void, onOpenReportModal: (targetId: string, targetType: string) => void, onQuote: (author: string, content: string) => void }> = ({ post, profiles, isOP, navigateTo, onOpenReportModal, onQuote }) => {
-    const author = profiles.find(p => p.id === post.authorId);
+    const author = Array.isArray(profiles) ? profiles.find(p => p.id === post.authorId) : undefined;
     if (!author) return null;
-    const authorLevel = USER_LEVELS.find(l => l.id === author.levelId);
+    const authorLevel = Array.isArray(USER_LEVELS) && author ? USER_LEVELS.find(l => l.id === author.levelId) : undefined;
 
     return (
         <div className={`flex space-x-4 ${isOP ? 'bg-white p-6 rounded-xl shadow-sm' : 'p-4'}`}>
@@ -30,7 +30,7 @@ const PostCard: React.FC<{ post: ForumPost, profiles: Profile[], isOP: boolean, 
                     onClick={() => navigateTo('profile', author.id)}
                 />
                 <a 
-                    href="#"
+                    href="/forums"
                     onClick={(e) => { e.preventDefault(); navigateTo('profile', author.id); }}
                     className="mt-2 font-bold text-sm text-center text-gray-800 hover:text-sky-600"
                 >
@@ -59,7 +59,7 @@ const PostCard: React.FC<{ post: ForumPost, profiles: Profile[], isOP: boolean, 
 };
 
 const ForumThreadPage: React.FC<ForumThreadPageProps> = ({ id, threads, profiles, navigateTo, currentUser, addPost, onOpenReportModal }) => {
-    const thread = threads.find(t => t.id === id);
+    const thread = Array.isArray(threads) ? threads.find(t => t.id === id) : undefined;
     const [replyContent, setReplyContent] = useState('');
     const replyTextareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -67,7 +67,7 @@ const ForumThreadPage: React.FC<ForumThreadPageProps> = ({ id, threads, profiles
         return <div className="text-center py-20">Sujet non trouvé.</div>;
     }
     
-    const category = FORUM_CATEGORIES.find(c => c.id === thread.categoryId);
+    const category = Array.isArray(FORUM_CATEGORIES) && thread ? FORUM_CATEGORIES.find(c => c.id === thread.categoryId) : undefined;
     const [op, ...replies] = thread.posts;
     
     const handleReplySubmit = (e: React.FormEvent) => {
@@ -83,7 +83,7 @@ const ForumThreadPage: React.FC<ForumThreadPageProps> = ({ id, threads, profiles
     };
     
     const handleQuote = (authorName: string, content: string) => {
-        const quoteText = `> **${authorName} a écrit:**\n> ${content.split('\n').join('\n> ')}\n\n`;
+    const quoteText = `> **${authorName} a écrit:**\n> ${(typeof content === 'string' ? content.split('\n').join('\n> ') : '')}\n\n`;
         setReplyContent(prev => prev + quoteText);
         
         if (replyTextareaRef.current) {
@@ -99,12 +99,12 @@ const ForumThreadPage: React.FC<ForumThreadPageProps> = ({ id, threads, profiles
                      <nav className="text-sm font-medium" aria-label="Breadcrumb">
                         <ol className="list-none p-0 inline-flex">
                             <li className="flex items-center">
-                                <a href="#" onClick={(e) => { e.preventDefault(); navigateTo('forums'); }} className="text-sky-600 hover:underline">Forums</a>
+                                <a href="/forums" onClick={(e) => { e.preventDefault(); navigateTo('forums'); }} className="text-sky-600 hover:underline">Forums</a>
                             </li>
                             {category && (
                                 <li className="flex items-center">
                                     <Icon name="chevronDown" className="w-5 h-5 -rotate-90 text-gray-400" />
-                                    <a href="#" onClick={(e) => { e.preventDefault(); navigateTo('forum-category', category.id); }} className="text-sky-600 hover:underline">{category.title}</a>
+                                    <a href={`/forum-category/${category.id}`} onClick={(e) => { e.preventDefault(); navigateTo('forum-category', category.id); }} className="text-sky-600 hover:underline">{category.title}</a>
                                 </li>
                             )}
                         </ol>
@@ -115,12 +115,12 @@ const ForumThreadPage: React.FC<ForumThreadPageProps> = ({ id, threads, profiles
                 <div className="space-y-6">
                     <PostCard post={op} profiles={profiles} isOP={true} navigateTo={navigateTo} onOpenReportModal={onOpenReportModal} onQuote={handleQuote} />
                     
-                    {replies.length > 0 && (
+                    {Array.isArray(replies) && replies.length > 0 && (
                         <div className="bg-white p-6 rounded-xl shadow-sm space-y-4">
                             <h2 className="text-xl font-bold text-gray-800 mb-2">{replies.length} réponse(s)</h2>
-                             {replies.map(reply => (
+                             {Array.isArray(replies) ? replies.map(reply => (
                                 <PostCard key={reply.id} post={reply} profiles={profiles} isOP={false} navigateTo={navigateTo} onOpenReportModal={onOpenReportModal} onQuote={handleQuote} />
-                            ))}
+                            )) : null}
                         </div>
                     )}
 

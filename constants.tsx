@@ -31,17 +31,17 @@ export const FORUM_CATEGORIES: ForumCategory[] = [
 
 // Static Pages Configuration
 export const STATIC_PAGES_CONTENT: StaticPageContent[] = [
-    { id: 'sp1', slug: 'about', title: 'À Propos', content: '<h1>À propos de Salut Annecy</h1><p>Votre guide local complet pour découvrir Annecy...</p>' },
-    { id: 'sp2', slug: 'terms', title: 'Conditions d\'utilisation', content: '<h1>Conditions d\'utilisation</h1><p>En utilisant notre site...</p>' },
-    { id: 'sp3', slug: 'privacy', title: 'Politique de Confidentialité', content: '<h1>Politique de Confidentialité</h1><p>Nous respectons votre vie privée...</p>' },
-    { id: 'sp4', slug: 'qui-sommes-nous', title: 'Qui sommes-nous ?', content: '<h2>Notre Mission</h2><p>Nous sommes une équipe de passionnés d\'Annecy déterminés à créer le guide le plus complet et le plus utile pour tous les amoureux de notre région.</p>' },
-    { id: 'sp5', slug: 'cgu', title: 'Conditions Générales d\'Utilisation', content: '<p>En utilisant ce site, vous acceptez nos conditions d\'utilisation...</p>' },
-    { id: 'sp6', slug: 'faq', title: 'Foire Aux Questions', content: '<h3>Comment puis-je proposer un lieu ?</h3><p>Vous devez être connecté, puis cliquer sur le bouton "Proposer un contenu" dans le menu principal.</p>' },
-    { id: 'sp7', slug: 'contact', title: 'Contact', content: '<p>Pour toute question, veuillez nous contacter à l\'adresse contact@salut-annecy.fr</p>'},
-    { id: 'sp8', slug: 'presse', title: 'Presse', content: '<p>Contenu pour la presse.</p>'},
-    { id: 'sp9', slug: 'cgv', title: 'Conditions Générales de Vente', content: '<p>Contenu des CGV.</p>'},
-    { id: 'sp10', slug: 'confidentialite', title: 'Politique de Confidentialité', content: '<p>Contenu sur la confidentialité.</p>'},
-    { id: 'sp11', slug: 'mentions-legales', title: 'Mentions Légales', content: '<p>Contenu des mentions légales.</p>'},
+    { slug: 'about', title: 'À Propos', content: '<h1>À propos de Salut Annecy</h1><p>Votre guide local complet pour découvrir Annecy...</p>' },
+    { slug: 'terms', title: 'Conditions d\'utilisation', content: '<h1>Conditions d\'utilisation</h1><p>En utilisant notre site...</p>' },
+    { slug: 'privacy', title: 'Politique de Confidentialité', content: '<h1>Politique de Confidentialité</h1><p>Nous respectons votre vie privée...</p>' },
+    { slug: 'qui-sommes-nous', title: 'Qui sommes-nous ?', content: '<h2>Notre Mission</h2><p>Nous sommes une équipe de passionnés d\'Annecy déterminés à créer le guide le plus complet et le plus utile pour tous les amoureux de notre région.</p>' },
+    { slug: 'cgu', title: 'Conditions Générales d\'Utilisation', content: '<p>En utilisant ce site, vous acceptez nos conditions d\'utilisation...</p>' },
+    { slug: 'faq', title: 'Foire Aux Questions', content: '<h3>Comment puis-je proposer un lieu ?</h3><p>Vous devez être connecté, puis cliquer sur le bouton "Proposer un contenu" dans le menu principal.</p>' },
+    { slug: 'contact', title: 'Contact', content: '<p>Pour toute question, veuillez nous contacter à l\'adresse contact@salut-annecy.fr</p>'},
+    { slug: 'presse', title: 'Presse', content: '<p>Contenu pour la presse.</p>'},
+    { slug: 'cgv', title: 'Conditions Générales de Vente', content: '<p>Contenu des CGV.</p>'},
+    { slug: 'confidentialite', title: 'Politique de Confidentialité', content: '<p>Contenu sur la confidentialité.</p>'},
+    { slug: 'mentions-legales', title: 'Mentions Légales', content: '<p>Contenu des mentions légales.</p>'},
 ];
 
 // Main Category Icons & Names

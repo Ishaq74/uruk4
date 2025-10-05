@@ -12,7 +12,7 @@ const ListingItem: React.FC<{ listing: Listing, navigateTo: LatestListingsProps[
     const iconInfo = LISTING_ICONS[listing.type as ListingType];
     return (
         <li>
-            <a href="#" onClick={(e) => { e.preventDefault(); navigateTo('annonce-detail', listing.id); }} className="flex items-center p-4 -m-4 rounded-xl hover:bg-gray-100 transition-colors duration-200">
+            <a href={`/annonce/${listing.id}`} onClick={(e) => { e.preventDefault(); navigateTo('annonce-detail', listing.id); }} className="flex items-center p-4 -m-4 rounded-xl hover:bg-gray-100 transition-colors duration-200">
                 <div className="flex-shrink-0 w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center">
                     <Icon name={iconInfo.name} className={iconInfo.className} />
                 </div>
@@ -38,7 +38,7 @@ const LatestListings: React.FC<LatestListingsProps> = ({ listings, navigateTo })
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Dernières Annonces</h2>
             <p className="mt-4 text-lg text-gray-600">Le pouls de la vie locale: emploi, immobilier, bonnes affaires et services.</p>
         </div>
-        <a href="#" onClick={(e) => { e.preventDefault(); navigateTo('annonces')}} className="px-4 py-2 text-sm font-semibold text-white bg-sky-500 rounded-full hover:bg-sky-600 transition-all duration-300 shadow-sm whitespace-nowrap">
+    <a href="/annonces" onClick={(e) => { e.preventDefault(); navigateTo('annonces')}} className="px-4 py-2 text-sm font-semibold text-white bg-sky-500 rounded-full hover:bg-sky-600 transition-all duration-300 shadow-sm whitespace-nowrap">
             Voir toutes les annonces
         </a>
       </div>

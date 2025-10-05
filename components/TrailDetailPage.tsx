@@ -35,7 +35,7 @@ const TrailDetailPage: React.FC<TrailDetailPageProps> = ({ id, trails, navigateT
     const trail = trails.find(t => t.id === id);
     
     if (!trail) {
-        return <div className="text-center py-20">Sentier non trouvé. <a href="#" onClick={(e) => { e.preventDefault(); navigateTo('home')}} className="text-sky-600">Retour à l'accueil</a></div>;
+    return <div className="text-center py-20">Sentier non trouvé. <a href="/" onClick={(e) => { e.preventDefault(); navigateTo('home')}} className="text-sky-600">Retour à l'accueil</a></div>;
     }
 
     return (

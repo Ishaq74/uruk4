@@ -8,7 +8,7 @@ interface AgendaCarouselProps {
 
 const EventCard: React.FC<{ event: Event, navigateTo: AgendaCarouselProps['navigateTo'] }> = ({ event, navigateTo }) => (
   <div className="flex-shrink-0 w-64 snap-start">
-    <a href="#" onClick={(e) => { e.preventDefault(); navigateTo('event-detail', event.id); }} className="group block">
+  <a href={`/event/${event.id}`} onClick={(e) => { e.preventDefault(); navigateTo('event-detail', event.id); }} className="group block">
       <div className="rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
         <img src={event.imageUrl} alt={event.title} className="w-full h-40 object-cover" />
         <div className="p-4 bg-white">
@@ -29,7 +29,7 @@ const AgendaCarousel: React.FC<AgendaCarouselProps> = ({ events, navigateTo }) =
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">L'Agenda du Moment</h2>
             <p className="mt-4 text-lg text-gray-600">Ne manquez rien de ce qu'il se passe à Annecy.</p>
         </div>
-        <a href="#" onClick={(e) => { e.preventDefault(); navigateTo('events'); }} className="px-4 py-2 text-sm font-semibold text-white bg-sky-500 rounded-full hover:bg-sky-600 transition-all duration-300 shadow-sm whitespace-nowrap">
+  <a href="/events" onClick={(e) => { e.preventDefault(); navigateTo('events'); }} className="px-4 py-2 text-sm font-semibold text-white bg-sky-500 rounded-full hover:bg-sky-600 transition-all duration-300 shadow-sm whitespace-nowrap">
             Voir tout l'agenda
         </a>
       </div>

@@ -15,7 +15,7 @@ const AdCampaignsPage: React.FC<AdCampaignsPageProps> = ({ currentUser, navigate
     <div className="bg-slate-100 min-h-screen">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8">
-            <a href="#" onClick={(e) => {e.preventDefault(); navigateTo('espace-pro');}} className="text-sm text-sky-600 hover:underline">&larr; Retour à l'Espace Pro</a>
+            <a href="/espace-pro" onClick={(e) => {e.preventDefault(); navigateTo('espace-pro');}} className="text-sm text-sky-600 hover:underline">&larr; Retour à l'Espace Pro</a>
             <h1 className="mt-2 text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">Campagnes Publicitaires</h1>
             <p className="mt-2 text-lg text-gray-600">Gérez vos contenus sponsorisés et vos bannières publicitaires.</p>
         </div>

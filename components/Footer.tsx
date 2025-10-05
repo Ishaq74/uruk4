@@ -7,7 +7,7 @@ interface FooterLinkProps {
 }
 const FooterLink: React.FC<FooterLinkProps> = ({ children, onClick }) => (
   <li>
-    <a href="#" onClick={(e) => { e.preventDefault(); onClick(); }} className="text-gray-500 hover:text-gray-900 transition-colors duration-300">
+  <a href="/" onClick={(e) => { e.preventDefault(); onClick(); }} className="text-gray-500 hover:text-gray-900 transition-colors duration-300">
       {children}
     </a>
   </li>
@@ -24,7 +24,7 @@ const Footer: React.FC<FooterProps> = ({ navigateTo, onOpenReportModal }) => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
           <div className="col-span-2 lg:col-span-1">
-             <a href="#" onClick={(e) => { e.preventDefault(); navigateTo('home')}} className="text-2xl font-extrabold text-slate-800">
+             <a href="/" onClick={(e) => { e.preventDefault(); navigateTo('home')}} className="text-2xl font-extrabold text-slate-800">
               Salut <span className="text-sky-500">Annecy</span>
             </a>
             <p className="mt-4 text-gray-500 text-sm">

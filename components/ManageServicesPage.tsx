@@ -25,7 +25,7 @@ const ManageServicesPage: React.FC<ManageServicesPageProps> = ({ orgId, currentU
     <div className="bg-slate-100 min-h-screen">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8">
-            <a href="#" onClick={(e) => {e.preventDefault(); navigateTo('espace-pro');}} className="text-sm text-sky-600 hover:underline">&larr; Retour à l'Espace Pro</a>
+            <a href="/espace-pro" onClick={(e) => {e.preventDefault(); navigateTo('espace-pro');}} className="text-sm text-sky-600 hover:underline">&larr; Retour à l'Espace Pro</a>
             <h1 className="mt-2 text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">Gérer mes Services</h1>
             <p className="mt-2 text-lg text-gray-600">Consultez la liste de vos services disponibles à la réservation.</p>
         </div>
@@ -47,7 +47,7 @@ const ManageServicesPage: React.FC<ManageServicesPageProps> = ({ orgId, currentU
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{service.duration_minutes} min</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{service.base_price.toFixed(2)}€</td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <a href="#" className="text-indigo-600 hover:text-indigo-900">Modifier</a>
+                            <a href="/modifier-service" className="text-indigo-600 hover:text-indigo-900">Modifier</a>
                         </td>
                     </tr>
                     ))}

@@ -36,7 +36,7 @@ const ProposeTrailForm: React.FC<ProposeTrailFormProps> = ({ currentUser, naviga
     <div className="bg-slate-100">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="max-w-3xl mx-auto">
-            <a href="#" onClick={(e) => { e.preventDefault(); navigateTo('propose'); }} className="text-sm text-sky-600 hover:underline">&larr; Choisir un autre type de contenu</a>
+            <a href="/propose" onClick={(e) => { e.preventDefault(); navigateTo('propose'); }} className="text-sm text-sky-600 hover:underline">&larr; Choisir un autre type de contenu</a>
             <h1 className="mt-2 text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">Proposer un Nouveau Sentier</h1>
             <form onSubmit={handleSubmit} className="mt-8 bg-white p-8 rounded-2xl shadow-lg space-y-6">
                 <div>

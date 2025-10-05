@@ -9,7 +9,7 @@ interface FeaturedContentProps {
 }
 
 const FeaturedCard: React.FC<{ item: any, navigateTo: FeaturedContentProps['navigateTo'] }> = ({ item, navigateTo }) => (
-  <a href="#" onClick={(e) => { e.preventDefault(); navigateTo(item.navPage, item.navId); }} className="group block rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+  <a href={`/${item.navPage}/${item.navId}`} onClick={(e) => { e.preventDefault(); navigateTo(item.navPage, item.navId); }} className="group block rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
     <div className="relative">
       <img src={item.imageUrl} alt={item.title} className="w-full h-56 object-cover" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>

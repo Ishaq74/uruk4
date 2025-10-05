@@ -18,7 +18,7 @@ interface ProfilePageProps {
 const ProfileContributionItem: React.FC<{ item: Review | Comment; type: 'review' | 'comment'; places: Place[]; articles: Article[]; navigateTo: (page: string, id?: string) => void; }> = ({ item, type, places, articles, navigateTo }) => {
     if (type === 'review') {
         const review = item as Review;
-        const place = places.find(p => p.id === review.placeId);
+        const place = Array.isArray(places) ? places.find(p => p.id === review.placeId) : undefined;
         if (!place) return null;
         return (
             <div className="bg-white p-4 rounded-lg shadow-sm flex space-x-4">
@@ -47,9 +47,9 @@ const ProfileContributionItem: React.FC<{ item: Review | Comment; type: 'review'
     }
 
     if (type === 'comment') {
-        const comment = item as Comment;
-        const article = articles.find(a => a.id === comment.target_entity_id);
-        if(!article) return null;
+    const comment = item as Comment;
+    const article = Array.isArray(articles) ? articles.find(a => a.id === comment.target_entity_id) : undefined;
+    if(!article) return null;
         return (
              <div className="bg-white p-4 rounded-lg shadow-sm flex space-x-4">
                 <img 
@@ -77,8 +77,8 @@ const ProfileContributionItem: React.FC<{ item: Review | Comment; type: 'review'
 };
 
 const GamificationSection: React.FC<{ profile: Profile }> = ({ profile }) => {
-    const currentLevel = USER_LEVELS.find(l => l.id === profile.levelId);
-    const nextLevel = USER_LEVELS.find(l => l.id === profile.levelId + 1);
+    const currentLevel = Array.isArray(USER_LEVELS) ? USER_LEVELS.find(l => l.id === profile.levelId) : undefined;
+    const nextLevel = Array.isArray(USER_LEVELS) ? USER_LEVELS.find(l => l.id === profile.levelId + 1) : undefined;
 
     if (!currentLevel) return null;
 
@@ -108,7 +108,7 @@ const GamificationSection: React.FC<{ profile: Profile }> = ({ profile }) => {
 }
 
 const ProfilePage: React.FC<ProfilePageProps> = ({ id, slug, profiles, places, articles, navigateTo, currentUser, onStartConversation }) => {
-    const profile = profiles.find(p => p.id === id);
+    const profile = Array.isArray(profiles) ? profiles.find(p => p.id === id) : undefined;
     
     const [activeTab, setActiveTab] = useState<'contributions' | 'activity'>(slug === 'contributions' ? 'contributions' : 'activity');
     
@@ -119,12 +119,16 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ id, slug, profiles, places, a
     }, [slug]);
 
     if (!profile) {
-        return <div className="text-center py-20">Profil non trouvé. <a href="#" onClick={(e) => { e.preventDefault(); navigateTo('home')}} className="text-sky-600">Retour à l'accueil</a></div>;
+    return <div className="text-center py-20">Profil non trouvé. <a href="/" onClick={(e) => { e.preventDefault(); navigateTo('home')}} className="text-sky-600">Retour à l'accueil</a></div>;
     }
     
-    const userReviews = places.flatMap(p => p.reviews).filter(r => r.profileId === profile.id);
-    const userComments: Comment[] = articles.flatMap(a => a.comments).filter(c => c.authorId === profile.id);
-    const allContributions = [...userReviews, ...userComments].sort((a,b) => 0); // Simplified sort
+        const userReviews = Array.isArray(places)
+            ? places.flatMap(p => Array.isArray(p.reviews) ? p.reviews : []).filter(r => r.profileId === profile?.id)
+            : [];
+        const userComments: Comment[] = Array.isArray(articles)
+            ? articles.flatMap(a => Array.isArray(a.comments) ? a.comments : []).filter(c => c.authorId === profile?.id)
+            : [];
+        const allContributions = [...userReviews, ...userComments].sort((a,b) => 0); // Simplified sort
 
     const TabButton: React.FC<{tabId: 'contributions' | 'activity', icon: string, label: string}> = ({ tabId, icon, label }) => (
         <button
@@ -143,7 +147,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ id, slug, profiles, places, a
     const isOwnProfile = currentUser?.id === profile.id;
 
     return (
-        <div className="bg-slate-100">
+    <div className="bg-slate-100">
             {/* --- Profile Header --- */}
             <div className="relative h-56 md:h-72">
                 <img src={profile.coverImageUrl} alt={`Photo de couverture de ${profile.fullName}`} className="w-full h-full object-cover"/>
@@ -161,7 +165,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ id, slug, profiles, places, a
                         <div className="mt-2 flex items-center space-x-4 text-sm text-gray-600">
                             <div className="flex items-center space-x-1">
                                 <Icon name="award" className="w-4 h-4 text-amber-500"/>
-                                <span>{USER_LEVELS.find(l => l.id === profile.levelId)?.name || ''}</span>
+                                <span>{Array.isArray(USER_LEVELS) ? USER_LEVELS.find(l => l.id === profile.levelId)?.name : ''}</span>
                             </div>
                             <div className="flex items-center space-x-1">
                                 <Icon name="calendar" className="w-4 h-4 text-sky-500"/>

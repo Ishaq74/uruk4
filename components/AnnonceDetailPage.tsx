@@ -29,7 +29,7 @@ const AnnonceDetailPage: React.FC<AnnonceDetailPageProps> = ({ id, listings, pro
           {/* Main content */}
           <div className="lg:col-span-2">
             <div className="mb-8">
-                <a href="#" onClick={(e) => { e.preventDefault(); navigateTo('annonces'); }} className="text-sm text-sky-600 hover:underline">&larr; Retour aux annonces</a>
+                <a href="/annonces" onClick={(e) => { e.preventDefault(); navigateTo('annonces'); }} className="text-sm text-sky-600 hover:underline">&larr; Retour aux annonces</a>
                 <div className="mt-4 flex items-center space-x-2">
                     <div className="w-8 h-8 flex items-center justify-center"><Icon name={iconInfo.name} className={iconInfo.className} /></div>
                     <span className="font-semibold text-gray-500">{annonce.type}</span>
@@ -64,7 +64,7 @@ const AnnonceDetailPage: React.FC<AnnonceDetailPageProps> = ({ id, listings, pro
                             <div>
                                 <p className="font-bold text-gray-800">{seller.fullName}</p>
                                 <a 
-                                    href="#" 
+                                    href="/annonces" 
                                     onClick={(e) => { e.preventDefault(); navigateTo('profile', seller.id); }} 
                                     className="text-sm text-sky-600 hover:underline"
                                 >

@@ -115,7 +115,6 @@ Le projet dispose maintenant d'un système d'authentification complet et d'une a
 
 > **📚 Documentation Admin Plugin** :
 > Consultez [ADMIN_PLUGIN_GUIDE.md](./ADMIN_PLUGIN_GUIDE.md) pour un guide complet sur l'utilisation du plugin d'administration Better Auth.
-
 > **📊 Documentation de la Base de Données** :
 
 Un schéma complet et intégral de la base de données est disponible. Consultez :

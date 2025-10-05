@@ -80,7 +80,7 @@ const OpeningHoursDisplay: React.FC<{ hours: Place['openingHours'] }> = ({ hours
 };
 
 const PlaceDetailPage: React.FC<PlaceDetailPageProps> = ({ id, places, profiles, organizations, products, services, navigateTo, currentUser, toggleFavorite, addReview, onLogin, onAddOrder, onAddBooking, onOpenReportModal }) => {
-    const place = places.find(p => p.id === id);
+    const place = places?.find?.(p => p.id === id);
     
     // AI State
     const [isLoadingAI, setIsLoadingAI] = useState(false);
@@ -93,15 +93,25 @@ const PlaceDetailPage: React.FC<PlaceDetailPageProps> = ({ id, places, profiles,
     }, [id]);
     
     if (!place) {
-        return <div className="text-center py-20">Lieu non trouvé. <a href="#" onClick={(e) => { e.preventDefault(); navigateTo('home')}} className="text-sky-600">Retour à l'accueil</a></div>;
+    return <div className="text-center py-20">Lieu non trouvé. <a href="/" onClick={(e) => { e.preventDefault(); navigateTo('home')}} className="text-sky-600">Retour à l'accueil</a></div>;
     }
 
-    const organization = organizations.find(org => org.place_ids.includes(place.id));
-    const placeProducts = organization ? products.filter(p => p.organization_id === organization.id) : [];
-    const placeServices = organization ? services.filter(s => s.organization_id === organization.id) : [];
+        const organization = Array.isArray(organizations)
+            ? organizations.find(org => Array.isArray(org.place_ids) && org.place_ids.includes(place.id))
+            : undefined;
+        const placeProducts = organization && Array.isArray(products)
+            ? products.filter(p => p.organization_id === organization.id)
+            : [];
+        const placeServices = organization && Array.isArray(services)
+            ? services.filter(s => s.organization_id === organization.id)
+            : [];
     
-    const similarPlaces = places.filter(p => p.mainCategory === place.mainCategory && p.id !== place.id).slice(0, 3);
-    const isFavorite = currentUser?.favoritePlaceIds?.includes(place.id) ?? false;
+        const similarPlaces = Array.isArray(places) && place?.mainCategory
+            ? places.filter(p => p.mainCategory === place.mainCategory && p.id !== place.id).slice(0, 3)
+            : [];
+        const isFavorite = Array.isArray(currentUser?.favoritePlaceIds)
+            ? currentUser.favoritePlaceIds.includes(place?.id)
+            : false;
 
     const handleReviewSubmit = (rating: number, comment: string) => {
         if (!currentUser) return;
@@ -269,7 +279,7 @@ const PlaceDetailPage: React.FC<PlaceDetailPageProps> = ({ id, places, profiles,
                     <div>
                         <h3 className="text-xl font-bold text-gray-900 mb-4">Avis des clients</h3>
                         <div className="bg-white rounded-xl shadow-sm p-6">
-                            {place.reviews.length > 0 ? (
+                            {Array.isArray(place.reviews) && place.reviews.length > 0 ? (
                                 <div>{place.reviews.map((review, index) => <ReviewItem key={review.id || `new-${index}`} review={review} profiles={profiles} navigateTo={navigateTo} onOpenReportModal={onOpenReportModal} />)}</div>
                             ) : (
                                 <p className="text-gray-500 text-center py-4">Aucun avis pour le moment.</p>
@@ -289,11 +299,15 @@ const PlaceDetailPage: React.FC<PlaceDetailPageProps> = ({ id, places, profiles,
                 <aside className="lg:col-span-1">
                     <div className="sticky top-24 space-y-8">
                         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-                             <img 
-                                src={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/pin-s+f74444(${place.coordinates.lng},${place.coordinates.lat})/${place.coordinates.lng},${place.coordinates.lat},14,0/400x300?access_token=pk.eyJ1IjoiZmFicmljOCIsImEiOiJjaWc5aTd2ZzUwMDk1bHNrdDR2d3p3bmVoIn0.p-b4-dlBS_G87-O3T5M0gQ`}
-                                alt={`Carte pour ${place.name}`}
-                                className="w-full h-56 object-cover" 
-                            />
+                            {place.coordinates && typeof place.coordinates.lng === 'number' && typeof place.coordinates.lat === 'number' ? (
+                                <img 
+                                    src={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/pin-s+f74444(${place.coordinates.lng},${place.coordinates.lat})/${place.coordinates.lng},${place.coordinates.lat},14,0/400x300?access_token=pk.eyJ1IjoiZmFicmljOCIsImEiOiJjaWc5aTd2ZzUwMDk1bHNrdDR2d3p3bmVoIn0.p-b4-dlBS_G87-O3T5M0gQ`}
+                                    alt={`Carte pour ${place.name}`}
+                                    className="w-full h-56 object-cover" 
+                                />
+                            ) : (
+                                <div className="w-full h-56 flex items-center justify-center bg-slate-100 text-slate-400">Coordonnées non disponibles</div>
+                            )}
                             <div className="p-4">
                                 <div className="flex items-start space-x-3">
                                     <Icon name="map-pin" className="w-5 h-5 text-gray-400 mt-1 flex-shrink-0"/>

@@ -202,7 +202,6 @@ async function main() {
   );
 
   console.log('📰 Seeding articles...');
-  console.log('📰 Seeding articles...');
   const articleIdMap: Record<string, string> = {};
   for (const article of MAGAZINE_ARTICLES) {
     const newArticleId = uuidv4();
@@ -221,7 +220,6 @@ async function main() {
     });
   }
 
-  console.log('💬 Seeding forum data...');
   console.log('💬 Seeding forum data...');
   const forumCategoryIdMap: Record<string, string> = {};
   await db.insert(schema.forumCategories).values(
@@ -275,7 +273,6 @@ async function main() {
   );
 
   console.log('🛍️ Seeding products and services...');
-  console.log('🛍️ Seeding products and services...');
   const productIdMap: Record<string, string> = {};
   for (const prod of PRODUCTS) {
     const newProdId = uuidv4();
@@ -311,7 +308,6 @@ async function main() {
   }
 
   console.log('📦 Seeding orders and bookings...');
-  console.log('📦 Seeding orders and bookings...');
   for (const order of ORDERS) {
     const newOrderId = uuidv4();
     await db.insert(schema.orders).values({
@@ -341,7 +337,6 @@ async function main() {
     });
   }
 
-  console.log('📊 Seeding claims, reports, and live events...');
   console.log('📊 Seeding claims, reports, and live events...');
   for (const claim of CLAIMS) {
     const newClaimId = uuidv4();
@@ -388,8 +383,9 @@ async function main() {
   }
 
   console.log('📄 Seeding static pages and analytics...');
-  console.log('📄 Seeding static pages and analytics...');
-  await db.insert(schema.staticPageContent).values(STATIC_PAGES_CONTENT);
+  await db.insert(schema.staticPageContent)
+    .values(STATIC_PAGES_CONTENT)
+    .onConflictDoNothing();
   for (const ev of ANALYTICS_EVENTS) {
     await db.insert(schema.analyticsEvents).values({
       targetEntityId: placeIdMap[ev.target_entity_id],
