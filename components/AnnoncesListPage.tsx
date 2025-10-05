@@ -8,6 +8,7 @@ interface AnnoncesListPageProps {
   navigateTo: (page: string, id?: string, mainCategory?: Place['mainCategory'], query?: string, slug?: string, filter?: 'my-listings' | 'my-groups') => void;
   currentUser: Profile | null;
   filter?: 'my-listings' | 'my-groups';
+  categorySlug?: string;
 }
 
 const ListingCard: React.FC<{ item: Listing, navigateTo: (page: string, id: string, mainCategory?: Place['mainCategory'], query?: string, slug?: string) => void }> = ({ item, navigateTo }) => {
@@ -80,10 +81,32 @@ const FilterPanel: React.FC<{ selectedCategories: ListingType[], onCategoryChang
 };
 
 
-const AnnoncesListPage: React.FC<AnnoncesListPageProps> = ({ listings, navigateTo, currentUser, filter }) => {
+const AnnoncesListPage: React.FC<AnnoncesListPageProps> = ({ listings, navigateTo, currentUser, filter, categorySlug }) => {
     const [selectedCategories, setSelectedCategories] = useState<ListingType[]>([]);
     
     const isMyListingsFiltered = filter === 'my-listings' && currentUser;
+
+    // Map slug to ListingType
+    const categoryFromSlug = useMemo(() => {
+        if (!categorySlug) return null;
+        
+        const slugMap: { [key: string]: ListingType } = {
+            'emploi': ListingType.Emploi,
+            'immobilier': ListingType.Immobilier,
+            'bonnes-affaires': ListingType.BonnesAffaires,
+            'services': ListingType.Services,
+        };
+        
+        return slugMap[categorySlug] || null;
+    }, [categorySlug]);
+
+    useEffect(() => {
+        if (categoryFromSlug) {
+            setSelectedCategories([categoryFromSlug]);
+        } else {
+            setSelectedCategories([]);
+        }
+    }, [categoryFromSlug]);
 
     const handleCategoryChange = (category: ListingType) => {
         setSelectedCategories(prev => 
@@ -111,18 +134,27 @@ const AnnoncesListPage: React.FC<AnnoncesListPageProps> = ({ listings, navigateT
 
     }, [selectedCategories, isMyListingsFiltered, currentUser, listings]);
 
+    const pageTitle = useMemo(() => {
+        if (isMyListingsFiltered) return "Mes Annonces";
+        if (categoryFromSlug) return categoryFromSlug;
+        return "Petites Annonces";
+    }, [isMyListingsFiltered, categoryFromSlug]);
+
+    const pageSubtitle = useMemo(() => {
+        if (isMyListingsFiltered) return "Retrouvez ici toutes les annonces que vous avez publiées.";
+        if (categoryFromSlug) return `Découvrez toutes les annonces de la catégorie ${categoryFromSlug}.`;
+        return "Trouvez les meilleures opportunités locales : emploi, immobilier, bonnes affaires et services entre particuliers.";
+    }, [isMyListingsFiltered, categoryFromSlug]);
+
     return (
         <div className="bg-slate-100">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div className="text-center mb-12">
                     <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">
-                        {isMyListingsFiltered ? "Mes Annonces" : "Petites Annonces"}
+                        {pageTitle}
                     </h1>
                     <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-600">
-                        {isMyListingsFiltered 
-                            ? "Retrouvez ici toutes les annonces que vous avez publiées."
-                            : "Trouvez les meilleures opportunités locales : emploi, immobilier, bonnes affaires et services entre particuliers."
-                        }
+                        {pageSubtitle}
                     </p>
                 </div>
                 

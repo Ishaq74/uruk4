@@ -60,6 +60,14 @@ export const LISTING_ICONS: { [key in ListingType]: { name: string, className: s
     [ListingType.Services]: { name: 'sparkles', className: 'w-6 h-6 text-rose-600' },
 };
 
+// Listing Categories for Navigation
+export const LISTING_CATEGORIES: FilterOption[] = [
+    { id: 'cat_emploi', label: 'Emploi' },
+    { id: 'cat_immobilier', label: 'Immobilier' },
+    { id: 'cat_bonnes_affaires', label: 'Bonnes Affaires' },
+    { id: 'cat_services', label: 'Services' },
+];
+
 // Filter Options for Events
 export const EVENT_CATEGORIES: FilterOption[] = [
     { id: 'cat_fest', label: 'Festival' },
