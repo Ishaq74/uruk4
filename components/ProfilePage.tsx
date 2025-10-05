@@ -26,13 +26,13 @@ const ProfileContributionItem: React.FC<{ item: Review | Comment; type: 'review'
                     src={place.imageUrl}
                     alt={place.name}
                     className="w-20 h-20 rounded-md object-cover cursor-pointer"
-                    onClick={() => navigateTo('place-detail', place.id, place.mainCategory, undefined, place.slug)}
+                    onClick={() => navigateTo('place-detail', place.id)}
                 />
                 <div className="flex-1">
                     <p className="text-xs text-gray-400">Avis sur</p>
                     <h4 
                         className="font-bold text-gray-800 hover:underline cursor-pointer"
-                        onClick={() => navigateTo('place-detail', place.id, place.mainCategory, undefined, place.slug)}
+                        onClick={() => navigateTo('place-detail', place.id)}
                     >
                         {place.name}
                     </h4>

@@ -264,15 +264,17 @@ const PlaceListPage: React.FC<PlaceListPageProps> = ({ places, navigateTo, mainC
                             </div>
                         </div>
                         {placesToShow.length > 0 ? (
-                             <>
-                                {viewMode === 'map' ? (
-                                    <div className="h-[600px]"><InteractiveMap items={placesToShow} navigateTo={navigateTo} itemPage="place-detail"/></div>
-                                ) : (
-                                     <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 gap-8' : 'space-y-8'}>
-                                        {placesToShow.map(item => <PlaceCard key={item.id} item={item} viewMode={viewMode} navigateTo={navigateTo} />)}
-                                    </div>
-                                )}
-                            </>
+                            viewMode === 'map' ? (
+                                <div className="h-[600px]">
+                                    <InteractiveMap items={placesToShow} navigateTo={navigateTo} itemPage="place-detail" />
+                                </div>
+                            ) : (
+                                <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 gap-8' : 'space-y-8'}>
+                                    {placesToShow.map(item => (
+                                        <PlaceCard key={item.id} item={item} viewMode={viewMode} navigateTo={navigateTo} />
+                                    ))}
+                                </div>
+                            )
                         ) : (
                             <div className="text-center py-12 bg-white rounded-lg shadow-sm">
                                 <p className="text-gray-500">Aucun lieu ne correspond à vos filtres.</p>

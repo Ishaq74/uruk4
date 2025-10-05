@@ -208,7 +208,14 @@ const PlaceDetailPage: React.FC<PlaceDetailPageProps> = ({ slug, places, profile
         { name: place.name, url: window.location.href }
     ];
     
-    const placeSchema = generatePlaceSchema(place);
+        // Correction : sécurise l'accès à place.coordinates
+        const safePlace = {
+            ...place,
+            coordinates: place.coordinates && typeof place.coordinates.lat === 'number' && typeof place.coordinates.lng === 'number'
+                ? place.coordinates
+                : { lat: 0, lng: 0 }
+        };
+        const placeSchema = generatePlaceSchema(safePlace);
     const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbItems);
     
     const combinedSchema = {

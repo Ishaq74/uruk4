@@ -61,7 +61,11 @@ const getPlaceSchemaType = (mainCategory: Place['mainCategory']): string => {
 
 const generateOpeningHours = (hours: Place['openingHours']) => {
   const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  return hours.map((hour, index) => {
+  // Convert OpeningHours object to array in day order (0=Sunday, 6=Saturday)
+  const hoursArray = Array.isArray(hours)
+    ? hours
+    : Array.from({ length: 7 }, (_, i) => hours && typeof hours === 'object' ? hours[i] ?? null : null);
+  return hoursArray.map((hour, index) => {
     if (!hour) return null;
     return {
       "@type": "OpeningHoursSpecification",
@@ -109,8 +113,8 @@ export const generateArticleSchema = (article: Article, authorName?: string) => 
   "headline": article.title,
   "description": article.excerpt,
   "image": article.imageUrl,
-  "datePublished": article.date,
-  "dateModified": article.date,
+  "datePublished": article.publishedAt,
+  "dateModified": article.publishedAt,
   "author": {
     "@type": "Person",
     "name": authorName || "Salut Annecy"

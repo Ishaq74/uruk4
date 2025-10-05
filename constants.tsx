@@ -21,12 +21,12 @@ export const USER_LEVELS: UserLevel[] = [
 
 // Forum Categories Configuration
 export const FORUM_CATEGORIES: ForumCategory[] = [
-    { id: 'fc1', slug: 'general', name: 'Général', description: 'Discussions générales sur Annecy', icon: 'message-circle' },
-    { id: 'fc2', slug: 'actualites', name: 'Actualités Locales', description: 'Les dernières nouvelles de la ville', icon: 'newspaper' },
-    { id: 'fc3', slug: 'conseils', name: 'Conseils & Astuces', description: 'Partagez vos bons plans et conseils', icon: 'lightbulb' },
-    { id: 'fc4', slug: 'aide', name: 'Aide & Questions', description: 'Besoin d\'aide ? Posez vos questions', icon: 'help-circle' },
-    { id: 'fc5', slug: 'rando', name: 'Randonnées & Nature', description: 'Partagez vos plus belles balades, vos conseils et vos photos', icon: 'hiking' },
-    { id: 'fc6', slug: 'food', name: 'Gastronomie & Restaurants', description: 'Les bonnes adresses, les recettes locales, les débats culinaires', icon: 'utensils' },
+    { id: 'fc1', slug: 'general', name: 'Général', title: 'Général', description: 'Discussions générales sur Annecy', icon: 'message-circle' },
+    { id: 'fc2', slug: 'actualites', name: 'Actualités Locales', title: 'Actualités Locales', description: 'Les dernières nouvelles de la ville', icon: 'newspaper' },
+    { id: 'fc3', slug: 'conseils', name: 'Conseils & Astuces', title: 'Conseils & Astuces', description: 'Partagez vos bons plans et conseils', icon: 'lightbulb' },
+    { id: 'fc4', slug: 'aide', name: 'Aide & Questions', title: 'Aide & Questions', description: 'Besoin d\'aide ? Posez vos questions', icon: 'help-circle' },
+    { id: 'fc5', slug: 'rando', name: 'Randonnées & Nature', title: 'Randonnées & Nature', description: 'Partagez vos plus belles balades, vos conseils et vos photos', icon: 'hiking' },
+    { id: 'fc6', slug: 'food', name: 'Gastronomie & Restaurants', title: 'Gastronomie & Restaurants', description: 'Les bonnes adresses, les recettes locales, les débats culinaires', icon: 'utensils' },
 ];
 
 // Static Pages Configuration
