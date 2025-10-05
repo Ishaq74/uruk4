@@ -63,6 +63,7 @@ async function main() {
       email: `${profile.username}@example.com`,
       emailVerified: true,
       image: profile.avatarUrl,
+      role: (profile as any).role || 'user',
       createdAt: isValidDate(profile.joinDate) ? new Date(profile.joinDate) : new Date(),
       updatedAt: new Date(),
     });
@@ -83,6 +84,12 @@ async function main() {
       updatedAt: new Date(),
     });
   }
+  
+  console.log('\n⚠️  ADMIN SETUP REQUIRED:');
+  console.log('📝 To create an admin user, please:');
+  console.log('   1. Register via the UI at http://localhost:3000');
+  console.log('   2. Then run: UPDATE "user" SET role = \'admin\' WHERE email = \'your-email@example.com\';');
+  console.log('   OR see ADMIN_ACCOUNT_SETUP.md for detailed instructions\n');
 
   // Patch toutes les entités qui référencent un profil
   // Organizations
