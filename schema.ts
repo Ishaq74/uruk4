@@ -113,6 +113,12 @@ export const analyticsEventNameEnum = pgEnum('analytics_event_name', [
   'click_website'
 ]);
 
+export const userRoleEnum = pgEnum('user_role', [
+  'user',
+  'moderator',
+  'admin'
+]);
+
 // ============================================================================
 // AUTHENTICATION & USER MANAGEMENT
 // ============================================================================
@@ -131,6 +137,7 @@ export const user = pgTable('user', {
   email: text('email').notNull().unique(),
   emailVerified: boolean('email_verified').notNull().default(false),
   image: text('image'),
+  role: userRoleEnum('role').notNull().default('user'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
