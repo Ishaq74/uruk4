@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
+import { authClient } from '../../auth-client';
 
 interface RegisterModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSwitchToLogin: () => void;
-  onRegister: (name: string, username: string, email: string, password: string) => Promise<void>;
+  onRegisterSuccess: () => void;
 }
 
-const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onSwitchToLogin, onRegister }) => {
+const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onSwitchToLogin, onRegisterSuccess }) => {
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -36,7 +37,34 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onSwitch
     setLoading(true);
 
     try {
-      await onRegister(name, username, email, password);
+      // Register user with Better Auth
+      const signUpResult = await authClient.signUp.email({
+        email,
+        password,
+        name,
+      });
+
+      if (signUpResult.error) {
+        setError(signUpResult.error.message || "Erreur lors de l'inscription");
+        return;
+      }
+
+      // Create profile with username
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/auth/create-profile`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ username }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Erreur lors de la création du profil');
+      }
+
+      onRegisterSuccess();
       onClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur lors de l'inscription");

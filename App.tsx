@@ -50,7 +50,7 @@ import LoginModal from './components/auth/LoginModal';
 import RegisterModal from './components/auth/RegisterModal';
 import AdminDashboard from './components/AdminDashboard';
 
-import { authService, AuthUser, UserProfile } from './services/auth.service';
+import { authClient } from './auth-client';
 
 import { Place, Profile, Review, ForumPost, Message, ForumThread, Order, Booking, Comment, PlaceClaim, Group, Report, Event, Trail, Listing, LiveEvent, Conversation } from './types';
 import { 
@@ -71,7 +71,7 @@ type Route = {
 const App: React.FC = () => {
   const [route, setRoute] = useState<Route>({ page: 'home' });
   const [currentUser, setCurrentUser] = useState<Profile | null>(null);
-  const [authUser, setAuthUser] = useState<AuthUser | null>(null);
+  const [authUser, setAuthUser] = useState<any | null>(null);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   
@@ -105,32 +105,45 @@ const App: React.FC = () => {
         setShowCookieBanner(true);
     }
 
-    // Check if user is logged in
-    if (authService.isAuthenticated()) {
-      authService.getCurrentUser()
-        .then(({ user, profile }) => {
-          setAuthUser(user);
-          // Convert profile to old Profile format for compatibility
-          const mappedProfile: Profile = {
-            id: profile.id,
-            username: profile.username,
-            fullName: profile.fullName,
-            avatarUrl: profile.avatarUrl || '',
-            coverImageUrl: profile.coverImageUrl || '',
-            bio: profile.bio || '',
-            levelId: profile.levelId,
-            joinDate: profile.joinDate.toString(),
-            isVerified: profile.isVerified,
-            points: profile.points,
-            role: user.role as any,
-          };
-          setCurrentUser(mappedProfile);
-        })
-        .catch(() => {
-          // If auth fails, clear token
-          authService.logout();
-        });
-    }
+    // Check if user is logged in using Better Auth
+    const loadSession = async () => {
+      try {
+        const session = await authClient.getSession();
+        
+        if (session?.data?.session && session.data.user) {
+          setAuthUser(session.data.user);
+          
+          // Fetch user profile
+          const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/auth/me`, {
+            credentials: 'include',
+          });
+          
+          if (response.ok) {
+            const { user, profile } = await response.json();
+            if (profile) {
+              const mappedProfile: Profile = {
+                id: profile.id,
+                username: profile.username,
+                fullName: profile.fullName,
+                avatarUrl: profile.avatarUrl || '',
+                coverImageUrl: profile.coverImageUrl || '',
+                bio: profile.bio || '',
+                levelId: profile.levelId,
+                joinDate: profile.joinDate?.toString() || new Date().toISOString(),
+                isVerified: profile.isVerified,
+                points: profile.points,
+                role: user.role as any,
+              };
+              setCurrentUser(mappedProfile);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Failed to load session:', error);
+      }
+    };
+    
+    loadSession();
   }, []);
 
   const handleCookieAccept = () => {
@@ -146,48 +159,45 @@ const App: React.FC = () => {
   const handleOpenReportModal = (targetId: string, targetType: string) => { setReportModalInfo({ isOpen: true, targetId, targetType }); };
   const handleCloseReportModal = () => { setReportModalInfo({ isOpen: false, targetId: '', targetType: '' }); };
   
-  const handleLogin = async (email: string, password: string) => {
-    const { user, profile } = await authService.login(email, password);
-    setAuthUser(user);
-    const mappedProfile: Profile = {
-      id: profile.id,
-      username: profile.username,
-      fullName: profile.fullName,
-      avatarUrl: profile.avatarUrl || '',
-      coverImageUrl: profile.coverImageUrl || '',
-      bio: profile.bio || '',
-      levelId: profile.levelId,
-      joinDate: profile.joinDate.toString(),
-      isVerified: profile.isVerified,
-      points: profile.points,
-      role: user.role as any,
-    };
-    setCurrentUser(mappedProfile);
-    setIsLoginModalOpen(false);
-  };
-
-  const handleRegister = async (name: string, username: string, email: string, password: string) => {
-    const { user, profile } = await authService.register(name, username, email, password);
-    setAuthUser(user);
-    const mappedProfile: Profile = {
-      id: profile.id,
-      username: profile.username,
-      fullName: profile.fullName,
-      avatarUrl: profile.avatarUrl || '',
-      coverImageUrl: profile.coverImageUrl || '',
-      bio: profile.bio || '',
-      levelId: profile.levelId,
-      joinDate: profile.joinDate.toString(),
-      isVerified: profile.isVerified,
-      points: profile.points,
-      role: user.role as any,
-    };
-    setCurrentUser(mappedProfile);
-    setIsRegisterModalOpen(false);
+  const loadUserSession = async () => {
+    try {
+      const session = await authClient.getSession();
+      
+      if (session?.data?.session && session.data.user) {
+        setAuthUser(session.data.user);
+        
+        // Fetch user profile
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/auth/me`, {
+          credentials: 'include',
+        });
+        
+        if (response.ok) {
+          const { user, profile } = await response.json();
+          if (profile) {
+            const mappedProfile: Profile = {
+              id: profile.id,
+              username: profile.username,
+              fullName: profile.fullName,
+              avatarUrl: profile.avatarUrl || '',
+              coverImageUrl: profile.coverImageUrl || '',
+              bio: profile.bio || '',
+              levelId: profile.levelId,
+              joinDate: profile.joinDate?.toString() || new Date().toISOString(),
+              isVerified: profile.isVerified,
+              points: profile.points,
+              role: user.role as any,
+            };
+            setCurrentUser(mappedProfile);
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Failed to load session:', error);
+    }
   };
 
   const handleLogout = async () => {
-    await authService.logout();
+    await authClient.signOut();
     setCurrentUser(null);
     setAuthUser(null);
     navigateTo('home');
@@ -449,13 +459,13 @@ const App: React.FC = () => {
         isOpen={isLoginModalOpen} 
         onClose={() => setIsLoginModalOpen(false)} 
         onSwitchToRegister={() => { setIsLoginModalOpen(false); setIsRegisterModalOpen(true); }}
-        onLogin={handleLogin}
+        onLoginSuccess={loadUserSession}
       />
       <RegisterModal 
         isOpen={isRegisterModalOpen} 
         onClose={() => setIsRegisterModalOpen(false)} 
         onSwitchToLogin={() => { setIsRegisterModalOpen(false); setIsLoginModalOpen(true); }}
-        onRegister={handleRegister}
+        onRegisterSuccess={loadUserSession}
       />
     </div>
   );
