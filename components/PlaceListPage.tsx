@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
     RESTAURATION_CATEGORIES, 
     RESTAURATION_ATTRIBUTES,
@@ -18,9 +18,10 @@ interface PlaceListPageProps {
   places: Place[];
   navigateTo: (page: string, id?: string, mainCategory?: Place['mainCategory'], query?: string, slug?: string, filter?: 'my-listings' | 'my-groups') => void;
   mainCategory: Place['mainCategory'];
+  categorySlug?: string;
 }
 
-const PlaceCard: React.FC<{ item: Place, viewMode: 'grid' | 'list' | 'map', navigateTo: (page: string, id: string) => void }> = ({ item, viewMode, navigateTo }) => {
+const PlaceCard: React.FC<{ item: Place, viewMode: 'grid' | 'list' | 'map', navigateTo: (page: string, id: string, mainCategory?: Place['mainCategory'], query?: string, slug?: string) => void }> = ({ item, viewMode, navigateTo }) => {
     
     const cardContent = (
         <>
@@ -41,7 +42,7 @@ const PlaceCard: React.FC<{ item: Place, viewMode: 'grid' | 'list' | 'map', navi
 
     return (
         <div 
-            onClick={() => navigateTo('place-detail', item.id)}
+            onClick={() => navigateTo('place-detail', item.id, undefined, undefined, item.slug)}
             className={`group bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer ${viewMode === 'list' ? 'flex' : ''}`}
         >
             {cardContent}
@@ -159,11 +160,23 @@ const PAGE_CONFIG = {
     }
 }
 
-const PlaceListPage: React.FC<PlaceListPageProps> = ({ places, navigateTo, mainCategory }) => {
+const PlaceListPage: React.FC<PlaceListPageProps> = ({ places, navigateTo, mainCategory, categorySlug }) => {
     const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map'>('grid');
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const [selectedAttributes, setSelectedAttributes] = useState<string[]>([]);
     const [selectedRating, setSelectedRating] = useState(0);
+
+    // If categorySlug is provided, decode it to get the category name and set it as selected
+    useEffect(() => {
+        if (categorySlug) {
+            // Decode the slug to category name (e.g., "gastronomique" -> "Gastronomique")
+            const categoryName = categorySlug
+                .split('-')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+            setSelectedCategories([categoryName]);
+        }
+    }, [categorySlug]);
 
     const config = PAGE_CONFIG[mainCategory];
     

@@ -9,7 +9,7 @@ import SEO from './SEO';
 import { generatePlaceSchema, generateBreadcrumbSchema } from '../utils/seo-schemas';
 
 interface PlaceDetailPageProps {
-  id: string;
+  slug: string;
   places: Place[];
   profiles: Profile[];
   organizations: Organization[];
@@ -81,8 +81,9 @@ const OpeningHoursDisplay: React.FC<{ hours: Place['openingHours'] }> = ({ hours
     );
 };
 
-const PlaceDetailPage: React.FC<PlaceDetailPageProps> = ({ id, places, profiles, organizations, products, services, navigateTo, currentUser, toggleFavorite, addReview, onLogin, onAddOrder, onAddBooking, onOpenReportModal }) => {
-    const place = places?.find?.(p => p.id === id);
+const PlaceDetailPage: React.FC<PlaceDetailPageProps> = ({ slug, places, profiles, organizations, products, services, navigateTo, currentUser, toggleFavorite, addReview, onLogin, onAddOrder, onAddBooking, onOpenReportModal }) => {
+    // Try to find place by slug first, fall back to id for backward compatibility
+    const place = places?.find?.(p => p.slug === slug || p.id === slug);
     
     // AI State
     const [isLoadingAI, setIsLoadingAI] = useState(false);
@@ -92,7 +93,7 @@ const PlaceDetailPage: React.FC<PlaceDetailPageProps> = ({ id, places, profiles,
     useEffect(() => {
         setSimilarPlacesAI([]);
         setAiError(null);
-    }, [id]);
+    }, [slug]);
     
     if (!place) {
     return <div className="text-center py-20">Lieu non trouvé. <a href="/" onClick={(e) => { e.preventDefault(); navigateTo('home')}} className="text-sky-600">Retour à l'accueil</a></div>;
