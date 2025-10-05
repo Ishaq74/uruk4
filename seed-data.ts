@@ -335,10 +335,37 @@ export const FORUM_THREADS: ForumThread[] = [
 ];
 export const GROUPS: Group[] = [ { id: 'g1', name: 'Les Randonneurs du Lac', bannerUrl: 'https://picsum.photos/seed/group1_banner/1200/300', avatarUrl: 'https://picsum.photos/seed/group1_avatar/200/200', description: 'Un groupe pour tous les amoureux de la marche...', memberCount: 2, isPrivate: false, members: [{ profileId: 'p2', role: 'owner'}, { profileId: 'p4', role: 'member'}] }, ];
 export const CONVERSATIONS: Conversation[] = [ { id: 'conv1', participantIds: ['p1', 'p2'], messages: [ { id: 'msg1', senderId: 'p1', content: 'Salut Marc !...', createdAt: 'Il y a 1 jour' }, ] }, ];
-export const PRODUCTS: Product[] = [ { id: 'prod1', organization_id: 'org3', name: 'Reblochon Fermier AOP', description: 'Un reblochon au lait cru...', price: 12.50, imageUrl: 'https://picsum.photos/seed/cheese1/200/200', stock: 50 }, ];
-export const SERVICES: Service[] = [ { id: 'serv1', organization_id: 'org1', name: 'Cours de cuisine "Saveurs des Alpes"', description: 'Apprenez à cuisiner un menu gastronomique...', base_price: 150, duration_minutes: 180 }, ];
-export const ORDERS: Order[] = [ { id: 'order1', customer_id: 'p1', organization_id: 'org3', product_id: 'prod1', product_name: 'Reblochon Fermier AOP', quantity: 2, total_price: 25.00, status: 'completed', ordered_at: '2024-05-20' }, ];
-export const BOOKINGS: Booking[] = [ { id: 'book1', customer_id: 'p3', organization_id: 'org1', service_id: 'serv1', service_name: 'Cours de cuisine', total_price: 150.00, status: 'confirmed', booked_at: '2024-05-18', booking_date: '2024-06-15' }, ];
+export const PRODUCTS: Product[] = [ 
+    { id: 'prod1', organization_id: 'org3', name: 'Reblochon Fermier AOP', description: 'Un reblochon au lait cru...', price: 12.50, imageUrl: 'https://picsum.photos/seed/cheese1/200/200', stock: 50 },
+    { id: 'prod2', organization_id: 'org3', name: 'Tomme de Savoie', description: 'Fromage traditionnel savoyard au lait de vache', price: 9.80, imageUrl: 'https://picsum.photos/seed/cheese2/200/200', stock: 35 },
+    { id: 'prod3', organization_id: 'org3', name: 'Beaufort d\'Alpage', description: 'Fromage AOP produit en haute montagne', price: 18.50, imageUrl: 'https://picsum.photos/seed/cheese3/200/200', stock: 20 },
+    { id: 'prod4', organization_id: 'org3', name: 'Confiture de Myrtilles', description: 'Confiture artisanale aux myrtilles des Alpes', price: 6.50, imageUrl: 'https://picsum.photos/seed/jam1/200/200', stock: 60 },
+    { id: 'prod5', organization_id: 'org3', name: 'Miel de Montagne', description: 'Miel de fleurs de montagne récolté localement', price: 8.90, imageUrl: 'https://picsum.photos/seed/honey1/200/200', stock: 40 },
+    { id: 'prod6', organization_id: 'org1', name: 'Coffret Gastronomique', description: 'Sélection de produits du terroir du restaurant Le Belvédère', price: 45.00, imageUrl: 'https://picsum.photos/seed/giftbox1/200/200', stock: 25 },
+    { id: 'prod7', organization_id: 'org2', name: 'Carte Cadeau Spa', description: 'Carte cadeau pour accès au spa de l\'Hôtel du Lac', price: 80.00, imageUrl: 'https://picsum.photos/seed/giftcard1/200/200', stock: 100 },
+];
+export const SERVICES: Service[] = [ 
+    { id: 'serv1', organization_id: 'org1', name: 'Cours de cuisine "Saveurs des Alpes"', description: 'Apprenez à cuisiner un menu gastronomique...', base_price: 150, duration_minutes: 180 },
+    { id: 'serv2', organization_id: 'org1', name: 'Dîner Dégustation 5 plats', description: 'Menu découverte avec accord mets-vins au Belvédère', base_price: 120, duration_minutes: 150 },
+    { id: 'serv3', organization_id: 'org2', name: 'Forfait Spa Relaxation', description: 'Accès spa illimité + massage 1h', base_price: 95, duration_minutes: 120 },
+    { id: 'serv4', organization_id: 'org2', name: 'Forfait Romantique', description: 'Nuit en suite + petit-déjeuner + spa pour 2 personnes', base_price: 450, duration_minutes: 1440 },
+    { id: 'serv5', organization_id: 'org1', name: 'Brunch Gastronomique', description: 'Brunch dominical avec produits locaux', base_price: 45, duration_minutes: 120 },
+    { id: 'serv6', organization_id: 'org2', name: 'Massage Pierres Chaudes', description: 'Soin relaxant de 60 minutes aux pierres chaudes', base_price: 85, duration_minutes: 60 },
+];
+export const ORDERS: Order[] = [ 
+    { id: 'order1', customer_id: 'p1', organization_id: 'org3', product_id: 'prod1', product_name: 'Reblochon Fermier AOP', quantity: 2, total_price: 25.00, status: 'completed', ordered_at: '2024-05-20' },
+    { id: 'order2', customer_id: 'p2', organization_id: 'org3', product_id: 'prod3', product_name: 'Beaufort d\'Alpage', quantity: 1, total_price: 18.50, status: 'completed', ordered_at: '2024-05-22' },
+    { id: 'order3', customer_id: 'p3', organization_id: 'org3', product_id: 'prod5', product_name: 'Miel de Montagne', quantity: 3, total_price: 26.70, status: 'completed', ordered_at: '2024-05-23' },
+    { id: 'order4', customer_id: 'p1', organization_id: 'org1', product_id: 'prod6', product_name: 'Coffret Gastronomique', quantity: 1, total_price: 45.00, status: 'processing', ordered_at: '2024-05-25' },
+    { id: 'order5', customer_id: 'p4', organization_id: 'org2', product_id: 'prod7', product_name: 'Carte Cadeau Spa', quantity: 2, total_price: 160.00, status: 'completed', ordered_at: '2024-05-21' },
+];
+export const BOOKINGS: Booking[] = [ 
+    { id: 'book1', customer_id: 'p3', organization_id: 'org1', service_id: 'serv1', service_name: 'Cours de cuisine', total_price: 150.00, status: 'confirmed', booked_at: '2024-05-18', booking_date: '2024-06-15' },
+    { id: 'book2', customer_id: 'p1', organization_id: 'org1', service_id: 'serv2', service_name: 'Dîner Dégustation 5 plats', total_price: 240.00, status: 'confirmed', booked_at: '2024-05-19', booking_date: '2024-06-10' },
+    { id: 'book3', customer_id: 'p2', organization_id: 'org2', service_id: 'serv3', service_name: 'Forfait Spa Relaxation', total_price: 95.00, status: 'confirmed', booked_at: '2024-05-10', booking_date: '2024-05-20' },
+    { id: 'book4', customer_id: 'p4', organization_id: 'org2', service_id: 'serv4', service_name: 'Forfait Romantique', total_price: 450.00, status: 'confirmed', booked_at: '2024-05-22', booking_date: '2024-06-20' },
+    { id: 'book5', customer_id: 'p1', organization_id: 'org1', service_id: 'serv5', service_name: 'Brunch Gastronomique', total_price: 90.00, status: 'confirmed', booked_at: '2024-05-23', booking_date: '2024-06-02' },
+];
 export const CLAIMS: PlaceClaim[] = [ { id: 'claim1', placeId: 'r2', organizationId: 'org1', userId: 'p2', status: 'pending' }, { id: 'claim2', placeId: 'a1', organizationId: 'org1', userId: 'p2', status: 'approved' } ];
 export const REPORTS: Report[] = [];
 export const LIVE_EVENTS: LiveEvent[] = [
