@@ -1,6 +1,7 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
+import { generateSlug } from './utils/slug';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import HomePage from './components/HomePage';
@@ -482,13 +483,14 @@ const App: React.FC = () => {
     navigateTo('espace-pro');
   }, [currentUser]);
   
-  const handleAddPlace = useCallback((place: Omit<Place, 'id' | 'rating' | 'reviewCount' | 'reviews' | 'openingHours' | 'coordinates' | 'phone' | 'website' | 'imageUrl' | 'priceRange' | 'attributes' | 'status' | 'organization_id' | 'rejection_reason'>) => {
+  const handleAddPlace = useCallback((place: Omit<Place, 'id' | 'slug' | 'rating' | 'reviewCount' | 'reviews' | 'openingHours' | 'coordinates' | 'phone' | 'website' | 'imageUrl' | 'priceRange' | 'attributes' | 'status' | 'organization_id' | 'rejection_reason'>) => {
     if(!currentUser) return;
-    const newPlace: Place = { ...place, id: `place${Date.now()}`, status: 'pending_review', rating: 0, reviewCount: 0, reviews: [], openingHours: {}, coordinates: { lat: 45.9, lng: 6.12 }, phone: '', website: '', imageUrl: `https://picsum.photos/seed/${place.name}/800/600`, priceRange: '€€', attributes: [] };
+    const slug = generateSlug(place.name);
+    const newPlace: Place = { ...place, id: `place${Date.now()}`, slug, status: 'pending_review', rating: 0, reviewCount: 0, reviews: [], openingHours: {}, coordinates: { lat: 45.9, lng: 6.12 }, phone: '', website: '', imageUrl: `https://picsum.photos/seed/${place.name}/800/600`, priceRange: '€€', attributes: [] };
     setPlaces(prev => [newPlace, ...prev]);
     alert(`${newPlace.name} a été soumis pour modération. Merci !`);
-    navigateTo('place-detail', newPlace.id, newPlace.mainCategory);
-  }, [currentUser]);
+    navigateTo('place-detail', newPlace.id, newPlace.mainCategory, undefined, newPlace.slug);
+  }, [currentUser, navigateTo]);
 
    const handleAddEvent = useCallback((event: Omit<Event, 'id' | 'imageUrl' | 'coordinates' | 'status' | 'rejection_reason'>) => {
     if(!currentUser) return;

@@ -25,9 +25,9 @@ const FeaturedContent: React.FC<FeaturedContentProps> = ({ places, events, trail
   // Build featured content dynamically from props
   const featuredContent = [
       trails.find(t => t.id === 't1') ? { id: 'feat1', imageUrl: trails.find(t => t.id === 't1')?.imageUrl, title: 'Randonnée au sommet du Semnoz', type: 'Sentier', navPage: 'trail-detail', navId: 't1'} : null,
-      places.find(p => p.id === 'r2') ? { id: 'feat2', imageUrl: places.find(p => p.id === 'r2')?.imageUrl, title: 'La meilleure tartiflette ?', type: 'Restaurant', navPage: 'place-detail', navId: 'r2'} : null,
+      places.find(p => p.id === 'r2') ? { id: 'feat2', imageUrl: places.find(p => p.id === 'r2')?.imageUrl, title: 'La meilleure tartiflette ?', type: 'Restaurant', navPage: 'place-detail', navId: 'r2', navSlug: places.find(p => p.id === 'r2')?.slug, mainCategory: places.find(p => p.id === 'r2')?.mainCategory} : null,
       events.find(e => e.id === 'ev2') ? { id: 'feat3', imageUrl: events.find(e => e.id === 'ev2')?.imageUrl, title: 'Fête de la Musique', type: 'Événement', navPage: 'event-detail', navId: 'ev2'} : null,
-      places.find(p => p.id === 'c1') ? { id: 'feat4', imageUrl: places.find(p => p.id === 'c1')?.imageUrl, title: 'Shopping en vieille ville', type: 'Commerce', navPage: 'place-detail', navId: 'c1'} : null
+      places.find(p => p.id === 'c1') ? { id: 'feat4', imageUrl: places.find(p => p.id === 'c1')?.imageUrl, title: 'Shopping en vieille ville', type: 'Commerce', navPage: 'place-detail', navId: 'c1', navSlug: places.find(p => p.id === 'c1')?.slug, mainCategory: places.find(p => p.id === 'c1')?.mainCategory} : null
   ].filter(Boolean);
     
   return (

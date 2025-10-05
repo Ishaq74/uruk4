@@ -382,7 +382,7 @@ const PlaceDetailPage: React.FC<PlaceDetailPageProps> = ({ slug, places, profile
                             {similarPlacesAI.length > 0 && (
                                 <div className="mt-4 space-y-3 border-t pt-4">
                                     {similarPlacesAI.map(item => (
-                                     <div key={item.id} onClick={() => navigateTo('place-detail', item.id)} className="flex items-center space-x-4 bg-purple-50 p-3 rounded-lg hover:bg-purple-100 transition-colors cursor-pointer">
+                                     <div key={item.id} onClick={() => navigateTo('place-detail', item.id, item.mainCategory, undefined, item.slug)} className="flex items-center space-x-4 bg-purple-50 p-3 rounded-lg hover:bg-purple-100 transition-colors cursor-pointer">
                                          <img src={item.imageUrl} alt={item.name} className="w-12 h-12 rounded-md object-cover" />
                                          <div>
                                              <h5 className="font-bold text-sm text-gray-800">{item.name}</h5>
@@ -398,7 +398,7 @@ const PlaceDetailPage: React.FC<PlaceDetailPageProps> = ({ slug, places, profile
                             <h3 className="text-xl font-bold text-gray-900 mb-4">Suggestions manuelles</h3>
                             <div className="space-y-4">
                                {similarPlaces.map(item => (
-                                 <div key={item.id} onClick={() => navigateTo('place-detail', item.id)} className="flex items-center space-x-4 bg-white p-3 rounded-xl shadow-sm hover:shadow-lg transition-shadow cursor-pointer">
+                                 <div key={item.id} onClick={() => navigateTo('place-detail', item.id, item.mainCategory, undefined, item.slug)} className="flex items-center space-x-4 bg-white p-3 rounded-xl shadow-sm hover:shadow-lg transition-shadow cursor-pointer">
                                      <img src={item.imageUrl} alt={item.name} className="w-16 h-16 rounded-lg object-cover" />
                                      <div>
                                          <h5 className="font-bold text-gray-800">{item.name}</h5>
