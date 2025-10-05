@@ -26,6 +26,47 @@ import {
 } from './constants.tsx';
 
 async function main() {
+  console.log('🌱 Starting database seed...');
+
+  // 1. Insert user levels first
+  console.log('📊 Seeding user levels...');
+  await db.insert(schema.userLevels).values(USER_LEVELS);
+
+  // 2. Create Better-Auth users and profiles
+  console.log('👤 Seeding users and profiles...');
+  for (const profile of PROFILES) {
+    // Create Better-Auth user
+    const userId = crypto.randomUUID();
+    await db.insert(schema.user).values({
+      id: userId,
+      name: profile.full_name,
+      email: `${profile.username}@example.com`,
+      emailVerified: true,
+      image: profile.avatar_url,
+      createdAt: new Date(profile.join_date),
+      updatedAt: new Date(),
+    });
+
+    // Create profile linked to Better-Auth user
+    await db.insert(schema.profiles).values({
+      id: profile.id,
+      userId: userId,
+      username: profile.username,
+      fullName: profile.full_name,
+      avatarUrl: profile.avatar_url,
+      coverImageUrl: profile.cover_image_url,
+      bio: profile.bio,
+      levelId: profile.level_id,
+      joinDate: new Date(profile.join_date),
+      isVerified: profile.is_verified,
+      points: profile.points,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+  }
+
+  console.log('🏢 Seeding organizations...');
+  console.log('🏢 Seeding organizations...');
   await db.insert(schema.organizations).values(
     ORGANIZATIONS.map(org => ({
       id: org.id,
@@ -37,6 +78,9 @@ async function main() {
       updatedAt: new Date(),
     }))
   );
+  
+  console.log('📍 Seeding places...');
+  console.log('📍 Seeding places...');
   await db.insert(schema.places).values(
     PLACES.map(place => ({
       id: place.id,
@@ -62,6 +106,9 @@ async function main() {
       updatedAt: new Date(),
     }))
   );
+  
+  console.log('🎉 Seeding events...');
+  console.log('🎉 Seeding events...');
   await db.insert(schema.events).values(
     EVENTS.map(ev => ({
       id: ev.id,
@@ -79,6 +126,9 @@ async function main() {
       updatedAt: new Date(),
     }))
   );
+  
+  console.log('🥾 Seeding trails...');
+  console.log('🥾 Seeding trails...');
   await db.insert(schema.trails).values(
     TRAILS.map(trail => ({
       id: trail.id,
@@ -98,7 +148,12 @@ async function main() {
       updatedAt: new Date(),
     }))
   );
+  
+  console.log('📋 Seeding listings...');
   await db.insert(schema.listings).values(ALL_LISTINGS);
+  
+  console.log('📰 Seeding articles...');
+  console.log('📰 Seeding articles...');
   await db.insert(schema.articles).values(
     MAGAZINE_ARTICLES.map(article => ({
       id: article.id,
@@ -113,6 +168,9 @@ async function main() {
       updatedAt: new Date(),
     }))
   );
+  
+  console.log('💬 Seeding forum data...');
+  console.log('💬 Seeding forum data...');
   await db.insert(schema.forumCategories).values(FORUM_CATEGORIES);
   await db.insert(schema.forumThreads).values(
     FORUM_THREADS.map(thread => ({
@@ -126,8 +184,13 @@ async function main() {
       updatedAt: new Date(),
     }))
   );
+  
+  console.log('👥 Seeding groups and conversations...');
   await db.insert(schema.groups).values(GROUPS);
   await db.insert(schema.conversations).values(CONVERSATIONS);
+  
+  console.log('🛍️ Seeding products and services...');
+  console.log('🛍️ Seeding products and services...');
   await db.insert(schema.products).values(
     PRODUCTS.map(prod => ({
       id: prod.id,
@@ -155,6 +218,9 @@ async function main() {
       updatedAt: new Date(),
     }))
   );
+  
+  console.log('📦 Seeding orders and bookings...');
+  console.log('📦 Seeding orders and bookings...');
   await db.insert(schema.orders).values(
     ORDERS.map(order => ({
       id: order.id,
@@ -181,6 +247,9 @@ async function main() {
       bookingDate: booking.booking_date,
     }))
   );
+  
+  console.log('📊 Seeding claims, reports, and live events...');
+  console.log('📊 Seeding claims, reports, and live events...');
   await db.insert(schema.placeClaims).values(CLAIMS);
   await db.insert(schema.reports).values(REPORTS);
   await db.insert(schema.liveEvents).values(
@@ -196,6 +265,9 @@ async function main() {
       createdAt: new Date(ev.createdAt),
     }))
   );
+  
+  console.log('📄 Seeding static pages and analytics...');
+  console.log('📄 Seeding static pages and analytics...');
   await db.insert(schema.staticPageContent).values(STATIC_PAGES_CONTENT);
   await db.insert(schema.analyticsEvents).values(
     ANALYTICS_EVENTS.map(ev => ({
@@ -206,7 +278,7 @@ async function main() {
     }))
   );
 
-  console.log('Seed completed!');
+  console.log('✅ Seed completed successfully!');
 }
 
 main().catch((err) => {
