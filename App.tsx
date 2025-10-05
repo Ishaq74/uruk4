@@ -529,11 +529,11 @@ const App: React.FC = () => {
       case 'settings': return <SettingsPage currentUser={currentUser} navigateTo={navigateTo} onUpdateProfile={handleUpdateProfile} onRequestDataExport={requestDataExport} onDeleteAccount={deleteAccount} />;
       case 'espace-pro': return <EspaceProPage currentUser={currentUser} navigateTo={navigateTo} organizations={organizations} places={places} claims={claims} />;
       case 'manage-place': return <ManagePlacePage id={route.id!} currentUser={currentUser} navigateTo={navigateTo} onUpdatePlace={handleUpdatePlace} places={places} />;
-      case 'place-analytics': return <PlaceAnalyticsPage id={route.id!} currentUser={currentUser} navigateTo={navigateTo} />;
+      case 'place-analytics': return <PlaceAnalyticsPage id={route.id!} currentUser={currentUser} navigateTo={navigateTo} places={places} />;
       case 'manage-products': return <ManageProductsPage orgId={route.id!} currentUser={currentUser} navigateTo={navigateTo} organizations={organizations} products={products} />;
       case 'manage-services': return <ManageServicesPage orgId={route.id!} currentUser={currentUser} navigateTo={navigateTo} organizations={organizations} services={services} />;
       case 'pro-orders': return <OrdersListPage orgId={route.id!} currentUser={currentUser} navigateTo={navigateTo} organizations={organizations} orders={orders} profiles={profiles} />;
-      case 'pro-bookings': return <BookingsListPage orgId={route.id!} currentUser={currentUser} navigateTo={navigateTo} />;
+      case 'pro-bookings': return <BookingsListPage orgId={route.id!} currentUser={currentUser} navigateTo={navigateTo} organizations={organizations} bookings={bookings} profiles={profiles} />;
       case 'claim-place': return <ClaimPlacePage currentUser={currentUser} navigateTo={navigateTo} onClaim={handleClaimPlace} places={places} organizations={organizations} />;
       case 'ad-campaigns': return <AdCampaignsPage currentUser={currentUser} navigateTo={navigateTo} />;
 

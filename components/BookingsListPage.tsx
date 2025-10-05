@@ -1,16 +1,18 @@
 import React from 'react';
 import { Profile, Booking, Organization } from '../types';
-import { ORGANIZATIONS, BOOKINGS, PROFILES } from '../constants';
 
 interface BookingsListPageProps {
   orgId: string;
   currentUser: Profile | null;
   navigateTo: (page: string, id?: string) => void;
+  organizations: Organization[];
+  bookings: Booking[];
+  profiles: Profile[];
 }
 
-const BookingsListPage: React.FC<BookingsListPageProps> = ({ orgId, currentUser, navigateTo }) => {
-  const organization = ORGANIZATIONS.find(org => org.id === orgId);
-  const bookings = BOOKINGS.filter(b => b.organization_id === orgId);
+const BookingsListPage: React.FC<BookingsListPageProps> = ({ orgId, currentUser, navigateTo, organizations, bookings, profiles }) => {
+  const organization = organizations.find(org => org.id === orgId);
+  const orgBookings = bookings.filter(b => b.organization_id === orgId);
 
   if (!currentUser || currentUser.id !== organization?.primary_owner_id) {
     return <div className="text-center py-20">Accès non autorisé.</div>;
@@ -50,8 +52,8 @@ const BookingsListPage: React.FC<BookingsListPageProps> = ({ orgId, currentUser,
                     </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                    {bookings.map((booking) => {
-                        const customer = PROFILES.find(p => p.id === booking.customer_id);
+                    {orgBookings.map((booking) => {
+                        const customer = profiles.find(p => p.id === booking.customer_id);
                         return (
                              <tr key={booking.id}>
                                 <td className="px-6 py-4 whitespace-nowrap">
