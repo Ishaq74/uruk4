@@ -16,7 +16,7 @@ app.use('/api/auth', auth.handler);
 // Create profile after user registration
 app.post('/api/auth/create-profile', async (req, res) => {
   try {
-    const session = await auth.api.getSession({ headers: req.headers });
+  const session = await auth.api.getSession({ headers: req.headers as any });
     
     if (!session) {
       return res.status(401).json({ error: 'Non authentifié' });
@@ -60,7 +60,7 @@ app.post('/api/auth/create-profile', async (req, res) => {
 // Get current user with profile
 app.get('/api/auth/me', async (req, res) => {
   try {
-  const session = await auth.api.getSession({ request: req });
+  const session = await auth.api.getSession({ headers: req.headers as any });
     
     if (!session) {
       return res.status(401).json({ error: 'Non authentifié' });
@@ -84,7 +84,7 @@ app.get('/api/auth/me', async (req, res) => {
 // Admin: Update user role
 app.post('/api/admin/users/:userId/role', async (req, res) => {
   try {
-  const session = await auth.api.getSession({ request: req });
+  const session = await auth.api.getSession({ headers: req.headers as any });
     
     if (!session || session.user.role !== 'admin') {
       return res.status(403).json({ error: 'Accès refusé' });
@@ -111,7 +111,7 @@ app.post('/api/admin/users/:userId/role', async (req, res) => {
 // Admin: Get all users
 app.get('/api/admin/users', async (req, res) => {
   try {
-  const session = await auth.api.getSession({ request: req });
+  const session = await auth.api.getSession({ headers: req.headers as any });
     
     if (!session || (session.user.role !== 'admin' && session.user.role !== 'moderator')) {
       return res.status(403).json({ error: 'Accès refusé' });
@@ -129,7 +129,7 @@ app.get('/api/admin/users', async (req, res) => {
 // Admin: Approve place
 app.post('/api/admin/places/:placeId/approve', async (req, res) => {
   try {
-  const session = await auth.api.getSession({ request: req });
+  const session = await auth.api.getSession({ headers: req.headers as any });
     
     if (!session || (session.user.role !== 'admin' && session.user.role !== 'moderator')) {
       return res.status(403).json({ error: 'Accès refusé' });
@@ -151,7 +151,7 @@ app.post('/api/admin/places/:placeId/approve', async (req, res) => {
 // Admin: Reject place
 app.post('/api/admin/places/:placeId/reject', async (req, res) => {
   try {
-  const session = await auth.api.getSession({ request: req });
+  const session = await auth.api.getSession({ headers: req.headers as any });
     
     if (!session || (session.user.role !== 'admin' && session.user.role !== 'moderator')) {
       return res.status(403).json({ error: 'Accès refusé' });
@@ -179,7 +179,7 @@ app.post('/api/admin/places/:placeId/reject', async (req, res) => {
 // Get user's organizations
 app.get('/api/organizations/my', async (req, res) => {
   try {
-  const session = await auth.api.getSession({ request: req });
+  const session = await auth.api.getSession({ headers: req.headers as any });
     
     if (!session) {
       return res.status(401).json({ error: 'Non authentifié' });
@@ -220,7 +220,7 @@ app.get('/api/organizations/my', async (req, res) => {
 // Create organization
 app.post('/api/organizations', async (req, res) => {
   try {
-  const session = await auth.api.getSession({ request: req });
+  const session = await auth.api.getSession({ headers: req.headers as any });
     
     if (!session) {
       return res.status(401).json({ error: 'Non authentifié' });
@@ -313,7 +313,7 @@ app.put('/api/organizations/:orgId', async (req, res) => {
 // Delete organization
 app.delete('/api/organizations/:orgId', async (req, res) => {
   try {
-    const session = await auth.api.getSession({ headers: req.headers });
+  const session = await auth.api.getSession({ headers: req.headers as any });
     
     if (!session) {
       return res.status(401).json({ error: 'Non authentifié' });
@@ -354,7 +354,7 @@ app.delete('/api/organizations/:orgId', async (req, res) => {
 // Add member to organization
 app.post('/api/organizations/:orgId/members', async (req, res) => {
   try {
-    const session = await auth.api.getSession({ headers: req.headers });
+  const session = await auth.api.getSession({ headers: req.headers as any });
     
     if (!session) {
       return res.status(401).json({ error: 'Non authentifié' });
@@ -408,7 +408,7 @@ app.post('/api/organizations/:orgId/members', async (req, res) => {
 // Remove member from organization
 app.delete('/api/organizations/:orgId/members/:memberId', async (req, res) => {
   try {
-    const session = await auth.api.getSession({ headers: req.headers });
+  const session = await auth.api.getSession({ headers: req.headers as any });
     
     if (!session) {
       return res.status(401).json({ error: 'Non authentifié' });
