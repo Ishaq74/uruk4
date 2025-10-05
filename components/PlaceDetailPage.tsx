@@ -5,6 +5,8 @@ import { Place, Review, Profile, Order, Booking, Organization, Product, Service 
 import Icon from './Icon';
 import StarRating from './StarRating';
 import ReviewForm from './ReviewForm';
+import SEO from './SEO';
+import { generatePlaceSchema, generateBreadcrumbSchema } from '../utils/seo-schemas';
 
 interface PlaceDetailPageProps {
   id: string;
@@ -191,8 +193,38 @@ const PlaceDetailPage: React.FC<PlaceDetailPageProps> = ({ id, places, profiles,
         }
     };
 
+    // Generate SEO data
+    const mainCategoryNames = {
+        'restauration': 'Restaurants',
+        'hebergement': 'Hébergements',
+        'activites': 'Activités',
+        'commerces': 'Commerces'
+    };
+    
+    const breadcrumbItems = [
+        { name: 'Accueil', url: window.location.origin },
+        { name: mainCategoryNames[place.mainCategory] || 'Lieux', url: `${window.location.origin}/${place.mainCategory}` },
+        { name: place.name, url: window.location.href }
+    ];
+    
+    const placeSchema = generatePlaceSchema(place);
+    const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbItems);
+    
+    const combinedSchema = {
+        "@context": "https://schema.org",
+        "@graph": [placeSchema, breadcrumbSchema]
+    };
+
     return (
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <SEO
+                title={`${place.name} - ${place.category}`}
+                description={place.description.substring(0, 160)}
+                image={place.imageUrl}
+                url={window.location.href}
+                type="place"
+                jsonLd={combinedSchema}
+            />
             <div className="relative h-96 rounded-2xl overflow-hidden shadow-lg mb-8">
                 <img src={place.imageUrl} alt={place.name} className="absolute inset-0 w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>

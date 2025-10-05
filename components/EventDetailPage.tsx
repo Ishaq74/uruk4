@@ -1,6 +1,8 @@
 import React from 'react';
 import { Event, Place, Profile } from '../types';
 import Icon from './Icon';
+import SEO from './SEO';
+import { generateEventSchema, generateBreadcrumbSchema } from '../utils/seo-schemas';
 
 interface EventDetailPageProps {
   id: string;
@@ -26,8 +28,31 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ id, events, navigateT
     return <div className="text-center py-20">Événement non trouvé.</div>;
   }
 
+  // Generate SEO data
+  const breadcrumbItems = [
+    { name: 'Accueil', url: window.location.origin },
+    { name: 'Événements', url: `${window.location.origin}/events` },
+    { name: event.title, url: window.location.href }
+  ];
+  
+  const eventSchema = generateEventSchema(event);
+  const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbItems);
+  
+  const combinedSchema = {
+    "@context": "https://schema.org",
+    "@graph": [eventSchema, breadcrumbSchema]
+  };
+
   return (
     <div className="bg-white">
+      <SEO
+        title={event.title}
+        description={event.description.substring(0, 160)}
+        image={event.imageUrl}
+        url={window.location.href}
+        type="event"
+        jsonLd={combinedSchema}
+      />
       {/* Header Image */}
       <div className="relative h-96">
         <img src={event.imageUrl} alt={event.title} className="absolute inset-0 w-full h-full object-cover" />

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Article, Place, Profile, Comment } from '../types';
 import Icon from './Icon';
+import SEO from './SEO';
+import { generateArticleSchema, generateBreadcrumbSchema } from '../utils/seo-schemas';
 
 interface ArticleDetailPageProps {
   id: string;
@@ -68,8 +70,31 @@ const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ id, articles, pro
         setCommentContent('');
     }
 
+    // Generate SEO data
+    const breadcrumbItems = [
+        { name: 'Accueil', url: window.location.origin },
+        { name: 'Magazine', url: `${window.location.origin}/articles` },
+        { name: article.title, url: window.location.href }
+    ];
+    
+    const articleSchema = generateArticleSchema(article, author?.fullName);
+    const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbItems);
+    
+    const combinedSchema = {
+        "@context": "https://schema.org",
+        "@graph": [articleSchema, breadcrumbSchema]
+    };
+
     return (
         <div className="bg-white">
+            <SEO
+                title={article.title}
+                description={article.excerpt}
+                image={article.imageUrl}
+                url={window.location.href}
+                type="article"
+                jsonLd={combinedSchema}
+            />
             <div className="relative h-96">
                 <img src={article.imageUrl} alt={article.title} className="absolute inset-0 w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>

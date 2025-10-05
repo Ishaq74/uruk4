@@ -1,6 +1,8 @@
 import React from 'react';
 import { Trail, TrailDifficulty, Place } from '../types';
 import Icon from './Icon';
+import SEO from './SEO';
+import { generateTrailSchema, generateBreadcrumbSchema } from '../utils/seo-schemas';
 
 interface TrailDetailPageProps {
   id: string;
@@ -38,8 +40,31 @@ const TrailDetailPage: React.FC<TrailDetailPageProps> = ({ id, trails, navigateT
     return <div className="text-center py-20">Sentier non trouvé. <a href="/" onClick={(e) => { e.preventDefault(); navigateTo('home')}} className="text-sky-600">Retour à l'accueil</a></div>;
     }
 
+    // Generate SEO data
+    const breadcrumbItems = [
+        { name: 'Accueil', url: window.location.origin },
+        { name: 'Sentiers & Randonnées', url: `${window.location.origin}/trails` },
+        { name: trail.name, url: window.location.href }
+    ];
+    
+    const trailSchema = generateTrailSchema(trail);
+    const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbItems);
+    
+    const combinedSchema = {
+        "@context": "https://schema.org",
+        "@graph": [trailSchema, breadcrumbSchema]
+    };
+
     return (
         <div className="bg-white">
+            <SEO
+                title={`${trail.name} - Randonnée`}
+                description={trail.excerpt || trail.description.substring(0, 160)}
+                image={trail.imageUrl}
+                url={window.location.href}
+                type="article"
+                jsonLd={combinedSchema}
+            />
             {/* Header Image */}
             <div className="relative h-96">
                 <img src={trail.imageUrl} alt={trail.name} className="absolute inset-0 w-full h-full object-cover" />

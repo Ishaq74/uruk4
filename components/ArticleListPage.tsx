@@ -1,5 +1,7 @@
 import React from 'react';
 import { Article, Place, Profile } from '../types';
+import SEO from './SEO';
+import { generateCollectionPageSchema, generateBreadcrumbSchema } from '../utils/seo-schemas';
 
 interface ArticleListPageProps {
   articles: Article[];
@@ -44,8 +46,33 @@ const ArticleCard: React.FC<{ article: Article; author: Profile | undefined; nav
 
 
 const ArticleListPage: React.FC<ArticleListPageProps> = ({ articles, profiles, navigateTo }) => {
+    // Generate SEO schemas
+    const breadcrumbItems = [
+        { name: 'Accueil', url: window.location.origin },
+        { name: 'Magazine', url: window.location.href }
+    ];
+    
+    const collectionSchema = generateCollectionPageSchema(
+        'Le Magazine - Annecy',
+        'Histoires, portraits et secrets d\'Annecy, racontés par ceux qui y vivent.',
+        articles.length
+    );
+    
+    const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbItems);
+    
+    const combinedSchema = {
+        "@context": "https://schema.org",
+        "@graph": [collectionSchema, breadcrumbSchema]
+    };
+
     return (
         <div className="bg-slate-100">
+            <SEO
+                title="Le Magazine - Annecy"
+                description="Histoires, portraits et secrets d'Annecy, racontés par ceux qui y vivent."
+                type="website"
+                jsonLd={combinedSchema}
+            />
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div className="text-center mb-12">
                     <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">Le Magazine</h1>

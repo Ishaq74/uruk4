@@ -3,6 +3,8 @@ import { EVENT_CATEGORIES } from '../constants';
 import { Event, FilterOption, Place, EventCategory } from '../types';
 import Icon from './Icon';
 import InteractiveMap from './InteractiveMap';
+import SEO from './SEO';
+import { generateCollectionPageSchema, generateBreadcrumbSchema } from '../utils/seo-schemas';
 
 interface EventListPageProps {
   events: Event[];
@@ -98,8 +100,33 @@ const EventListPage: React.FC<EventListPageProps> = ({ events, navigateTo }) => 
         });
     }, [events, selectedCategories]);
 
+    // Generate SEO schemas
+    const breadcrumbItems = [
+        { name: 'Accueil', url: window.location.origin },
+        { name: 'Événements', url: window.location.href }
+    ];
+    
+    const collectionSchema = generateCollectionPageSchema(
+        'Agenda des Événements à Annecy',
+        'Festivals, concerts, marchés, sports... Découvrez tout ce qui anime Annecy et ses environs.',
+        events.filter(e => e.status === 'published').length
+    );
+    
+    const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbItems);
+    
+    const combinedSchema = {
+        "@context": "https://schema.org",
+        "@graph": [collectionSchema, breadcrumbSchema]
+    };
+
     return (
         <div className="bg-slate-100">
+            <SEO
+                title="Agenda des Événements à Annecy"
+                description="Festivals, concerts, marchés, sports... Découvrez tout ce qui anime Annecy et ses environs."
+                type="website"
+                jsonLd={combinedSchema}
+            />
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div className="text-center mb-12">
                     <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">Agenda des Événements</h1>
