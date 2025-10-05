@@ -223,6 +223,17 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentUser, onLogin, onLog
                 <DropdownItem onClick={() => navClick('settings')}>Paramètres du Compte</DropdownItem>
                 <div className="border-t my-1"></div>
                 <DropdownItem onClick={() => navClick('espace-pro')}>Espace Professionnel</DropdownItem>
+                {(currentUser.role === 'admin' || currentUser.role === 'moderator') && (
+                  <>
+                    <div className="border-t my-1"></div>
+                    <DropdownItem onClick={() => navClick('admin')}>
+                      <span className="flex items-center gap-2 text-sky-600 font-semibold">
+                        <Icon name="shield" className="w-4 h-4" />
+                        Administration
+                      </span>
+                    </DropdownItem>
+                  </>
+                )}
                 <DropdownItem onClick={onLogout}>Déconnexion</DropdownItem>
               </DropdownMenu>
             ) : (
@@ -230,7 +241,7 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentUser, onLogin, onLog
                 <button onClick={onLogin} className="text-sm font-semibold text-gray-600 hover:text-sky-600 transition-colors">
                   Connexion
                 </button>
-                <button className="px-4 py-2 text-sm font-semibold text-white bg-sky-500 rounded-full hover:bg-sky-600 transition-all duration-300 shadow-sm">
+                <button onClick={onLogin} className="px-4 py-2 text-sm font-semibold text-white bg-sky-500 rounded-full hover:bg-sky-600 transition-all duration-300 shadow-sm">
                   Inscription
                 </button>
               </>

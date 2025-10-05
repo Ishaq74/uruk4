@@ -46,7 +46,11 @@ import ClaimPlacePage from './components/ClaimPlacePage';
 import AdCampaignsPage from './components/AdCampaignsPage';
 import ReportModal from './components/ReportModal';
 import LivePage from './components/LivePage';
+import LoginModal from './components/auth/LoginModal';
+import RegisterModal from './components/auth/RegisterModal';
+import AdminDashboard from './components/AdminDashboard';
 
+import { authService, AuthUser, UserProfile } from './services/auth.service';
 
 import { Place, Profile, Review, ForumPost, Message, ForumThread, Order, Booking, Comment, PlaceClaim, Group, Report, Event, Trail, Listing, LiveEvent, Conversation } from './types';
 import { 
@@ -67,6 +71,9 @@ type Route = {
 const App: React.FC = () => {
   const [route, setRoute] = useState<Route>({ page: 'home' });
   const [currentUser, setCurrentUser] = useState<Profile | null>(null);
+  const [authUser, setAuthUser] = useState<AuthUser | null>(null);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   
   // State Management
   const [profiles, setProfiles] = useState(PROFILES);
@@ -97,6 +104,33 @@ const App: React.FC = () => {
     if (!consent) {
         setShowCookieBanner(true);
     }
+
+    // Check if user is logged in
+    if (authService.isAuthenticated()) {
+      authService.getCurrentUser()
+        .then(({ user, profile }) => {
+          setAuthUser(user);
+          // Convert profile to old Profile format for compatibility
+          const mappedProfile: Profile = {
+            id: profile.id,
+            username: profile.username,
+            fullName: profile.fullName,
+            avatarUrl: profile.avatarUrl || '',
+            coverImageUrl: profile.coverImageUrl || '',
+            bio: profile.bio || '',
+            levelId: profile.levelId,
+            joinDate: profile.joinDate.toString(),
+            isVerified: profile.isVerified,
+            points: profile.points,
+            role: user.role as any,
+          };
+          setCurrentUser(mappedProfile);
+        })
+        .catch(() => {
+          // If auth fails, clear token
+          authService.logout();
+        });
+    }
   }, []);
 
   const handleCookieAccept = () => {
@@ -111,8 +145,55 @@ const App: React.FC = () => {
 
   const handleOpenReportModal = (targetId: string, targetType: string) => { setReportModalInfo({ isOpen: true, targetId, targetType }); };
   const handleCloseReportModal = () => { setReportModalInfo({ isOpen: false, targetId: '', targetType: '' }); };
-  const handleLogin = () => { setCurrentUser(profiles[0]); };
-  const handleLogout = () => { setCurrentUser(null); navigateTo('home'); };
+  
+  const handleLogin = async (email: string, password: string) => {
+    const { user, profile } = await authService.login(email, password);
+    setAuthUser(user);
+    const mappedProfile: Profile = {
+      id: profile.id,
+      username: profile.username,
+      fullName: profile.fullName,
+      avatarUrl: profile.avatarUrl || '',
+      coverImageUrl: profile.coverImageUrl || '',
+      bio: profile.bio || '',
+      levelId: profile.levelId,
+      joinDate: profile.joinDate.toString(),
+      isVerified: profile.isVerified,
+      points: profile.points,
+      role: user.role as any,
+    };
+    setCurrentUser(mappedProfile);
+    setIsLoginModalOpen(false);
+  };
+
+  const handleRegister = async (name: string, username: string, email: string, password: string) => {
+    const { user, profile } = await authService.register(name, username, email, password);
+    setAuthUser(user);
+    const mappedProfile: Profile = {
+      id: profile.id,
+      username: profile.username,
+      fullName: profile.fullName,
+      avatarUrl: profile.avatarUrl || '',
+      coverImageUrl: profile.coverImageUrl || '',
+      bio: profile.bio || '',
+      levelId: profile.levelId,
+      joinDate: profile.joinDate.toString(),
+      isVerified: profile.isVerified,
+      points: profile.points,
+      role: user.role as any,
+    };
+    setCurrentUser(mappedProfile);
+    setIsRegisterModalOpen(false);
+  };
+
+  const handleLogout = async () => {
+    await authService.logout();
+    setCurrentUser(null);
+    setAuthUser(null);
+    navigateTo('home');
+  };
+
+  const handleOpenLogin = () => { setIsLoginModalOpen(true); };
   const handleSearch = (query: string) => { navigateTo('search', undefined, undefined, query, undefined); }
   
   // --- Data mutation handlers ---
@@ -286,18 +367,18 @@ const App: React.FC = () => {
   const renderPage = () => {
     switch (route.page) {
       // Discovery
-      case 'live': return <LivePage liveEvents={liveEvents} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} onAddEvent={handleAddLiveEvent} onVote={handleVoteLiveEvent} onLogin={handleLogin} />;
+      case 'live': return <LivePage liveEvents={liveEvents} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} onAddEvent={handleAddLiveEvent} onVote={handleVoteLiveEvent} onLogin={handleOpenLogin} />;
       case 'restaurants': return <PlaceListPage places={places} navigateTo={navigateTo} mainCategory="restauration" />;
       case 'hebergements': return <PlaceListPage places={places} navigateTo={navigateTo} mainCategory="hebergement" />;
       case 'activites': return <PlaceListPage places={places} navigateTo={navigateTo} mainCategory="activites" />;
       case 'commerces': return <PlaceListPage places={places} navigateTo={navigateTo} mainCategory="commerces" />;
-      case 'place-detail': return <PlaceDetailPage id={route.id!} places={places} profiles={profiles} organizations={organizations} products={products} services={services} navigateTo={navigateTo} currentUser={currentUser} toggleFavorite={toggleFavorite} addReview={handleAddReview} onLogin={handleLogin} onAddOrder={handleAddOrder} onAddBooking={handleAddBooking} onOpenReportModal={handleOpenReportModal} />;
+      case 'place-detail': return <PlaceDetailPage id={route.id!} places={places} profiles={profiles} organizations={organizations} products={products} services={services} navigateTo={navigateTo} currentUser={currentUser} toggleFavorite={toggleFavorite} addReview={handleAddReview} onLogin={handleOpenLogin} onAddOrder={handleAddOrder} onAddBooking={handleAddBooking} onOpenReportModal={handleOpenReportModal} />;
       case 'events': return <EventListPage events={events} navigateTo={navigateTo} />;
       case 'event-detail': return <EventDetailPage id={route.id!} events={events} navigateTo={navigateTo} currentUser={currentUser} />;
       case 'trails': return <TrailListPage trails={trails} navigateTo={navigateTo} />;
       case 'trail-detail': return <TrailDetailPage id={route.id!} trails={trails} navigateTo={navigateTo} />;
       case 'articles': return <ArticleListPage articles={articles} profiles={profiles} navigateTo={navigateTo} />;
-      case 'article-detail': return <ArticleDetailPage id={route.id!} articles={articles} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} onAddComment={handleAddComment} onLogin={handleLogin} onOpenReportModal={handleOpenReportModal} />;
+      case 'article-detail': return <ArticleDetailPage id={route.id!} articles={articles} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} onAddComment={handleAddComment} onLogin={handleOpenLogin} onOpenReportModal={handleOpenReportModal} />;
       
       // Community & Services
       case 'annonces': return <AnnoncesListPage listings={allListings} navigateTo={navigateTo} currentUser={currentUser} filter={route.filter} />;
@@ -334,6 +415,16 @@ const App: React.FC = () => {
       case 'pro-bookings': return <BookingsListPage orgId={route.id!} currentUser={currentUser} navigateTo={navigateTo} />;
       case 'claim-place': return <ClaimPlacePage currentUser={currentUser} navigateTo={navigateTo} onClaim={handleClaimPlace} />;
       case 'ad-campaigns': return <AdCampaignsPage currentUser={currentUser} navigateTo={navigateTo} />;
+
+      // Admin
+      case 'admin': return <AdminDashboard 
+        currentUser={currentUser} 
+        navigateTo={navigateTo}
+        pendingPlaces={places.filter(p => p.status === 'pending_review')}
+        pendingEvents={events.filter(e => e.status === 'pending_review')}
+        pendingReports={reports.filter(r => r.status === 'pending')}
+        users={profiles}
+      />;
       
       // System Pages
       case 'search': return <SearchPage query={route.query || ''} places={places} articles={articles} trails={trails} navigateTo={navigateTo} />;
@@ -344,13 +435,25 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
-      <Header navigateTo={navigateTo} currentUser={currentUser} onLogin={handleLogin} onLogout={handleLogout} onSearch={handleSearch} />
+      <Header navigateTo={navigateTo} currentUser={currentUser} onLogin={handleOpenLogin} onLogout={handleLogout} onSearch={handleSearch} />
       <main className="flex-grow">
         {renderPage()}
       </main>
       <Footer navigateTo={navigateTo} onOpenReportModal={() => handleOpenReportModal('site-general', 'Platform')} />
       {showCookieBanner && <CookieBanner onAccept={handleCookieAccept} />}
       <ReportModal isOpen={reportModalInfo.isOpen} onClose={handleCloseReportModal} onSubmit={handleReportSubmit} targetId={reportModalInfo.targetId} targetType={reportModalInfo.targetType} />
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+        onSwitchToRegister={() => { setIsLoginModalOpen(false); setIsRegisterModalOpen(true); }}
+        onLogin={handleLogin}
+      />
+      <RegisterModal 
+        isOpen={isRegisterModalOpen} 
+        onClose={() => setIsRegisterModalOpen(false)} 
+        onSwitchToLogin={() => { setIsRegisterModalOpen(false); setIsLoginModalOpen(true); }}
+        onRegister={handleRegister}
+      />
     </div>
   );
 };
