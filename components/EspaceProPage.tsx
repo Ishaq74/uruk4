@@ -1,11 +1,13 @@
 import React from 'react';
 import { Profile, Place, Organization, PlaceClaim, ContentStatus } from '../types';
 import Icon from './Icon';
-import { ORGANIZATIONS, PLACES, CLAIMS } from '../constants';
 
 interface EspaceProPageProps {
   currentUser: Profile | null;
   navigateTo: (page: string, id?: string, mainCategory?: Place['mainCategory'], query?: string, slug?: string, filter?: 'my-listings' | 'my-groups') => void;
+  organizations: Organization[];
+  places: Place[];
+  claims: PlaceClaim[];
 }
 
 const getStatusBadge = (status?: ContentStatus) => {
@@ -111,7 +113,7 @@ const EspaceProDashboard: React.FC<{ org: Organization; places: Place[], userCla
     );
 };
 
-const EspaceProPage: React.FC<EspaceProPageProps> = ({ currentUser, navigateTo }) => {
+const EspaceProPage: React.FC<EspaceProPageProps> = ({ currentUser, navigateTo, organizations, places, claims }) => {
 
     if (!currentUser) {
         return (
@@ -125,14 +127,14 @@ const EspaceProPage: React.FC<EspaceProPageProps> = ({ currentUser, navigateTo }
         );
     }
     
-    const userOrganization = ORGANIZATIONS.find(org => org.primary_owner_id === currentUser.id);
-    const userClaims = CLAIMS.filter(c => c.userId === currentUser.id);
+    const userOrganization = organizations.find(org => org.primary_owner_id === currentUser.id);
+    const userClaims = claims.filter(c => c.userId === currentUser.id);
 
     return (
         <div className="bg-slate-100 min-h-screen">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 {userOrganization ? (
-                    <EspaceProDashboard org={userOrganization} places={PLACES} userClaims={userClaims} navigateTo={navigateTo} />
+                    <EspaceProDashboard org={userOrganization} places={places} userClaims={userClaims} navigateTo={navigateTo} />
                 ) : (
                     <div className="text-center max-w-2xl mx-auto">
                          <Icon name="building-office" className="w-16 h-16 text-sky-500 mx-auto" />

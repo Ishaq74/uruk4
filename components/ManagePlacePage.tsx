@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Place, Profile } from '../types';
-import { PLACES } from '../constants';
 
 interface ManagePlacePageProps {
   id: string;
   currentUser: Profile | null;
   navigateTo: (page: string, id?: string) => void;
   onUpdatePlace: (placeId: string, data: Partial<Pick<Place, 'name' | 'description' | 'category'>>) => void;
+  places: Place[];
 }
 
-const ManagePlacePage: React.FC<ManagePlacePageProps> = ({ id, currentUser, navigateTo, onUpdatePlace }) => {
+const ManagePlacePage: React.FC<ManagePlacePageProps> = ({ id, currentUser, navigateTo, onUpdatePlace, places }) => {
   const [place, setPlace] = useState<Place | null>(null);
   const [formData, setFormData] = useState({
       name: '',
@@ -18,7 +18,7 @@ const ManagePlacePage: React.FC<ManagePlacePageProps> = ({ id, currentUser, navi
   });
 
   useEffect(() => {
-    const foundPlace = PLACES.find(p => p.id === id);
+    const foundPlace = places.find(p => p.id === id);
     if (foundPlace) {
       setPlace(foundPlace);
       setFormData({
@@ -27,7 +27,7 @@ const ManagePlacePage: React.FC<ManagePlacePageProps> = ({ id, currentUser, navi
           description: foundPlace.description,
       });
     }
-  }, [id]);
+  }, [id, places]);
 
   if (!currentUser) {
     return <div className="text-center py-20">Accès non autorisé.</div>;
