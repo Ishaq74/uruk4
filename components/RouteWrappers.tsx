@@ -6,6 +6,7 @@ import EventDetailPage from './EventDetailPage';
 import TrailDetailPage from './TrailDetailPage';
 import ArticleDetailPage from './ArticleDetailPage';
 import AnnonceDetailPage from './AnnonceDetailPage';
+import AnnoncesListPage from './AnnoncesListPage';
 import ForumCategoryPage from './ForumCategoryPage';
 import ForumThreadPage from './ForumThreadPage';
 import GroupDetailPage from './GroupDetailPage';
@@ -83,6 +84,15 @@ export const AnnonceDetailWrapper: React.FC<{
 }> = (props) => {
   const { id, slug } = useParams<{ id?: string; slug?: string }>();
   return <AnnonceDetailPage {...props} id={slug || id || ''} />;
+};
+
+export const AnnoncesListCategoryWrapper: React.FC<{
+  listings: Listing[];
+  navigateTo: (page: string, id?: string, mainCategory?: Place['mainCategory'], query?: string, slug?: string, filter?: 'my-listings' | 'my-groups') => void;
+  currentUser: Profile | null;
+}> = (props) => {
+  const { categorySlug } = useParams<{ categorySlug: string }>();
+  return <AnnoncesListPage {...props} categorySlug={categorySlug} />;
 };
 
 export const ForumCategoryWrapper: React.FC<{

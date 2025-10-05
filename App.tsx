@@ -40,6 +40,7 @@ import {
   TrailDetailWrapper,
   ArticleDetailWrapper,
   AnnonceDetailWrapper,
+  AnnoncesListCategoryWrapper,
   ForumCategoryWrapper,
   ForumThreadWrapper,
   GroupDetailWrapper,
@@ -603,6 +604,7 @@ const App: React.FC = () => {
           
           {/* Annonces */}
           <Route path="/annonces" element={<AnnoncesListPage listings={allListings} navigateTo={navigateTo} currentUser={currentUser} />} />
+          <Route path="/annonces/:categorySlug" element={<AnnoncesListCategoryWrapper listings={allListings} navigateTo={navigateTo} currentUser={currentUser} />} />
           <Route path="/mes-annonces" element={<AnnoncesListPage listings={allListings} navigateTo={navigateTo} currentUser={currentUser} filter="my-listings" />} />
           <Route path="/annonce/:slug" element={<AnnonceDetailWrapper listings={allListings} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} onStartConversation={handleStartConversation} />} />
           

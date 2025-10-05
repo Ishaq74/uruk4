@@ -5,7 +5,8 @@ import {
     RESTAURATION_CATEGORIES, 
     HEBERGEMENT_CATEGORIES, 
     ACTIVITES_CATEGORIES,
-    COMMERCES_CATEGORIES 
+    COMMERCES_CATEGORIES,
+    LISTING_CATEGORIES 
 } from '../constants';
 import { generateCategorySlug } from '../utils/slug';
 
@@ -176,6 +177,11 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentUser, onLogin, onLog
 
                  <MobileCollapsible title="Petites Annonces">
                     <DropdownItem isMobile onClick={() => navClick('annonces')}>Toutes les annonces</DropdownItem>
+                    {LISTING_CATEGORIES.map(cat => (
+                        <DropdownItem key={cat.id} isMobile onClick={() => navToPath(`/annonces/${generateCategorySlug(cat.label)}`)}>
+                            <div className="pl-4 text-gray-600">• {cat.label}</div>
+                        </DropdownItem>
+                    ))}
                  </MobileCollapsible>
             </div>
             <div className="py-6 px-5 border-t border-gray-200">
@@ -274,7 +280,14 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentUser, onLogin, onLog
 
                 {/* Listings Menu */}
                  <DropdownMenu title="Petites Annonces">
-                    <DropdownItem onClick={() => navClick('annonces')}>Toutes les annonces</DropdownItem>
+                    <DropdownItem onClick={() => navClick('annonces')}>
+                        <div className="font-semibold">Toutes les annonces</div>
+                    </DropdownItem>
+                    {LISTING_CATEGORIES.map(cat => (
+                        <DropdownItem key={cat.id} onClick={() => navToPath(`/annonces/${generateCategorySlug(cat.label)}`)}>
+                            <div className="pl-4 text-gray-600">• {cat.label}</div>
+                        </DropdownItem>
+                    ))}
                 </DropdownMenu>
             </nav>
           </div>
