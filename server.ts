@@ -6,8 +6,24 @@ import * as schema from './schema';
 import { eq } from 'drizzle-orm';
 
 const app = express();
+// Log all incoming requests for debugging
+app.use((req, res, next) => {
+  console.log('--- Incoming Request ---');
+  console.log('Method:', req.method);
+  console.log('URL:', req.originalUrl);
+  console.log('Headers:', req.headers);
+  if (req.method !== 'GET') {
+    console.log('Body:', req.body);
+  }
+  next();
+});
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3001',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 app.use(express.json());
 
 // Mount Better-Auth API routes
