@@ -5,6 +5,8 @@ import AgendaCarousel from './AgendaCarousel';
 import CategoryGrid from './CategoryGrid';
 import LatestListings from './LatestListings';
 import MagazineSection from './MagazineSection';
+import SEO from './SEO';
+import { generateOrganizationSchema } from '../utils/seo-schemas';
 import { Place, Event, Trail, Article, Listing } from '../types';
 
 interface HomePageProps {
@@ -18,8 +20,17 @@ interface HomePageProps {
 }
 
 const HomePage: React.FC<HomePageProps> = ({ places, events, trails, articles, listings, navigateTo, onSearch }) => {
+  // Generate SEO schema for homepage
+  const organizationSchema = generateOrganizationSchema();
+
   return (
     <>
+      <SEO
+        title="Salut Annecy - Votre guide local complet"
+        description="Découvrez les meilleurs restaurants, hébergements, activités et événements à Annecy. Votre guide local complet pour la Venise des Alpes."
+        type="website"
+        jsonLd={organizationSchema}
+      />
       <Hero onSearch={onSearch} />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
         <FeaturedContent places={places} events={events} trails={trails} navigateTo={navigateTo} />

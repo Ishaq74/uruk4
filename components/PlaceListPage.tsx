@@ -11,6 +11,8 @@ import { Place, FilterOption } from '../types';
 import StarRating from './StarRating';
 import Icon from './Icon';
 import InteractiveMap from './InteractiveMap';
+import SEO from './SEO';
+import { generateCollectionPageSchema, generateBreadcrumbSchema } from '../utils/seo-schemas';
 
 interface PlaceListPageProps {
   places: Place[];
@@ -165,6 +167,25 @@ const PlaceListPage: React.FC<PlaceListPageProps> = ({ places, navigateTo, mainC
 
     const config = PAGE_CONFIG[mainCategory];
     
+    // Generate SEO schemas
+    const breadcrumbItems = [
+        { name: 'Accueil', url: window.location.origin },
+        { name: config.title, url: window.location.href }
+    ];
+    
+    const collectionSchema = generateCollectionPageSchema(
+        config.title,
+        config.description,
+        places.filter(p => p.mainCategory === mainCategory && p.status === 'published').length
+    );
+    
+    const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbItems);
+    
+    const combinedSchema = {
+        "@context": "https://schema.org",
+        "@graph": [collectionSchema, breadcrumbSchema]
+    };
+    
     const handleCategoryChange = (category: string) => {
         setSelectedCategories(prev => prev.includes(category) ? prev.filter(c => c !== category) : [...prev, category]);
     };
@@ -188,6 +209,12 @@ const PlaceListPage: React.FC<PlaceListPageProps> = ({ places, navigateTo, mainC
 
     return (
         <div className="bg-slate-100">
+            <SEO
+                title={config.title}
+                description={config.description}
+                type="website"
+                jsonLd={combinedSchema}
+            />
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div className="text-center mb-12">
                     <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">{config.title}</h1>

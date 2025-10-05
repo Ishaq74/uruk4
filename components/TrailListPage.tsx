@@ -3,6 +3,8 @@ import { TRAIL_DIFFICULTY_OPTIONS } from '../constants';
 import { Trail, TrailDifficulty, Place } from '../types';
 import Icon from './Icon';
 import InteractiveMap from './InteractiveMap';
+import SEO from './SEO';
+import { generateCollectionPageSchema, generateBreadcrumbSchema } from '../utils/seo-schemas';
 
 interface TrailListPageProps {
   trails: Trail[];
@@ -95,9 +97,33 @@ const TrailListPage: React.FC<TrailListPageProps> = ({ trails, navigateTo }) => 
         return currentTrails.filter(trail => selectedDifficulties.includes(trail.difficulty));
     }, [trails, selectedDifficulties]);
 
+    // Generate SEO schemas
+    const breadcrumbItems = [
+        { name: 'Accueil', url: window.location.origin },
+        { name: 'Sentiers & Randonnées', url: window.location.href }
+    ];
+    
+    const collectionSchema = generateCollectionPageSchema(
+        'Sentiers & Randonnées autour d\'Annecy',
+        'Des balades familiales aux ascensions sportives, explorez les plus beaux sentiers entre lac et montagnes.',
+        trails.filter(t => t.status === 'published').length
+    );
+    
+    const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbItems);
+    
+    const combinedSchema = {
+        "@context": "https://schema.org",
+        "@graph": [collectionSchema, breadcrumbSchema]
+    };
 
     return (
         <div className="bg-slate-100">
+            <SEO
+                title="Sentiers & Randonnées autour d'Annecy"
+                description="Des balades familiales aux ascensions sportives, explorez les plus beaux sentiers entre lac et montagnes."
+                type="website"
+                jsonLd={combinedSchema}
+            />
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div className="text-center mb-12">
                     <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">Sentiers & Randonnées</h1>
