@@ -7,6 +7,7 @@ Ce document décrit le schéma complet et intégral de la base de données pour 
 ## 🏗️ Architecture
 
 ### Technologies
+
 - **Base de données**: PostgreSQL
 - **ORM**: Drizzle ORM
 - **Authentification**: Better-Auth (à intégrer)
@@ -31,6 +32,7 @@ Le schéma est organisé en 7 modules principaux :
 ### 1. AUTHENTIFICATION & UTILISATEURS
 
 #### `user_levels` - Niveaux de Gamification
+
 Système de progression des utilisateurs basé sur les points.
 
 | Colonne | Type | Description |
@@ -41,11 +43,13 @@ Système de progression des utilisateurs basé sur les points.
 | `created_at` | TIMESTAMP | Date de création |
 
 **Niveaux prévus:**
+
 - Niveau 1: Nouveau venu (0 points)
 - Niveau 2: Contributeur (50 points)
 - Niveau 3: Expert Local (250 points)
 
 #### `profiles` - Profils Utilisateurs
+
 Informations détaillées des utilisateurs et données de gamification.
 
 | Colonne | Type | Description |
@@ -65,6 +69,7 @@ Informations détaillées des utilisateurs et données de gamification.
 | `updated_at` | TIMESTAMP | Date de modification |
 
 #### `user_favorite_places` - Lieux Favoris
+
 Relation many-to-many entre utilisateurs et lieux.
 
 | Colonne | Type | Description |
@@ -108,6 +113,7 @@ Table principale pour restaurants, hébergements, activités, commerces.
 | `published_at` | TIMESTAMP | Date de publication |
 
 **Catégories principales:**
+
 - `restauration`: Restaurants, cafés, pizzerias, gastronomique, savoyard
 - `hebergement`: Hôtels, chambres d'hôtes, gîtes
 - `activites`: Sports aériens, activités nautiques, terrestres
@@ -266,6 +272,7 @@ Commentaires sur articles et autres contenus.
 | `created_at` | TIMESTAMP | Date de création |
 
 **Catégories prévues:**
+
 - Restaurants & Gastronomie
 - Hébergement & Hôtellerie
 - Activités & Loisirs
@@ -521,6 +528,7 @@ Suivi des interactions utilisateurs avec le contenu.
 ## 🔐 Statuts et Énumérations
 
 ### ContentStatus (Statut de Contenu)
+
 - `draft` - Brouillon
 - `pending_review` - En attente de modération
 - `published` - Publié
@@ -530,21 +538,25 @@ Suivi des interactions utilisateurs avec le contenu.
 - `hidden` - Masqué
 
 ### SubscriptionTier (Niveau d'Abonnement)
+
 - `free` - Gratuit
 - `pro` - Professionnel
 - `premium` - Premium
 
 ### ClaimStatus (Statut de Réclamation)
+
 - `pending` - En attente
 - `approved` - Approuvé
 - `rejected` - Rejeté
 
 ### OrderStatus (Statut de Commande)
+
 - `processing` - En traitement
 - `completed` - Terminée
 - `cancelled` - Annulée
 
 ### BookingStatus (Statut de Réservation)
+
 - `pending` - En attente
 - `confirmed` - Confirmée
 - `cancelled` - Annulée
@@ -554,18 +566,21 @@ Suivi des interactions utilisateurs avec le contenu.
 ## 🔗 Relations Principales
 
 ### Utilisateurs
+
 - Un profil appartient à un niveau
 - Un profil peut avoir plusieurs lieux favoris
 - Un profil peut écrire plusieurs avis, articles, commentaires
 - Un profil peut être propriétaire d'une ou plusieurs organisations
 
 ### Lieux
+
 - Un lieu appartient à une organisation (optionnel)
 - Un lieu a plusieurs avis
 - Un lieu peut être réclamé par plusieurs organisations
 - Un lieu peut être favoris de plusieurs utilisateurs
 
 ### Organisations
+
 - Une organisation appartient à un propriétaire principal
 - Une organisation peut gérer plusieurs lieux
 - Une organisation peut vendre plusieurs produits
@@ -573,15 +588,18 @@ Suivi des interactions utilisateurs avec le contenu.
 - Une organisation peut avoir plusieurs commandes et réservations
 
 ### Forums
+
 - Une catégorie contient plusieurs threads
 - Un thread contient plusieurs posts
 - Un post peut avoir un parent (réponse imbriquée)
 
 ### Groupes
+
 - Un groupe a plusieurs membres
 - Un membre a un rôle (owner, admin, member)
 
 ### Messagerie
+
 - Une conversation a plusieurs participants
 - Une conversation contient plusieurs messages
 
@@ -632,13 +650,16 @@ CREATE INDEX idx_bookings_customer ON bookings(customer_id);
 ### Étapes de Migration
 
 1. **Installation des dépendances**
+
    ```bash
    npm install drizzle-orm pg
    npm install -D drizzle-kit
    ```
 
 2. **Configuration de Drizzle**
+
    Créer `drizzle.config.ts` :
+
    ```typescript
    import type { Config } from 'drizzle-kit';
    
@@ -653,11 +674,13 @@ CREATE INDEX idx_bookings_customer ON bookings(customer_id);
    ```
 
 3. **Génération des migrations**
+
    ```bash
    npx drizzle-kit generate:pg
    ```
 
 4. **Application des migrations**
+
    ```bash
    npx drizzle-kit push:pg
    ```
@@ -682,7 +705,7 @@ export const auth = betterAuth({
 
 ## 📊 Diagramme ER Simplifié
 
-```
+```md
 Users & Auth
 ├── user_levels
 ├── profiles
@@ -764,7 +787,7 @@ Ce schéma inclut **TOUTES** les entités TypeScript définies dans `types.ts` :
 - [x] FilterOption (utilisé pour UI, pas stocké en DB)
 - [x] AnalyticsEvent (table)
 
-**Total : 35 interfaces/types TypeScript → 32 tables PostgreSQL + 3 types UI-only**
+### Total : 35 interfaces/types TypeScript → 32 tables PostgreSQL + 3 types UI-only
 
 ---
 

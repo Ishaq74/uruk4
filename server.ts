@@ -11,9 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 // Mount Better-Auth API routes
-app.all('/api/auth/*', (req, res) => {
-  return auth.handler(req, res);
-});
+app.use('/api/auth', auth.handler);
 
 // Create profile after user registration
 app.post('/api/auth/create-profile', async (req, res) => {
@@ -62,7 +60,7 @@ app.post('/api/auth/create-profile', async (req, res) => {
 // Get current user with profile
 app.get('/api/auth/me', async (req, res) => {
   try {
-    const session = await auth.api.getSession({ headers: req.headers });
+  const session = await auth.api.getSession({ request: req });
     
     if (!session) {
       return res.status(401).json({ error: 'Non authentifié' });
@@ -86,7 +84,7 @@ app.get('/api/auth/me', async (req, res) => {
 // Admin: Update user role
 app.post('/api/admin/users/:userId/role', async (req, res) => {
   try {
-    const session = await auth.api.getSession({ headers: req.headers });
+  const session = await auth.api.getSession({ request: req });
     
     if (!session || session.user.role !== 'admin') {
       return res.status(403).json({ error: 'Accès refusé' });
@@ -113,7 +111,7 @@ app.post('/api/admin/users/:userId/role', async (req, res) => {
 // Admin: Get all users
 app.get('/api/admin/users', async (req, res) => {
   try {
-    const session = await auth.api.getSession({ headers: req.headers });
+  const session = await auth.api.getSession({ request: req });
     
     if (!session || (session.user.role !== 'admin' && session.user.role !== 'moderator')) {
       return res.status(403).json({ error: 'Accès refusé' });
@@ -131,7 +129,7 @@ app.get('/api/admin/users', async (req, res) => {
 // Admin: Approve place
 app.post('/api/admin/places/:placeId/approve', async (req, res) => {
   try {
-    const session = await auth.api.getSession({ headers: req.headers });
+  const session = await auth.api.getSession({ request: req });
     
     if (!session || (session.user.role !== 'admin' && session.user.role !== 'moderator')) {
       return res.status(403).json({ error: 'Accès refusé' });
@@ -153,7 +151,7 @@ app.post('/api/admin/places/:placeId/approve', async (req, res) => {
 // Admin: Reject place
 app.post('/api/admin/places/:placeId/reject', async (req, res) => {
   try {
-    const session = await auth.api.getSession({ headers: req.headers });
+  const session = await auth.api.getSession({ request: req });
     
     if (!session || (session.user.role !== 'admin' && session.user.role !== 'moderator')) {
       return res.status(403).json({ error: 'Accès refusé' });
@@ -181,7 +179,7 @@ app.post('/api/admin/places/:placeId/reject', async (req, res) => {
 // Get user's organizations
 app.get('/api/organizations/my', async (req, res) => {
   try {
-    const session = await auth.api.getSession({ headers: req.headers });
+  const session = await auth.api.getSession({ request: req });
     
     if (!session) {
       return res.status(401).json({ error: 'Non authentifié' });
@@ -222,7 +220,7 @@ app.get('/api/organizations/my', async (req, res) => {
 // Create organization
 app.post('/api/organizations', async (req, res) => {
   try {
-    const session = await auth.api.getSession({ headers: req.headers });
+  const session = await auth.api.getSession({ request: req });
     
     if (!session) {
       return res.status(401).json({ error: 'Non authentifié' });
@@ -259,7 +257,7 @@ app.post('/api/organizations', async (req, res) => {
 // Update organization
 app.put('/api/organizations/:orgId', async (req, res) => {
   try {
-    const session = await auth.api.getSession({ headers: req.headers });
+  const session = await auth.api.getSession({ headers: req.headers as any });
     
     if (!session) {
       return res.status(401).json({ error: 'Non authentifié' });

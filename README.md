@@ -98,7 +98,7 @@ Une plateforme web complète pour découvrir et explorer Annecy, France. Ce guid
 
 ### Base de Données & Authentification
 
-**Production-Ready avec Better-Auth, PostgreSQL et Drizzle ORM**
+### Production-Ready avec Better-Auth, PostgreSQL et Drizzle ORM
 
 Le projet dispose maintenant d'un système d'authentification complet et d'une architecture de base de données prête pour la production :
 
@@ -167,7 +167,7 @@ Créer un fichier `.env` à la racine (voir `.env.example` pour référence) :
    EMAIL_SERVICE_API_KEY=your_email_service_api_key
    ```
 
-4. **Configurer la base de données PostgreSQL**
+1. **Configurer la base de données PostgreSQL**
 
    ```bash
    # Créer la base de données
@@ -180,7 +180,7 @@ Créer un fichier `.env` à la racine (voir `.env.example` pour référence) :
    npm run db:seed
    ```
 
-5. **Lancer le serveur de développement**
+2. **Lancer le serveur de développement**
 
    Vous devez lancer deux serveurs :
 
@@ -198,12 +198,15 @@ Créer un fichier `.env` à la racine (voir `.env.example` pour référence) :
 ### Build de Production
 
 1. **Build du Frontend**
+
    ```bash
    npm run build
    ```
+
    Le build sera généré dans le dossier `dist/`
 
 2. **Servir les fichiers statiques**
+
    ```bash
    npm run preview
    ```
@@ -225,6 +228,7 @@ Pour la production, utilisez un serveur web comme Nginx ou déployez sur Vercel,
 ### Inscription et Connexion
 
 Les utilisateurs peuvent créer un compte avec :
+
 - Nom complet
 - Nom d'utilisateur (unique)
 - Email (avec vérification)
@@ -239,6 +243,7 @@ Les utilisateurs peuvent créer un compte avec :
 ### Panel d'Administration
 
 Accessible via le menu utilisateur pour les admins et modérateurs :
+
 - Modération des lieux en attente
 - Modération des événements en attente
 - Gestion des utilisateurs et rôles (admin uniquement)

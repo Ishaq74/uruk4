@@ -15,6 +15,13 @@
       "when": 1759662031661,
       "tag": "0001_peaceful_big_bertha",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1759663785492,
+      "tag": "0002_parched_sumo",
+      "breakpoints": true
     }
   ]
 }
