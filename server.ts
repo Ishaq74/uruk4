@@ -81,6 +81,9 @@ app.get('/api/auth/me', async (req, res) => {
   }
 });
 
+// NOTE: User management endpoints (list users, update roles, ban/unban) are now
+// handled by Better Auth Admin Plugin at /api/auth/* routes.
+// See ADMIN_PLUGIN_GUIDE.md for usage.
 // Admin: Update user role
 app.post('/api/admin/users/:userId/role', async (req, res) => {
   try {

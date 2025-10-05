@@ -22,6 +22,13 @@
       "when": 1759663785492,
       "tag": "0002_parched_sumo",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1759666756127,
+      "tag": "0003_careless_exiles",
+      "breakpoints": true
     }
   ]
 }

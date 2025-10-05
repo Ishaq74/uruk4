@@ -103,12 +103,18 @@ Une plateforme web complète pour découvrir et explorer Annecy, France. Ce guid
 Le projet dispose maintenant d'un système d'authentification complet et d'une architecture de base de données prête pour la production :
 
 - ✅ **Better-Auth** - Authentification complète (email/password, vérification email)
+- ✅ **Better-Auth Admin Plugin** - Gestion avancée des utilisateurs et permissions
 - ✅ **PostgreSQL** - Base de données relationnelle
 - ✅ **Drizzle ORM** - ORM type-safe pour TypeScript
 - ✅ **Express** - API server pour les endpoints d'authentification
 - ✅ **Système de rôles** - Admin, Modérateur, Utilisateur
-- ✅ **Panel d'administration** - Modération de contenu
+- ✅ **Panel d'administration** - Modération de contenu et gestion des utilisateurs
 - ✅ **Gestion des permissions** - Protection des routes et actions
+- ✅ **Ban system** - Suspension temporaire ou permanente des utilisateurs
+- ✅ **Impersonation** - Les admins peuvent se faire passer pour d'autres utilisateurs
+
+> **📚 Documentation Admin Plugin** :
+> Consultez [ADMIN_PLUGIN_GUIDE.md](./ADMIN_PLUGIN_GUIDE.md) pour un guide complet sur l'utilisation du plugin d'administration Better Auth.
 
 > **📊 Documentation de la Base de Données** :
 
@@ -248,6 +254,15 @@ Accessible via le menu utilisateur pour les admins et modérateurs :
 - Modération des événements en attente
 - Gestion des utilisateurs et rôles (admin uniquement)
 - Traitement des signalements
+- Gestion avancée avec Better-Auth Admin Plugin :
+  - Création et suppression d'utilisateurs
+  - Modification des rôles
+  - Ban/Unban d'utilisateurs
+  - Gestion des sessions utilisateur
+  - Impersonation d'utilisateurs
+  - Filtrage et recherche avancés
+
+> **📘 Pour plus d'informations** : Consultez [ADMIN_PLUGIN_GUIDE.md](./ADMIN_PLUGIN_GUIDE.md)
 
 ## 📁 Structure du Projet
 

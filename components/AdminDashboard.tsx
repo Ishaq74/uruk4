@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Shield, Users, MapPin, Calendar, MessageSquare, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Shield, Users, MapPin, Calendar, MessageSquare, AlertTriangle, CheckCircle, XCircle, Ban, Unlock, Trash2, Key, Clock } from 'lucide-react';
+import { authClient } from '../auth-client';
 
 interface AdminDashboardProps {
   currentUser: any;
@@ -7,13 +8,10 @@ interface AdminDashboardProps {
   pendingPlaces?: any[];
   pendingEvents?: any[];
   pendingReports?: any[];
-  users?: any[];
   onApprovePlace?: (placeId: string) => void;
   onRejectPlace?: (placeId: string, reason: string) => void;
   onApproveEvent?: (eventId: string) => void;
   onRejectEvent?: (eventId: string, reason: string) => void;
-  onUpdateUserRole?: (userId: string, role: string) => void;
-  onBanUser?: (userId: string) => void;
 }
 
 const AdminDashboard: React.FC<AdminDashboardProps> = ({
@@ -22,17 +20,21 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
   pendingPlaces = [],
   pendingEvents = [],
   pendingReports = [],
-  users = [],
   onApprovePlace,
   onRejectPlace,
   onApproveEvent,
   onRejectEvent,
-  onUpdateUserRole,
-  onBanUser,
 }) => {
   const [activeTab, setActiveTab] = useState<'overview' | 'places' | 'events' | 'users' | 'reports'>('overview');
   const [rejectionReason, setRejectionReason] = useState('');
   const [showRejectModal, setShowRejectModal] = useState<{ type: 'place' | 'event', id: string } | null>(null);
+  const [users, setUsers] = useState<any[]>([]);
+  const [loadingUsers, setLoadingUsers] = useState(false);
+  const [banModal, setBanModal] = useState<{ userId: string; userName: string } | null>(null);
+  const [banReason, setBanReason] = useState('');
+  const [banDays, setBanDays] = useState<number>(7);
+  const [showSessions, setShowSessions] = useState<{ userId: string; userName: string } | null>(null);
+  const [userSessions, setUserSessions] = useState<any[]>([]);
 
   // Check if user is admin or moderator
   if (!currentUser || (currentUser.role !== 'admin' && currentUser.role !== 'moderator')) {
@@ -52,6 +54,169 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
       </div>
     );
   }
+
+  // Load users using Better Auth Admin API
+  useEffect(() => {
+    if (activeTab === 'users' && currentUser.role === 'admin') {
+      loadUsers();
+    }
+  }, [activeTab, currentUser.role]);
+
+  const loadUsers = async () => {
+    setLoadingUsers(true);
+    try {
+      const { data, error } = await authClient.admin.listUsers({
+        query: { limit: 100 }
+      });
+      
+      if (error) {
+        console.error('Failed to load users:', error);
+      } else if (data) {
+        setUsers(data.users || []);
+      }
+    } catch (error) {
+      console.error('Error loading users:', error);
+    } finally {
+      setLoadingUsers(false);
+    }
+  };
+
+  const handleUpdateUserRole = async (userId: string, newRole: string) => {
+    try {
+      const { error } = await authClient.admin.setRole({
+        userId,
+        role: newRole
+      });
+
+      if (error) {
+        alert('Erreur lors de la mise à jour du rôle: ' + error.message);
+      } else {
+        alert('Rôle mis à jour avec succès');
+        loadUsers(); // Reload users
+      }
+    } catch (error) {
+      console.error('Error updating role:', error);
+      alert('Erreur lors de la mise à jour du rôle');
+    }
+  };
+
+  const handleBanUser = async () => {
+    if (!banModal) return;
+
+    try {
+      const banExpiresIn = banDays > 0 ? banDays * 24 * 60 * 60 : undefined; // Convert days to seconds
+      
+      const { error } = await authClient.admin.banUser({
+        userId: banModal.userId,
+        banReason: banReason || 'Violation des conditions d\'utilisation',
+        banExpiresIn
+      });
+
+      if (error) {
+        alert('Erreur lors du bannissement: ' + error.message);
+      } else {
+        alert('Utilisateur banni avec succès');
+        setBanModal(null);
+        setBanReason('');
+        setBanDays(7);
+        loadUsers();
+      }
+    } catch (error) {
+      console.error('Error banning user:', error);
+      alert('Erreur lors du bannissement');
+    }
+  };
+
+  const handleUnbanUser = async (userId: string) => {
+    try {
+      const { error } = await authClient.admin.unbanUser({ userId });
+
+      if (error) {
+        alert('Erreur lors du débannissement: ' + error.message);
+      } else {
+        alert('Utilisateur débanni avec succès');
+        loadUsers();
+      }
+    } catch (error) {
+      console.error('Error unbanning user:', error);
+      alert('Erreur lors du débannissement');
+    }
+  };
+
+  const handleViewSessions = async (userId: string, userName: string) => {
+    try {
+      const { data, error } = await authClient.admin.listUserSessions({ userId });
+
+      if (error) {
+        alert('Erreur lors du chargement des sessions: ' + error.message);
+      } else if (data) {
+        setUserSessions(data || []);
+        setShowSessions({ userId, userName });
+      }
+    } catch (error) {
+      console.error('Error loading sessions:', error);
+      alert('Erreur lors du chargement des sessions');
+    }
+  };
+
+  const handleRevokeSession = async (sessionToken: string) => {
+    try {
+      const { error } = await authClient.admin.revokeUserSession({ sessionToken });
+
+      if (error) {
+        alert('Erreur lors de la révocation: ' + error.message);
+      } else {
+        alert('Session révoquée avec succès');
+        if (showSessions) {
+          handleViewSessions(showSessions.userId, showSessions.userName);
+        }
+      }
+    } catch (error) {
+      console.error('Error revoking session:', error);
+      alert('Erreur lors de la révocation');
+    }
+  };
+
+  const handleRevokeAllSessions = async (userId: string) => {
+    if (!confirm('Êtes-vous sûr de vouloir révoquer toutes les sessions de cet utilisateur ?')) {
+      return;
+    }
+
+    try {
+      const { error } = await authClient.admin.revokeUserSessions({ userId });
+
+      if (error) {
+        alert('Erreur lors de la révocation: ' + error.message);
+      } else {
+        alert('Toutes les sessions ont été révoquées');
+        setShowSessions(null);
+        setUserSessions([]);
+      }
+    } catch (error) {
+      console.error('Error revoking sessions:', error);
+      alert('Erreur lors de la révocation');
+    }
+  };
+
+  const handleDeleteUser = async (userId: string, userName: string) => {
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer définitivement l'utilisateur ${userName} ? Cette action est irréversible.`)) {
+      return;
+    }
+
+    try {
+      const { error } = await authClient.admin.removeUser({ userId });
+
+      if (error) {
+        alert('Erreur lors de la suppression: ' + error.message);
+      } else {
+        alert('Utilisateur supprimé avec succès');
+        loadUsers();
+      }
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      alert('Erreur lors de la suppression');
+    }
+  };
 
   const handleReject = (type: 'place' | 'event', id: string) => {
     setShowRejectModal({ type, id });
@@ -267,45 +432,97 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <div className="bg-white rounded-lg shadow-sm">
             <div className="p-6">
               <h2 className="text-xl font-bold text-gray-900 mb-4">Gestion des utilisateurs</h2>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="text-left py-3 px-4">Utilisateur</th>
-                      <th className="text-left py-3 px-4">Email</th>
-                      <th className="text-left py-3 px-4">Rôle</th>
-                      <th className="text-left py-3 px-4">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {users.map((user) => (
-                      <tr key={user.id} className="border-b hover:bg-gray-50">
-                        <td className="py-3 px-4">{user.name}</td>
-                        <td className="py-3 px-4">{user.email}</td>
-                        <td className="py-3 px-4">
-                          <select
-                            value={user.role || 'user'}
-                            onChange={(e) => onUpdateUserRole && onUpdateUserRole(user.id, e.target.value)}
-                            className="border rounded px-2 py-1"
-                          >
-                            <option value="user">Utilisateur</option>
-                            <option value="moderator">Modérateur</option>
-                            <option value="admin">Administrateur</option>
-                          </select>
-                        </td>
-                        <td className="py-3 px-4">
-                          <button
-                            onClick={() => onBanUser && onBanUser(user.id)}
-                            className="text-red-600 hover:text-red-800 text-sm"
-                          >
-                            Bannir
-                          </button>
-                        </td>
+              {loadingUsers ? (
+                <p className="text-gray-500 text-center py-8">Chargement des utilisateurs...</p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="text-left py-3 px-4">Utilisateur</th>
+                        <th className="text-left py-3 px-4">Email</th>
+                        <th className="text-left py-3 px-4">Rôle</th>
+                        <th className="text-left py-3 px-4">Statut</th>
+                        <th className="text-left py-3 px-4">Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {users.map((user) => (
+                        <tr key={user.id} className="border-b hover:bg-gray-50">
+                          <td className="py-3 px-4">{user.name}</td>
+                          <td className="py-3 px-4">{user.email}</td>
+                          <td className="py-3 px-4">
+                            <select
+                              value={user.role || 'user'}
+                              onChange={(e) => handleUpdateUserRole(user.id, e.target.value)}
+                              className="border rounded px-2 py-1"
+                              disabled={user.id === currentUser.id}
+                            >
+                              <option value="user">Utilisateur</option>
+                              <option value="moderator">Modérateur</option>
+                              <option value="admin">Administrateur</option>
+                            </select>
+                          </td>
+                          <td className="py-3 px-4">
+                            {user.banned ? (
+                              <span className="inline-flex items-center gap-1 px-2 py-1 bg-red-100 text-red-800 rounded text-sm">
+                                <Ban size={14} />
+                                Banni
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded text-sm">
+                                <CheckCircle size={14} />
+                                Actif
+                              </span>
+                            )}
+                          </td>
+                          <td className="py-3 px-4">
+                            <div className="flex gap-2 flex-wrap">
+                              {user.banned ? (
+                                <button
+                                  onClick={() => handleUnbanUser(user.id)}
+                                  className="inline-flex items-center gap-1 text-green-600 hover:text-green-800 text-sm"
+                                  title="Débannir"
+                                >
+                                  <Unlock size={16} />
+                                  Débannir
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={() => setBanModal({ userId: user.id, userName: user.name })}
+                                  className="inline-flex items-center gap-1 text-red-600 hover:text-red-800 text-sm"
+                                  title="Bannir"
+                                  disabled={user.id === currentUser.id}
+                                >
+                                  <Ban size={16} />
+                                  Bannir
+                                </button>
+                              )}
+                              <button
+                                onClick={() => handleViewSessions(user.id, user.name)}
+                                className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 text-sm"
+                                title="Sessions"
+                              >
+                                <Clock size={16} />
+                                Sessions
+                              </button>
+                              <button
+                                onClick={() => handleDeleteUser(user.id, user.name)}
+                                className="inline-flex items-center gap-1 text-gray-600 hover:text-gray-800 text-sm"
+                                title="Supprimer"
+                                disabled={user.id === currentUser.id}
+                              >
+                                <Trash2 size={16} />
+                                Supprimer
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -367,6 +584,135 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   Annuler
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Ban User Modal */}
+      {banModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
+            <div className="p-6">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">
+                Bannir {banModal.userName}
+              </h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Raison du bannissement
+                  </label>
+                  <textarea
+                    value={banReason}
+                    onChange={(e) => setBanReason(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                    rows={3}
+                    placeholder="Expliquez la raison du bannissement..."
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Durée (jours)
+                  </label>
+                  <input
+                    type="number"
+                    value={banDays}
+                    onChange={(e) => setBanDays(parseInt(e.target.value) || 0)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500"
+                    min="0"
+                    placeholder="0 = permanent"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    0 = bannissement permanent
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-2 mt-6">
+                <button
+                  onClick={handleBanUser}
+                  className="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                >
+                  Confirmer le bannissement
+                </button>
+                <button
+                  onClick={() => {
+                    setBanModal(null);
+                    setBanReason('');
+                    setBanDays(7);
+                  }}
+                  className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"
+                >
+                  Annuler
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Sessions Modal */}
+      {showSessions && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 max-h-[80vh] flex flex-col">
+            <div className="p-6 border-b">
+              <h3 className="text-xl font-bold text-gray-900">
+                Sessions de {showSessions.userName}
+              </h3>
+            </div>
+            <div className="p-6 overflow-y-auto flex-1">
+              {userSessions.length === 0 ? (
+                <p className="text-gray-500 text-center py-8">Aucune session active</p>
+              ) : (
+                <div className="space-y-3">
+                  {userSessions.map((session) => (
+                    <div key={session.id} className="border rounded-lg p-4">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <p className="text-sm text-gray-600">
+                            <strong>ID:</strong> {session.id.substring(0, 20)}...
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            <strong>IP:</strong> {session.ipAddress || 'N/A'}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            <strong>User Agent:</strong> {session.userAgent?.substring(0, 50) || 'N/A'}...
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            <strong>Créée:</strong> {new Date(session.createdAt).toLocaleString('fr-FR')}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            <strong>Expire:</strong> {new Date(session.expiresAt).toLocaleString('fr-FR')}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => handleRevokeSession(session.token)}
+                          className="ml-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm"
+                        >
+                          Révoquer
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div className="p-6 border-t flex gap-2">
+              <button
+                onClick={() => handleRevokeAllSessions(showSessions.userId)}
+                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                disabled={userSessions.length === 0}
+              >
+                Révoquer toutes les sessions
+              </button>
+              <button
+                onClick={() => {
+                  setShowSessions(null);
+                  setUserSessions([]);
+                }}
+                className="flex-1 px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"
+              >
+                Fermer
+              </button>
             </div>
           </div>
         </div>
