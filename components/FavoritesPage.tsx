@@ -8,9 +8,9 @@ interface FavoritesPageProps {
   navigateTo: (page: string, id?: string, mainCategory?: Place['mainCategory'], query?: string) => void;
 }
 
-const PlaceCard: React.FC<{ item: Place; navigateTo: (page: string, id: string) => void }> = ({ item, navigateTo }) => (
+const PlaceCard: React.FC<{ item: Place; navigateTo: (page: string, id?: string, mainCategory?: Place['mainCategory'], query?: string, slug?: string) => void }> = ({ item, navigateTo }) => (
     <div 
-        onClick={() => navigateTo('place-detail', item.id)}
+        onClick={() => navigateTo('place-detail', item.id, item.mainCategory, undefined, item.slug)}
         className="group bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col"
     >
         <img className="h-48 w-full object-cover" src={item.imageUrl} alt={item.name} />

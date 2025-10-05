@@ -246,6 +246,7 @@ export const userFavoritePlaces = pgTable('user_favorite_places', {
  */
 export const places = pgTable('places', {
   id: uuid('id').primaryKey().defaultRandom(),
+  slug: varchar('slug', { length: 200 }).notNull().unique(),
   name: varchar('name', { length: 200 }).notNull(),
   imageUrl: text('image_url').notNull(),
   rating: real('rating').notNull().default(0),

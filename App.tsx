@@ -1,6 +1,7 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
+import { generateSlug } from './utils/slug';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import HomePage from './components/HomePage';
@@ -34,6 +35,7 @@ import RegisterModal from './components/auth/RegisterModal';
 import AdminDashboard from './components/AdminDashboard';
 import {
   PlaceDetailWrapper,
+  PlaceListCategoryWrapper,
   EventDetailWrapper,
   TrailDetailWrapper,
   ArticleDetailWrapper,
@@ -247,7 +249,34 @@ const App: React.FC = () => {
       case 'hebergements': navigate('/hebergements'); break;
       case 'activites': navigate('/activites'); break;
       case 'commerces': navigate('/commerces'); break;
-      case 'place-detail': navigate(`/place/${id}`); break;
+      case 'place-detail': 
+        // Use slug-based URLs for places
+        if (slug && mainCategory) {
+          const categoryMap: Record<Place['mainCategory'], string> = {
+            'restauration': 'restaurant',
+            'hebergement': 'hebergement',
+            'activites': 'activite',
+            'commerces': 'commerce'
+          };
+          navigate(`/${categoryMap[mainCategory]}/${slug}`);
+        } else if (slug) {
+          // Fallback: try to find the place to get mainCategory
+          const place = places.find(p => p.slug === slug || p.id === id);
+          if (place) {
+            const categoryMap: Record<Place['mainCategory'], string> = {
+              'restauration': 'restaurant',
+              'hebergement': 'hebergement',
+              'activites': 'activite',
+              'commerces': 'commerce'
+            };
+            navigate(`/${categoryMap[place.mainCategory]}/${place.slug}`);
+          } else {
+            navigate(`/place/${id}`); // Old fallback
+          }
+        } else {
+          navigate(`/place/${id}`); // Old fallback for backward compatibility
+        }
+        break;
       case 'events': navigate('/events'); break;
       case 'event-detail': navigate(`/event/${id}`); break;
       case 'trails': navigate('/trails'); break;
@@ -289,7 +318,7 @@ const App: React.FC = () => {
       case 'static': navigate(`/page/${slug}`); break;
       default: navigate('/');
     }
-  }, [navigate]);
+  }, [navigate, places]);
 
   const handleOpenReportModal = (targetId: string, targetType: string) => { setReportModalInfo({ isOpen: true, targetId, targetType }); };
   const handleCloseReportModal = () => { setReportModalInfo({ isOpen: false, targetId: '', targetType: '' }); };
@@ -454,13 +483,14 @@ const App: React.FC = () => {
     navigateTo('espace-pro');
   }, [currentUser]);
   
-  const handleAddPlace = useCallback((place: Omit<Place, 'id' | 'rating' | 'reviewCount' | 'reviews' | 'openingHours' | 'coordinates' | 'phone' | 'website' | 'imageUrl' | 'priceRange' | 'attributes' | 'status' | 'organization_id' | 'rejection_reason'>) => {
+  const handleAddPlace = useCallback((place: Omit<Place, 'id' | 'slug' | 'rating' | 'reviewCount' | 'reviews' | 'openingHours' | 'coordinates' | 'phone' | 'website' | 'imageUrl' | 'priceRange' | 'attributes' | 'status' | 'organization_id' | 'rejection_reason'>) => {
     if(!currentUser) return;
-    const newPlace: Place = { ...place, id: `place${Date.now()}`, status: 'pending_review', rating: 0, reviewCount: 0, reviews: [], openingHours: {}, coordinates: { lat: 45.9, lng: 6.12 }, phone: '', website: '', imageUrl: `https://picsum.photos/seed/${place.name}/800/600`, priceRange: '€€', attributes: [] };
+    const slug = generateSlug(place.name);
+    const newPlace: Place = { ...place, id: `place${Date.now()}`, slug, status: 'pending_review', rating: 0, reviewCount: 0, reviews: [], openingHours: {}, coordinates: { lat: 45.9, lng: 6.12 }, phone: '', website: '', imageUrl: `https://picsum.photos/seed/${place.name}/800/600`, priceRange: '€€', attributes: [] };
     setPlaces(prev => [newPlace, ...prev]);
     alert(`${newPlace.name} a été soumis pour modération. Merci !`);
-    navigateTo('place-detail', newPlace.id, newPlace.mainCategory);
-  }, [currentUser]);
+    navigateTo('place-detail', newPlace.id, newPlace.mainCategory, undefined, newPlace.slug);
+  }, [currentUser, navigateTo]);
 
    const handleAddEvent = useCallback((event: Omit<Event, 'id' | 'imageUrl' | 'coordinates' | 'status' | 'rejection_reason'>) => {
     if(!currentUser) return;
@@ -540,9 +570,21 @@ const App: React.FC = () => {
           {/* Discovery Pages */}
           <Route path="/live" element={<LivePage liveEvents={liveEvents} profiles={profiles} navigateTo={navigateTo} currentUser={currentUser} onAddEvent={handleAddLiveEvent} onVote={handleVoteLiveEvent} onLogin={handleOpenLogin} />} />
           <Route path="/restaurants" element={<PlaceListPage places={places} navigateTo={navigateTo} mainCategory="restauration" />} />
+          <Route path="/restaurants/:categorySlug" element={<PlaceListCategoryWrapper places={places} navigateTo={navigateTo} mainCategory="restauration" />} />
           <Route path="/hebergements" element={<PlaceListPage places={places} navigateTo={navigateTo} mainCategory="hebergement" />} />
+          <Route path="/hebergements/:categorySlug" element={<PlaceListCategoryWrapper places={places} navigateTo={navigateTo} mainCategory="hebergement" />} />
           <Route path="/activites" element={<PlaceListPage places={places} navigateTo={navigateTo} mainCategory="activites" />} />
+          <Route path="/activites/:categorySlug" element={<PlaceListCategoryWrapper places={places} navigateTo={navigateTo} mainCategory="activites" />} />
           <Route path="/commerces" element={<PlaceListPage places={places} navigateTo={navigateTo} mainCategory="commerces" />} />
+          <Route path="/commerces/:categorySlug" element={<PlaceListCategoryWrapper places={places} navigateTo={navigateTo} mainCategory="commerces" />} />
+          
+          {/* Place Detail Pages - new semantic URLs */}
+          <Route path="/restaurant/:slug" element={<PlaceDetailWrapper places={places} profiles={profiles} organizations={organizations} products={products} services={services} navigateTo={navigateTo} currentUser={currentUser} toggleFavorite={toggleFavorite} addReview={handleAddReview} onLogin={handleOpenLogin} onAddOrder={handleAddOrder} onAddBooking={handleAddBooking} onOpenReportModal={handleOpenReportModal} />} />
+          <Route path="/hebergement/:slug" element={<PlaceDetailWrapper places={places} profiles={profiles} organizations={organizations} products={products} services={services} navigateTo={navigateTo} currentUser={currentUser} toggleFavorite={toggleFavorite} addReview={handleAddReview} onLogin={handleOpenLogin} onAddOrder={handleAddOrder} onAddBooking={handleAddBooking} onOpenReportModal={handleOpenReportModal} />} />
+          <Route path="/activite/:slug" element={<PlaceDetailWrapper places={places} profiles={profiles} organizations={organizations} products={products} services={services} navigateTo={navigateTo} currentUser={currentUser} toggleFavorite={toggleFavorite} addReview={handleAddReview} onLogin={handleOpenLogin} onAddOrder={handleAddOrder} onAddBooking={handleAddBooking} onOpenReportModal={handleOpenReportModal} />} />
+          <Route path="/commerce/:slug" element={<PlaceDetailWrapper places={places} profiles={profiles} organizations={organizations} products={products} services={services} navigateTo={navigateTo} currentUser={currentUser} toggleFavorite={toggleFavorite} addReview={handleAddReview} onLogin={handleOpenLogin} onAddOrder={handleAddOrder} onAddBooking={handleAddBooking} onOpenReportModal={handleOpenReportModal} />} />
+          
+          {/* Old place detail route for backward compatibility */}
           <Route path="/place/:id" element={<PlaceDetailWrapper places={places} profiles={profiles} organizations={organizations} products={products} services={services} navigateTo={navigateTo} currentUser={currentUser} toggleFavorite={toggleFavorite} addReview={handleAddReview} onLogin={handleOpenLogin} onAddOrder={handleAddOrder} onAddBooking={handleAddBooking} onOpenReportModal={handleOpenReportModal} />} />
           
           {/* Events */}

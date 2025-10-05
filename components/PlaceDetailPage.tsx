@@ -9,7 +9,7 @@ import SEO from './SEO';
 import { generatePlaceSchema, generateBreadcrumbSchema } from '../utils/seo-schemas';
 
 interface PlaceDetailPageProps {
-  id: string;
+  slug: string;
   places: Place[];
   profiles: Profile[];
   organizations: Organization[];
@@ -81,8 +81,9 @@ const OpeningHoursDisplay: React.FC<{ hours: Place['openingHours'] }> = ({ hours
     );
 };
 
-const PlaceDetailPage: React.FC<PlaceDetailPageProps> = ({ id, places, profiles, organizations, products, services, navigateTo, currentUser, toggleFavorite, addReview, onLogin, onAddOrder, onAddBooking, onOpenReportModal }) => {
-    const place = places?.find?.(p => p.id === id);
+const PlaceDetailPage: React.FC<PlaceDetailPageProps> = ({ slug, places, profiles, organizations, products, services, navigateTo, currentUser, toggleFavorite, addReview, onLogin, onAddOrder, onAddBooking, onOpenReportModal }) => {
+    // Try to find place by slug first, fall back to id for backward compatibility
+    const place = places?.find?.(p => p.slug === slug || p.id === slug);
     
     // AI State
     const [isLoadingAI, setIsLoadingAI] = useState(false);
@@ -92,7 +93,7 @@ const PlaceDetailPage: React.FC<PlaceDetailPageProps> = ({ id, places, profiles,
     useEffect(() => {
         setSimilarPlacesAI([]);
         setAiError(null);
-    }, [id]);
+    }, [slug]);
     
     if (!place) {
     return <div className="text-center py-20">Lieu non trouvé. <a href="/" onClick={(e) => { e.preventDefault(); navigateTo('home')}} className="text-sky-600">Retour à l'accueil</a></div>;
@@ -381,7 +382,7 @@ const PlaceDetailPage: React.FC<PlaceDetailPageProps> = ({ id, places, profiles,
                             {similarPlacesAI.length > 0 && (
                                 <div className="mt-4 space-y-3 border-t pt-4">
                                     {similarPlacesAI.map(item => (
-                                     <div key={item.id} onClick={() => navigateTo('place-detail', item.id)} className="flex items-center space-x-4 bg-purple-50 p-3 rounded-lg hover:bg-purple-100 transition-colors cursor-pointer">
+                                     <div key={item.id} onClick={() => navigateTo('place-detail', item.id, item.mainCategory, undefined, item.slug)} className="flex items-center space-x-4 bg-purple-50 p-3 rounded-lg hover:bg-purple-100 transition-colors cursor-pointer">
                                          <img src={item.imageUrl} alt={item.name} className="w-12 h-12 rounded-md object-cover" />
                                          <div>
                                              <h5 className="font-bold text-sm text-gray-800">{item.name}</h5>
@@ -397,7 +398,7 @@ const PlaceDetailPage: React.FC<PlaceDetailPageProps> = ({ id, places, profiles,
                             <h3 className="text-xl font-bold text-gray-900 mb-4">Suggestions manuelles</h3>
                             <div className="space-y-4">
                                {similarPlaces.map(item => (
-                                 <div key={item.id} onClick={() => navigateTo('place-detail', item.id)} className="flex items-center space-x-4 bg-white p-3 rounded-xl shadow-sm hover:shadow-lg transition-shadow cursor-pointer">
+                                 <div key={item.id} onClick={() => navigateTo('place-detail', item.id, item.mainCategory, undefined, item.slug)} className="flex items-center space-x-4 bg-white p-3 rounded-xl shadow-sm hover:shadow-lg transition-shadow cursor-pointer">
                                      <img src={item.imageUrl} alt={item.name} className="w-16 h-16 rounded-lg object-cover" />
                                      <div>
                                          <h5 className="font-bold text-gray-800">{item.name}</h5>

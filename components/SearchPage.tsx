@@ -12,8 +12,8 @@ interface SearchPageProps {
   navigateTo: (page: string, id?: string, mainCategory?: Place['mainCategory'], query?: string) => void;
 }
 
-const PlaceResultCard: React.FC<{ item: Place, navigateTo: (page: string, id: string) => void }> = ({ item, navigateTo }) => (
-    <div onClick={() => navigateTo('place-detail', item.id)} className="group flex bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+const PlaceResultCard: React.FC<{ item: Place, navigateTo: (page: string, id?: string, mainCategory?: Place['mainCategory'], query?: string, slug?: string) => void }> = ({ item, navigateTo }) => (
+    <div onClick={() => navigateTo('place-detail', item.id, item.mainCategory, undefined, item.slug)} className="group flex bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer">
         <img src={item.imageUrl} alt={item.name} className="w-24 h-24 rounded-md object-cover"/>
         <div className="ml-4">
             <p className="text-xs font-semibold text-sky-600">{item.mainCategory}</p>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import PlaceDetailPage from './PlaceDetailPage';
+import PlaceListPage from './PlaceListPage';
 import EventDetailPage from './EventDetailPage';
 import TrailDetailPage from './TrailDetailPage';
 import ArticleDetailPage from './ArticleDetailPage';
@@ -37,8 +38,10 @@ export const PlaceDetailWrapper: React.FC<{
   onAddBooking: (booking: Omit<Booking, 'id'>) => void;
   onOpenReportModal: (targetId: string, targetType: string) => void;
 }> = (props) => {
-  const { id } = useParams<{ id: string }>();
-  return <PlaceDetailPage {...props} id={id || ''} />;
+  const params = useParams<{ slug?: string; id?: string }>();
+  // Try slug first, fall back to id for backward compatibility
+  const slugToUse = params.slug || params.id || '';
+  return <PlaceDetailPage {...props} slug={slugToUse} />;
 };
 
 export const EventDetailWrapper: React.FC<{
@@ -197,6 +200,15 @@ export const BookingsListWrapper: React.FC<{
 }> = (props) => {
   const { id } = useParams<{ id: string }>();
   return <BookingsListPage {...props} orgId={id || ''} />;
+};
+
+export const PlaceListCategoryWrapper: React.FC<{
+  places: Place[];
+  navigateTo: (page: string, id?: string, mainCategory?: Place['mainCategory'], query?: string, slug?: string, filter?: 'my-listings' | 'my-groups') => void;
+  mainCategory: Place['mainCategory'];
+}> = (props) => {
+  const { categorySlug } = useParams<{ categorySlug: string }>();
+  return <PlaceListPage {...props} categorySlug={categorySlug} />;
 };
 
 export const StaticPageWrapper: React.FC<{
