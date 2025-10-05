@@ -98,15 +98,21 @@ Une plateforme web complète pour découvrir et explorer Annecy, France. Ce guid
 
 ### Base de Données & Authentification
 
-> - **Better-Auth** pour l'authentification
-> - **PostgreSQL** comme base de données
-> - **Drizzle ORM** pour la gestion de la base de données
+**Production-Ready avec Better-Auth, PostgreSQL et Drizzle ORM**
 
-Actuellement, le projet utilise des données mockées en mémoire pour le développement et le prototypage.
+Le projet dispose maintenant d'un système d'authentification complet et d'une architecture de base de données prête pour la production :
 
-> **📊 Schéma de Base de Données Disponible** :
+- ✅ **Better-Auth** - Authentification complète (email/password, vérification email)
+- ✅ **PostgreSQL** - Base de données relationnelle
+- ✅ **Drizzle ORM** - ORM type-safe pour TypeScript
+- ✅ **Express** - API server pour les endpoints d'authentification
+- ✅ **Système de rôles** - Admin, Modérateur, Utilisateur
+- ✅ **Panel d'administration** - Modération de contenu
+- ✅ **Gestion des permissions** - Protection des routes et actions
 
-Un schéma complet et intégral de la base de données est maintenant disponible. Consultez :
+> **📊 Documentation de la Base de Données** :
+
+Un schéma complet et intégral de la base de données est disponible. Consultez :
 
 > - [DATABASE_README.md](./DATABASE_README.md) - Vue d'ensemble et documentation
 > - [DATABASE_SCHEMA.md](./DATABASE_SCHEMA.md) - Documentation détaillée des tables
@@ -139,35 +145,104 @@ Un schéma complet et intégral de la base de données est maintenant disponible
 
 3. **Configurer les variables d'environnement**
 
-Créer un fichier `.env` à la racine :
+Créer un fichier `.env` à la racine (voir `.env.example` pour référence) :
 
-   ```bash
+   ```env
+   # Base de données PostgreSQL
+   DATABASE_URL=postgresql://user:password@localhost:5432/salut_annecy
+
+   # Better-Auth (générer une clé secrète unique)
+   BETTER_AUTH_SECRET=your-super-secret-key-here-min-32-chars
+   BETTER_AUTH_URL=http://localhost:3000
+
+   # API Server
+   PORT=3001
+   VITE_API_URL=http://localhost:3001
+
+   # Optionnel : Google Gemini AI
    GEMINI_API_KEY=votre_clé_api_gemini
+
+   # Optionnel : Email service (pour vérification d'email)
+   EMAIL_FROM=noreply@salut-annecy.com
+   EMAIL_SERVICE_API_KEY=your_email_service_api_key
    ```
 
-   > La clé API Gemini est optionnelle. Elle permet les fonctionnalités d'IA (suggestions de lieux similaires).
-
-1. **Lancer le serveur de développement**
+4. **Configurer la base de données PostgreSQL**
 
    ```bash
+   # Créer la base de données
+   psql -U postgres -c "CREATE DATABASE salut_annecy;"
+
+   # Appliquer le schéma
+   npm run db:push
+
+   # (Optionnel) Peupler avec des données de test
+   npm run db:seed
+   ```
+
+5. **Lancer le serveur de développement**
+
+   Vous devez lancer deux serveurs :
+
+   ```bash
+   # Terminal 1 : API Server (Backend)
+   npm run dev:server
+
+   # Terminal 2 : Vite Dev Server (Frontend)
    npm run dev
    ```
 
-   L'application sera accessible sur `http://localhost:3000`
+   - Frontend accessible sur `http://localhost:3000`
+   - API Backend sur `http://localhost:3001`
 
 ### Build de Production
 
-```bash
-npm run build
-```
+1. **Build du Frontend**
+   ```bash
+   npm run build
+   ```
+   Le build sera généré dans le dossier `dist/`
 
-Le build sera généré dans le dossier `dist/`
+2. **Servir les fichiers statiques**
+   ```bash
+   npm run preview
+   ```
 
-### Preview du Build
+Pour la production, utilisez un serveur web comme Nginx ou déployez sur Vercel, Netlify, etc.
 
-```bash
-npm run preview
-```
+### Scripts Disponibles
+
+- `npm run dev` - Démarre le serveur de développement Vite (Frontend)
+- `npm run dev:server` - Démarre le serveur API Express (Backend)
+- `npm run build` - Build de production du frontend
+- `npm run preview` - Preview du build de production
+- `npm run db:push` - Applique le schéma à la base de données
+- `npm run db:studio` - Ouvre Drizzle Studio pour gérer la DB
+- `npm run db:seed` - Peuple la base de données avec des données de test
+
+## 🔐 Authentification et Rôles
+
+### Inscription et Connexion
+
+Les utilisateurs peuvent créer un compte avec :
+- Nom complet
+- Nom d'utilisateur (unique)
+- Email (avec vérification)
+- Mot de passe (minimum 8 caractères)
+
+### Système de Rôles
+
+- **Utilisateur** : Accès standard, peut créer du contenu
+- **Modérateur** : Peut modérer le contenu (approuver/rejeter)
+- **Administrateur** : Accès complet, gestion des utilisateurs et permissions
+
+### Panel d'Administration
+
+Accessible via le menu utilisateur pour les admins et modérateurs :
+- Modération des lieux en attente
+- Modération des événements en attente
+- Gestion des utilisateurs et rôles (admin uniquement)
+- Traitement des signalements
 
 ## 📁 Structure du Projet
 
