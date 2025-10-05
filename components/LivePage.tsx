@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { LIVE_EVENTS, PROFILES, LIVE_EVENT_ICONS } from '../constants';
+import { LIVE_EVENT_ICONS } from '../constants';
 import { LiveEvent, LiveEventType, Profile, Place } from '../types';
 import Icon from './Icon';
 import InteractiveMap from './InteractiveMap';
