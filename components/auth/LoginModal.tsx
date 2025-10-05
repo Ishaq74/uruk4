@@ -23,11 +23,13 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSwitchToRegi
     setLoading(true);
 
     try {
+      console.log('[Login] Sending:', { email, password });
       const result = await authClient.signIn.email({
         email,
         password,
+        callbackURL: window.location.origin + '/dashboard',
       });
-
+      console.log('[Login] Response:', result);
       if (result.error) {
         setError(result.error.message || 'Erreur de connexion');
       } else {

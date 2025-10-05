@@ -19,7 +19,7 @@ app.use((req, res, next) => {
 });
 
 app.use(cors({
-  origin: 'http://localhost:3001',
+  origin: 'http://localhost:3000',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
@@ -31,6 +31,8 @@ app.use('/api/auth', auth.handler);
 
 // Create profile after user registration
 app.post('/api/auth/create-profile', async (req, res) => {
+  const start = Date.now();
+  console.log('[POST] /api/auth/create-profile', { body: req.body });
   try {
   const session = await auth.api.getSession({ headers: req.headers as any });
     
@@ -66,7 +68,8 @@ app.post('/api/auth/create-profile', async (req, res) => {
       points: 0,
     }).returning();
 
-    res.json(newProfile);
+  res.json(newProfile);
+  console.log('[POST] /api/auth/create-profile - OK', { duration: Date.now() - start });
   } catch (error) {
     console.error('Error creating profile:', error);
     res.status(500).json({ error: 'Erreur serveur' });
@@ -75,6 +78,8 @@ app.post('/api/auth/create-profile', async (req, res) => {
 
 // Get current user with profile
 app.get('/api/auth/me', async (req, res) => {
+  const start = Date.now();
+  console.log('[GET] /api/auth/me');
   try {
   const session = await auth.api.getSession({ headers: req.headers as any });
     
@@ -91,6 +96,7 @@ app.get('/api/auth/me', async (req, res) => {
       user: session.user,
       profile: profile,
     });
+    console.log('[GET] /api/auth/me - OK', { duration: Date.now() - start });
   } catch (error) {
     console.error('Error getting user:', error);
     res.status(500).json({ error: 'Erreur serveur' });
@@ -102,6 +108,8 @@ app.get('/api/auth/me', async (req, res) => {
 // See ADMIN_PLUGIN_GUIDE.md for usage.
 // Admin: Update user role
 app.post('/api/admin/users/:userId/role', async (req, res) => {
+  const start = Date.now();
+  console.log('[POST] /api/admin/users/:userId/role', { params: req.params, body: req.body });
   try {
   const session = await auth.api.getSession({ headers: req.headers as any });
     
@@ -120,7 +128,8 @@ app.post('/api/admin/users/:userId/role', async (req, res) => {
       .set({ role: role as any })
       .where(eq(schema.user.id, userId));
 
-    res.json({ success: true });
+  res.json({ success: true });
+  console.log('[POST] /api/admin/users/:userId/role - OK', { duration: Date.now() - start });
   } catch (error) {
     console.error('Error updating role:', error);
     res.status(500).json({ error: 'Erreur serveur' });
@@ -129,6 +138,8 @@ app.post('/api/admin/users/:userId/role', async (req, res) => {
 
 // Admin: Get all users
 app.get('/api/admin/users', async (req, res) => {
+  const start = Date.now();
+  console.log('[GET] /api/admin/users');
   try {
   const session = await auth.api.getSession({ headers: req.headers as any });
     
@@ -138,7 +149,8 @@ app.get('/api/admin/users', async (req, res) => {
 
     const users = await db.query.user.findMany();
 
-    res.json(users);
+  res.json(users);
+  console.log('[GET] /api/admin/users - OK', { duration: Date.now() - start });
   } catch (error) {
     console.error('Error getting users:', error);
     res.status(500).json({ error: 'Erreur serveur' });
@@ -147,6 +159,8 @@ app.get('/api/admin/users', async (req, res) => {
 
 // Admin: Approve place
 app.post('/api/admin/places/:placeId/approve', async (req, res) => {
+  const start = Date.now();
+  console.log('[POST] /api/admin/places/:placeId/approve', { params: req.params });
   try {
   const session = await auth.api.getSession({ headers: req.headers as any });
     
@@ -160,7 +174,8 @@ app.post('/api/admin/places/:placeId/approve', async (req, res) => {
       .set({ status: 'published' })
       .where(eq(schema.places.id, placeId));
 
-    res.json({ success: true });
+  res.json({ success: true });
+  console.log('[POST] /api/admin/places/:placeId/approve - OK', { duration: Date.now() - start });
   } catch (error) {
     console.error('Error approving place:', error);
     res.status(500).json({ error: 'Erreur serveur' });
@@ -169,6 +184,8 @@ app.post('/api/admin/places/:placeId/approve', async (req, res) => {
 
 // Admin: Reject place
 app.post('/api/admin/places/:placeId/reject', async (req, res) => {
+  const start = Date.now();
+  console.log('[POST] /api/admin/places/:placeId/reject', { params: req.params, body: req.body });
   try {
   const session = await auth.api.getSession({ headers: req.headers as any });
     
@@ -186,7 +203,8 @@ app.post('/api/admin/places/:placeId/reject', async (req, res) => {
       })
       .where(eq(schema.places.id, placeId));
 
-    res.json({ success: true });
+  res.json({ success: true });
+  console.log('[POST] /api/admin/places/:placeId/reject - OK', { duration: Date.now() - start });
   } catch (error) {
     console.error('Error rejecting place:', error);
     res.status(500).json({ error: 'Erreur serveur' });
@@ -197,6 +215,8 @@ app.post('/api/admin/places/:placeId/reject', async (req, res) => {
 
 // Get user's organizations
 app.get('/api/organizations/my', async (req, res) => {
+  const start = Date.now();
+  console.log('[GET] /api/organizations/my');
   try {
   const session = await auth.api.getSession({ headers: req.headers as any });
     
@@ -230,6 +250,7 @@ app.get('/api/organizations/my', async (req, res) => {
       owned: ownedOrgs,
       member: memberOrgs.map(m => ({ ...m.organization, role: m.role })),
     });
+    console.log('[GET] /api/organizations/my - OK', { duration: Date.now() - start });
   } catch (error) {
     console.error('Error getting organizations:', error);
     res.status(500).json({ error: 'Erreur serveur' });
@@ -238,6 +259,8 @@ app.get('/api/organizations/my', async (req, res) => {
 
 // Create organization
 app.post('/api/organizations', async (req, res) => {
+  const start = Date.now();
+  console.log('[POST] /api/organizations', { body: req.body });
   try {
   const session = await auth.api.getSession({ headers: req.headers as any });
     
@@ -266,7 +289,8 @@ app.post('/api/organizations', async (req, res) => {
       subscriptionTier: 'free',
     }).returning();
 
-    res.json(newOrg);
+  res.json(newOrg);
+  console.log('[POST] /api/organizations - OK', { duration: Date.now() - start });
   } catch (error) {
     console.error('Error creating organization:', error);
     res.status(500).json({ error: 'Erreur serveur' });
@@ -275,6 +299,8 @@ app.post('/api/organizations', async (req, res) => {
 
 // Update organization
 app.put('/api/organizations/:orgId', async (req, res) => {
+  const start = Date.now();
+  console.log('[PUT] /api/organizations/:orgId', { params: req.params, body: req.body });
   try {
   const session = await auth.api.getSession({ headers: req.headers as any });
     
@@ -322,7 +348,8 @@ app.put('/api/organizations/:orgId', async (req, res) => {
       .where(eq(schema.organizations.id, orgId))
       .returning();
 
-    res.json(updatedOrg);
+  res.json(updatedOrg);
+  console.log('[PUT] /api/organizations/:orgId - OK', { duration: Date.now() - start });
   } catch (error) {
     console.error('Error updating organization:', error);
     res.status(500).json({ error: 'Erreur serveur' });
@@ -331,6 +358,8 @@ app.put('/api/organizations/:orgId', async (req, res) => {
 
 // Delete organization
 app.delete('/api/organizations/:orgId', async (req, res) => {
+  const start = Date.now();
+  console.log('[DELETE] /api/organizations/:orgId', { params: req.params });
   try {
   const session = await auth.api.getSession({ headers: req.headers as any });
     
@@ -363,7 +392,8 @@ app.delete('/api/organizations/:orgId', async (req, res) => {
 
     await db.delete(schema.organizations).where(eq(schema.organizations.id, orgId));
 
-    res.json({ success: true });
+  res.json({ success: true });
+  console.log('[DELETE] /api/organizations/:orgId - OK', { duration: Date.now() - start });
   } catch (error) {
     console.error('Error deleting organization:', error);
     res.status(500).json({ error: 'Erreur serveur' });
@@ -372,6 +402,8 @@ app.delete('/api/organizations/:orgId', async (req, res) => {
 
 // Add member to organization
 app.post('/api/organizations/:orgId/members', async (req, res) => {
+  const start = Date.now();
+  console.log('[POST] /api/organizations/:orgId/members', { params: req.params, body: req.body });
   try {
   const session = await auth.api.getSession({ headers: req.headers as any });
     
@@ -417,7 +449,8 @@ app.post('/api/organizations/:orgId/members', async (req, res) => {
       acceptedAt: new Date(), // Auto-accept for now
     }).returning();
 
-    res.json(newMember);
+  res.json(newMember);
+  console.log('[POST] /api/organizations/:orgId/members - OK', { duration: Date.now() - start });
   } catch (error) {
     console.error('Error adding member:', error);
     res.status(500).json({ error: 'Erreur serveur' });
@@ -426,6 +459,8 @@ app.post('/api/organizations/:orgId/members', async (req, res) => {
 
 // Remove member from organization
 app.delete('/api/organizations/:orgId/members/:memberId', async (req, res) => {
+  const start = Date.now();
+  console.log('[DELETE] /api/organizations/:orgId/members/:memberId', { params: req.params });
   try {
   const session = await auth.api.getSession({ headers: req.headers as any });
     
@@ -464,7 +499,8 @@ app.delete('/api/organizations/:orgId/members/:memberId', async (req, res) => {
 
     await db.delete(schema.organizationMembers).where(eq(schema.organizationMembers.id, memberId));
 
-    res.json({ success: true });
+  res.json({ success: true });
+  console.log('[DELETE] /api/organizations/:orgId/members/:memberId - OK', { duration: Date.now() - start });
   } catch (error) {
     console.error('Error removing member:', error);
     res.status(500).json({ error: 'Erreur serveur' });

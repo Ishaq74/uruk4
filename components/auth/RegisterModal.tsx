@@ -37,19 +37,22 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onSwitch
     setLoading(true);
 
     try {
+      console.log('[Register] Sending:', { email, password, name });
       // Register user with Better Auth
       const signUpResult = await authClient.signUp.email({
         email,
         password,
         name,
+        callbackURL: window.location.origin + '/welcome',
       });
-
+      console.log('[Register] Response:', signUpResult);
       if (signUpResult.error) {
         setError(signUpResult.error.message || "Erreur lors de l'inscription");
         return;
       }
 
       // Create profile with username
+      console.log('[Register] Creating profile:', { username });
       const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/auth/create-profile`, {
         method: 'POST',
         headers: {
@@ -58,6 +61,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onSwitch
         credentials: 'include',
         body: JSON.stringify({ username }),
       });
+      console.log('[Register] Profile response:', response);
 
       if (!response.ok) {
         const error = await response.json();
