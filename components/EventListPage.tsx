@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { EVENT_CATEGORIES } from '../constants';
 import { Event, FilterOption, Place, EventCategory } from '../types';
 import Icon from './Icon';
@@ -9,6 +9,7 @@ import { generateCollectionPageSchema, generateBreadcrumbSchema } from '../utils
 interface EventListPageProps {
   events: Event[];
   navigateTo: (page: string, id?: string, mainCategory?: Place['mainCategory'], query?: string, slug?: string, filter?: 'my-listings' | 'my-groups') => void;
+  categorySlug?: string;
 }
 
 const EventCard: React.FC<{ item: Event; navigateTo: (page: string, id: string, mainCategory?: Place['mainCategory'], query?: string, slug?: string) => void }> = ({ item, navigateTo }) => {
@@ -80,9 +81,32 @@ const FilterPanel: React.FC<{ selectedCategories: EventCategory[], onCategoryCha
 };
 
 
-const EventListPage: React.FC<EventListPageProps> = ({ events, navigateTo }) => {
+const EventListPage: React.FC<EventListPageProps> = ({ events, navigateTo, categorySlug }) => {
     const [selectedCategories, setSelectedCategories] = useState<EventCategory[]>([]);
     const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
+
+    // Map slug to EventCategory
+    const categoryFromSlug = useMemo(() => {
+        if (!categorySlug) return null;
+        
+        const slugMap: { [key: string]: EventCategory } = {
+            'festival': 'Festival',
+            'concert': 'Concert',
+            'marche': 'Marché',
+            'sport': 'Sport',
+            'culture': 'Culture',
+        };
+        
+        return slugMap[categorySlug] || null;
+    }, [categorySlug]);
+
+    useEffect(() => {
+        if (categoryFromSlug) {
+            setSelectedCategories([categoryFromSlug]);
+        } else {
+            setSelectedCategories([]);
+        }
+    }, [categoryFromSlug]);
 
     const handleCategoryChange = (category: EventCategory) => {
         setSelectedCategories(prev => 

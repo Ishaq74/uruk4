@@ -10,13 +10,13 @@ interface ForumListPageProps {
   currentUser: Profile | null;
 }
 
-const CategoryRow: React.FC<{ category: any, navigateTo: (page: string, id: string) => void }> = ({ category, navigateTo }) => (
+const CategoryRow: React.FC<{ category: any, navigateTo: (page: string, id: string, mainCategory?: Place['mainCategory'], query?: string, slug?: string) => void }> = ({ category, navigateTo }) => (
     <div className="flex items-start space-x-4 p-4 bg-white rounded-lg shadow-sm transition-shadow hover:shadow-md">
         <div className="bg-slate-100 p-3 rounded-lg mt-1">
             <Icon name={category.icon} className="w-6 h-6 text-slate-500" />
         </div>
         <div className="flex-1 min-w-0">
-            <a href={`/forum-category/${category.id}`} onClick={(e) => { e.preventDefault(); navigateTo('forum-category', category.id); }} className="font-bold text-lg text-gray-800 hover:text-sky-600 transition-colors truncate">{category.title}</a>
+            <a href={category.slug ? `/forum/categorie/${category.slug}` : `/forum/category/${category.id}`} onClick={(e) => { e.preventDefault(); navigateTo('forum-category', category.id, undefined, undefined, category.slug); }} className="font-bold text-lg text-gray-800 hover:text-sky-600 transition-colors truncate">{category.title}</a>
             <p className="text-sm text-gray-500">{category.description}</p>
         </div>
         <div className="hidden sm:flex flex-col text-center w-24">

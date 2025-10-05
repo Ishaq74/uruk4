@@ -104,7 +104,7 @@ const ForumThreadPage: React.FC<ForumThreadPageProps> = ({ id, threads, profiles
                             {category && (
                                 <li className="flex items-center">
                                     <Icon name="chevronDown" className="w-5 h-5 -rotate-90 text-gray-400" />
-                                    <a href={`/forum-category/${category.id}`} onClick={(e) => { e.preventDefault(); navigateTo('forum-category', category.id); }} className="text-sky-600 hover:underline">{category.title}</a>
+                                    <a href={category.slug ? `/forum/categorie/${category.slug}` : `/forum/category/${category.id}`} onClick={(e) => { e.preventDefault(); navigateTo('forum-category', category.id, undefined, undefined, category.slug); }} className="text-sky-600 hover:underline">{category.title}</a>
                                 </li>
                             )}
                         </ol>
