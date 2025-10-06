@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Icon from './Icon';
+import LanguageSelector from './LanguageSelector';
 import { Place, Profile } from '../types';
 import { 
     RESTAURATION_CATEGORIES, 
@@ -293,6 +294,8 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentUser, onLogin, onLog
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
+             <LanguageSelector />
+             <div className="h-6 w-px bg-gray-200"></div>
              <a href="/propose" onClick={(e) => { e.preventDefault(); navClick('propose') }} className="text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition-colors">
               Proposer un contenu
             </a>
