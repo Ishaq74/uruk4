@@ -7,11 +7,20 @@ interface AdminDashboardProps {
   navigateTo: (page: string, id?: string) => void;
   pendingPlaces?: any[];
   pendingEvents?: any[];
+  pendingTrails?: any[];
+  pendingArticles?: any[];
+  pendingListings?: any[];
   pendingReports?: any[];
   onApprovePlace?: (placeId: string) => void;
   onRejectPlace?: (placeId: string, reason: string) => void;
   onApproveEvent?: (eventId: string) => void;
   onRejectEvent?: (eventId: string, reason: string) => void;
+  onApproveTrail?: (trailId: string) => void;
+  onRejectTrail?: (trailId: string, reason: string) => void;
+  onApproveArticle?: (articleId: string) => void;
+  onRejectArticle?: (articleId: string, reason: string) => void;
+  onApproveListing?: (listingId: string) => void;
+  onRejectListing?: (listingId: string, reason: string) => void;
 }
 
 const AdminDashboard: React.FC<AdminDashboardProps> = ({
@@ -19,15 +28,24 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
   navigateTo,
   pendingPlaces = [],
   pendingEvents = [],
+  pendingTrails = [],
+  pendingArticles = [],
+  pendingListings = [],
   pendingReports = [],
   onApprovePlace,
   onRejectPlace,
   onApproveEvent,
   onRejectEvent,
+  onApproveTrail,
+  onRejectTrail,
+  onApproveArticle,
+  onRejectArticle,
+  onApproveListing,
+  onRejectListing,
 }) => {
-  const [activeTab, setActiveTab] = useState<'overview' | 'places' | 'events' | 'users' | 'reports'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'places' | 'events' | 'trails' | 'articles' | 'listings' | 'users' | 'reports'>('overview');
   const [rejectionReason, setRejectionReason] = useState('');
-  const [showRejectModal, setShowRejectModal] = useState<{ type: 'place' | 'event', id: string } | null>(null);
+  const [showRejectModal, setShowRejectModal] = useState<{ type: 'place' | 'event' | 'trail' | 'article' | 'listing', id: string } | null>(null);
   const [users, setUsers] = useState<any[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [banModal, setBanModal] = useState<{ userId: string; userName: string } | null>(null);
@@ -218,7 +236,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     }
   };
 
-  const handleReject = (type: 'place' | 'event', id: string) => {
+  const handleReject = (type: 'place' | 'event' | 'trail' | 'article' | 'listing', id: string) => {
     setShowRejectModal({ type, id });
   };
 
@@ -229,6 +247,12 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
       onRejectPlace(showRejectModal.id, rejectionReason);
     } else if (showRejectModal.type === 'event' && onRejectEvent) {
       onRejectEvent(showRejectModal.id, rejectionReason);
+    } else if (showRejectModal.type === 'trail' && onRejectTrail) {
+      onRejectTrail(showRejectModal.id, rejectionReason);
+    } else if (showRejectModal.type === 'article' && onRejectArticle) {
+      onRejectArticle(showRejectModal.id, rejectionReason);
+    } else if (showRejectModal.type === 'listing' && onRejectListing) {
+      onRejectListing(showRejectModal.id, rejectionReason);
     }
 
     setShowRejectModal(null);
@@ -282,6 +306,36 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
               Événements ({pendingEvents.length})
             </button>
             <button
+              onClick={() => setActiveTab('trails')}
+              className={`px-6 py-4 font-semibold whitespace-nowrap ${
+                activeTab === 'trails'
+                  ? 'text-sky-600 border-b-2 border-sky-600'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Sentiers ({pendingTrails.length})
+            </button>
+            <button
+              onClick={() => setActiveTab('articles')}
+              className={`px-6 py-4 font-semibold whitespace-nowrap ${
+                activeTab === 'articles'
+                  ? 'text-sky-600 border-b-2 border-sky-600'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Articles ({pendingArticles.length})
+            </button>
+            <button
+              onClick={() => setActiveTab('listings')}
+              className={`px-6 py-4 font-semibold whitespace-nowrap ${
+                activeTab === 'listings'
+                  ? 'text-sky-600 border-b-2 border-sky-600'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Annonces ({pendingListings.length})
+            </button>
+            <button
               onClick={() => setActiveTab('users')}
               className={`px-6 py-4 font-semibold whitespace-nowrap ${
                 activeTab === 'users'
@@ -320,6 +374,27 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 <span className="text-2xl font-bold text-gray-900">{pendingEvents.length}</span>
               </div>
               <h3 className="text-gray-600 font-medium">Événements en attente</h3>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <div className="flex items-center justify-between mb-4">
+                <MapPin className="text-orange-600" size={24} />
+                <span className="text-2xl font-bold text-gray-900">{pendingTrails.length}</span>
+              </div>
+              <h3 className="text-gray-600 font-medium">Sentiers en attente</h3>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <div className="flex items-center justify-between mb-4">
+                <MessageSquare className="text-blue-600" size={24} />
+                <span className="text-2xl font-bold text-gray-900">{pendingArticles.length}</span>
+              </div>
+              <h3 className="text-gray-600 font-medium">Articles en attente</h3>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <div className="flex items-center justify-between mb-4">
+                <MessageSquare className="text-indigo-600" size={24} />
+                <span className="text-2xl font-bold text-gray-900">{pendingListings.length}</span>
+              </div>
+              <h3 className="text-gray-600 font-medium">Annonces en attente</h3>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-sm">
               <div className="flex items-center justify-between mb-4">
@@ -398,9 +473,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     <div key={event.id} className="border rounded-lg p-4">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <h3 className="font-semibold text-gray-900">{event.name}</h3>
-                          <p className="text-sm text-gray-600 mt-1">{event.category}</p>
+                          <h3 className="font-semibold text-gray-900">{event.title || event.name}</h3>
+                          <p className="text-sm text-gray-600 mt-1">{event.category} - {event.date}</p>
                           <p className="text-sm text-gray-500 mt-2">{event.description}</p>
+                          {event.slug && <p className="text-xs text-blue-600 mt-1">Slug: {event.slug}</p>}
                         </div>
                       </div>
                       <div className="flex gap-2 mt-4">
@@ -413,6 +489,134 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         </button>
                         <button
                           onClick={() => handleReject('event', event.id)}
+                          className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                        >
+                          <XCircle size={16} />
+                          Rejeter
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Trails Tab */}
+        {activeTab === 'trails' && (
+          <div className="bg-white rounded-lg shadow-sm">
+            <div className="p-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Sentiers en attente de modération</h2>
+              {pendingTrails.length === 0 ? (
+                <p className="text-gray-500 text-center py-8">Aucun sentier en attente</p>
+              ) : (
+                <div className="space-y-4">
+                  {pendingTrails.map((trail) => (
+                    <div key={trail.id} className="border rounded-lg p-4">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-gray-900">{trail.name}</h3>
+                          <p className="text-sm text-gray-600 mt-1">Distance: {trail.distanceKm}km - Difficulté: {trail.difficulty}</p>
+                          <p className="text-sm text-gray-500 mt-2">{trail.description || trail.excerpt}</p>
+                          {trail.slug && <p className="text-xs text-blue-600 mt-1">Slug: {trail.slug}</p>}
+                        </div>
+                      </div>
+                      <div className="flex gap-2 mt-4">
+                        <button
+                          onClick={() => onApproveTrail && onApproveTrail(trail.id)}
+                          className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                        >
+                          <CheckCircle size={16} />
+                          Approuver
+                        </button>
+                        <button
+                          onClick={() => handleReject('trail', trail.id)}
+                          className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                        >
+                          <XCircle size={16} />
+                          Rejeter
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Articles Tab */}
+        {activeTab === 'articles' && (
+          <div className="bg-white rounded-lg shadow-sm">
+            <div className="p-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Articles en attente de modération</h2>
+              {pendingArticles.length === 0 ? (
+                <p className="text-gray-500 text-center py-8">Aucun article en attente</p>
+              ) : (
+                <div className="space-y-4">
+                  {pendingArticles.map((article) => (
+                    <div key={article.id} className="border rounded-lg p-4">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-gray-900">{article.title}</h3>
+                          <p className="text-sm text-gray-500 mt-2">{article.excerpt}</p>
+                          {article.slug && <p className="text-xs text-blue-600 mt-1">Slug: {article.slug}</p>}
+                        </div>
+                      </div>
+                      <div className="flex gap-2 mt-4">
+                        <button
+                          onClick={() => onApproveArticle && onApproveArticle(article.id)}
+                          className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                        >
+                          <CheckCircle size={16} />
+                          Approuver
+                        </button>
+                        <button
+                          onClick={() => handleReject('article', article.id)}
+                          className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                        >
+                          <XCircle size={16} />
+                          Rejeter
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Listings Tab */}
+        {activeTab === 'listings' && (
+          <div className="bg-white rounded-lg shadow-sm">
+            <div className="p-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Annonces en attente de modération</h2>
+              {pendingListings.length === 0 ? (
+                <p className="text-gray-500 text-center py-8">Aucune annonce en attente</p>
+              ) : (
+                <div className="space-y-4">
+                  {pendingListings.map((listing) => (
+                    <div key={listing.id} className="border rounded-lg p-4">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-gray-900">{listing.title}</h3>
+                          <p className="text-sm text-gray-600 mt-1">{listing.type} - {listing.price}</p>
+                          <p className="text-sm text-gray-500 mt-2">{listing.description}</p>
+                          {listing.slug && <p className="text-xs text-blue-600 mt-1">Slug: {listing.slug}</p>}
+                        </div>
+                      </div>
+                      <div className="flex gap-2 mt-4">
+                        <button
+                          onClick={() => onApproveListing && onApproveListing(listing.id)}
+                          className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                        >
+                          <CheckCircle size={16} />
+                          Approuver
+                        </button>
+                        <button
+                          onClick={() => handleReject('listing', listing.id)}
                           className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
                         >
                           <XCircle size={16} />

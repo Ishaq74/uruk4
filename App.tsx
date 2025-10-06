@@ -564,6 +564,36 @@ const App: React.FC = () => {
     alert('Événement rejeté');
   }, []);
 
+  const handleApproveTrail = useCallback((trailId: string) => {
+    setTrails(prev => prev.map(t => t.id === trailId ? { ...t, status: 'published' as const } : t));
+    alert('Sentier approuvé avec succès');
+  }, []);
+
+  const handleRejectTrail = useCallback((trailId: string, reason: string) => {
+    setTrails(prev => prev.map(t => t.id === trailId ? { ...t, status: 'rejected' as const, rejection_reason: reason } : t));
+    alert('Sentier rejeté');
+  }, []);
+
+  const handleApproveArticle = useCallback((articleId: string) => {
+    setArticles(prev => prev.map(a => a.id === articleId ? { ...a, status: 'published' as const } : a));
+    alert('Article approuvé avec succès');
+  }, []);
+
+  const handleRejectArticle = useCallback((articleId: string, reason: string) => {
+    setArticles(prev => prev.map(a => a.id === articleId ? { ...a, status: 'rejected' as const, rejection_reason: reason } : a));
+    alert('Article rejeté');
+  }, []);
+
+  const handleApproveListing = useCallback((listingId: string) => {
+    setAllListings(prev => prev.map(l => l.id === listingId ? { ...l, status: 'published' as const } : l));
+    alert('Annonce approuvée avec succès');
+  }, []);
+
+  const handleRejectListing = useCallback((listingId: string, reason: string) => {
+    setAllListings(prev => prev.map(l => l.id === listingId ? { ...l, status: 'rejected' as const, rejection_reason: reason } : l));
+    alert('Annonce rejetée');
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
       <Header navigateTo={navigateTo} currentUser={currentUser} onLogin={handleOpenLogin} onLogout={handleLogout} onSearch={handleSearch} />
@@ -664,11 +694,20 @@ const App: React.FC = () => {
             navigateTo={navigateTo}
             pendingPlaces={places.filter(p => p.status === 'pending_review')}
             pendingEvents={events.filter(e => e.status === 'pending_review')}
+            pendingTrails={trails.filter(t => t.status === 'pending_review')}
+            pendingArticles={articles.filter(a => a.status === 'pending_review')}
+            pendingListings={allListings.filter(l => l.status === 'pending_review')}
             pendingReports={reports.filter(r => r.status === 'pending')}
             onApprovePlace={handleApprovePlace}
             onRejectPlace={handleRejectPlace}
             onApproveEvent={handleApproveEvent}
             onRejectEvent={handleRejectEvent}
+            onApproveTrail={handleApproveTrail}
+            onRejectTrail={handleRejectTrail}
+            onApproveArticle={handleApproveArticle}
+            onRejectArticle={handleRejectArticle}
+            onApproveListing={handleApproveListing}
+            onRejectListing={handleRejectListing}
           />} />
           
           {/* Search & Static Pages */}
