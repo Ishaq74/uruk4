@@ -1,5 +1,8 @@
 # Salut Annecy - Guide Local Complet
 
+> 📚 **Navigation Documentation** : Voir [DOCUMENTATION_INDEX.md](./DOCUMENTATION_INDEX.md) pour un guide complet de toute la documentation  
+> ⚠️ **État du Projet** : Lire [CRITIQUE_ET_PRECONISATION.md](./CRITIQUE_ET_PRECONISATION.md) pour comprendre l'état actuel et [ACTION_PLAN.md](./ACTION_PLAN.md) pour le plan d'amélioration
+
 Une plateforme web complète pour découvrir et explorer Annecy, France. Ce guide local permet aux utilisateurs de découvrir les meilleurs endroits, événements, randonnées, et de participer à une communauté locale dynamique.
 
 ## 🎯 Fonctionnalités Principales
