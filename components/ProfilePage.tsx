@@ -15,7 +15,7 @@ interface ProfilePageProps {
   onStartConversation: (recipientId: string) => void;
 }
 
-const ProfileContributionItem: React.FC<{ item: Review | Comment; type: 'review' | 'comment'; places: Place[]; articles: Article[]; navigateTo: (page: string, id?: string) => void; }> = ({ item, type, places, articles, navigateTo }) => {
+const ProfileContributionItem: React.FC<{ item: Review | Comment; type: 'review' | 'comment'; places: Place[]; articles: Article[]; navigateTo: (page: string, id?: string, mainCategory?: Place['mainCategory'], query?: string, slug?: string) => void; }> = ({ item, type, places, articles, navigateTo }) => {
     if (type === 'review') {
         const review = item as Review;
         const place = Array.isArray(places) ? places.find(p => p.id === review.placeId) : undefined;
@@ -56,13 +56,13 @@ const ProfileContributionItem: React.FC<{ item: Review | Comment; type: 'review'
                     src={article.imageUrl}
                     alt={article.title}
                     className="w-20 h-20 rounded-md object-cover cursor-pointer"
-                    onClick={() => navigateTo('article-detail', article.id)}
+                    onClick={() => navigateTo('article-detail', article.id, undefined, undefined, article.slug)}
                 />
                 <div className="flex-1">
                     <p className="text-xs text-gray-400">Commentaire sur</p>
                     <h4 
                         className="font-bold text-gray-800 hover:underline cursor-pointer"
-                        onClick={() => navigateTo('article-detail', article.id)}
+                        onClick={() => navigateTo('article-detail', article.id, undefined, undefined, article.slug)}
                     >
                         {article.title}
                     </h4>

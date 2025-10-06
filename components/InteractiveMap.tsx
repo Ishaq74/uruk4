@@ -6,6 +6,8 @@ import L from 'leaflet';
 // A generic item type that has the necessary properties for the map
 type MapItem = {
     id: string;
+    slug?: string;
+    mainCategory?: string;
     coordinates?: { lat: number, lng: number };
     startPoint?: { lat: number, lng: number };
     name?: string;
@@ -15,7 +17,7 @@ type MapItem = {
 
 interface InteractiveMapProps {
     items: MapItem[];
-    navigateTo?: (page: string, id: string) => void;
+    navigateTo?: (page: string, id?: string, mainCategory?: string, query?: string, slug?: string) => void;
     itemPage?: 'place-detail' | 'event-detail' | 'trail-detail' | 'annonce-detail';
     selectedItemId?: string | null;
     onMarkerClick?: (itemId: string | null) => void;
@@ -64,7 +66,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ items, navigateTo, item
             return [];
         }
 
-        return items.reduce<Array<{ id: string; lat: number; lng: number; title: string; location?: string }>>((acc, item) => {
+        return items.reduce<Array<{ id: string; slug?: string; mainCategory?: string; lat: number; lng: number; title: string; location?: string }>>((acc, item) => {
             if (!item || typeof item !== 'object' || !item.id) {
                 console.warn("[MAP VALIDATION] Skipping invalid item:", item);
                 return acc;
@@ -86,6 +88,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ items, navigateTo, item
 
             acc.push({
                 id: item.id,
+                slug: item.slug,
+                mainCategory: item.mainCategory,
                 lat: lat,
                 lng: lng,
                 title: item.title || item.name || 'Sans titre',
@@ -132,7 +136,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ items, navigateTo, item
                                     {markerInfo.location && <p className="text-xs text-gray-500">{markerInfo.location}</p>}
                                     {navigateTo && itemPage && (
                                         <button
-                                            onClick={() => navigateTo(itemPage, markerInfo.id)}
+                                            onClick={() => navigateTo(itemPage, markerInfo.id, markerInfo.mainCategory, undefined, markerInfo.slug)}
                                             className="mt-2 px-3 py-1 bg-sky-500 text-white text-xs font-semibold rounded-full hover:bg-sky-600"
                                         >
                                             Voir les détails
