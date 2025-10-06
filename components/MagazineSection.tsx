@@ -6,8 +6,8 @@ interface MagazineSectionProps {
   navigateTo: (page: string, id?: string, mainCategory?: Place['mainCategory'], query?: string) => void;
 }
 
-const ArticleCard: React.FC<{ article: Article, navigateTo: (page: string, id: string) => void }> = ({ article, navigateTo }) => (
-  <a href={`/article/${article.id}`} onClick={(e) => { e.preventDefault(); navigateTo('article-detail', article.id); }} className="group block rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 bg-white">
+const ArticleCard: React.FC<{ article: Article, navigateTo: (page: string, id: string, mainCategory?: Place['mainCategory'], query?: string, slug?: string) => void }> = ({ article, navigateTo }) => (
+  <a href={article.slug ? `/article/${article.slug}` : `/article/${article.id}`} onClick={(e) => { e.preventDefault(); navigateTo('article-detail', article.id, undefined, undefined, article.slug); }} className="group block rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 bg-white">
     <img src={article.imageUrl} alt={article.title} className="w-full h-56 object-cover" />
     <div className="p-6">
       <h3 className="text-xl font-bold text-gray-900 group-hover:text-sky-600 transition-colors">{article.title}</h3>

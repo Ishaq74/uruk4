@@ -8,7 +8,7 @@ interface AgendaCarouselProps {
 
 const EventCard: React.FC<{ event: Event, navigateTo: AgendaCarouselProps['navigateTo'] }> = ({ event, navigateTo }) => (
   <div className="flex-shrink-0 w-64 snap-start">
-  <a href={`/event/${event.id}`} onClick={(e) => { e.preventDefault(); navigateTo('event-detail', event.id); }} className="group block">
+  <a href={event.slug ? `/evenement/${event.slug}` : `/event/${event.id}`} onClick={(e) => { e.preventDefault(); navigateTo('event-detail', event.id, undefined, undefined, event.slug); }} className="group block">
       <div className="rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
         <img src={event.imageUrl} alt={event.title} className="w-full h-40 object-cover" />
         <div className="p-4 bg-white">
