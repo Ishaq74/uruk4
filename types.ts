@@ -126,7 +126,7 @@ export interface Place {
 
 export interface Event {
   id: string;
-  slug?: string;
+  slug: string;
   date: string;
   title: string;
   location: string;
@@ -141,7 +141,7 @@ export interface Event {
 
 export interface Trail {
     id: string;
-    slug?: string;
+    slug: string;
     name: string;
     imageUrl: string;
     distanceKm: number;
@@ -158,7 +158,7 @@ export interface Trail {
 
 export interface Listing {
   id: string;
-  slug?: string;
+  slug: string;
   title: string;
   type: ListingType;
   price?: string;
@@ -174,7 +174,7 @@ export interface Listing {
 
 export interface Article {
   id:string;
-  slug?: string;
+  slug: string;
   imageUrl: string;
   title: string;
   excerpt: string;

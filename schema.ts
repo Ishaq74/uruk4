@@ -292,6 +292,7 @@ export const reviews = pgTable('reviews', {
  */
 export const events = pgTable('events', {
   id: uuid('id').primaryKey().defaultRandom(),
+  slug: varchar('slug', { length: 200 }).notNull().unique(),
   title: varchar('title', { length: 200 }).notNull(),
   date: varchar('date', { length: 100 }).notNull(), // Can be date or recurring pattern like "CHAQUE VENDREDI"
   location: text('location').notNull(),
@@ -317,6 +318,7 @@ export const events = pgTable('events', {
  */
 export const trails = pgTable('trails', {
   id: uuid('id').primaryKey().defaultRandom(),
+  slug: varchar('slug', { length: 200 }).notNull().unique(),
   name: varchar('name', { length: 200 }).notNull(),
   imageUrl: text('image_url').notNull(),
   distanceKm: real('distance_km').notNull(),
@@ -344,6 +346,7 @@ export const trails = pgTable('trails', {
  */
 export const listings = pgTable('listings', {
   id: uuid('id').primaryKey().defaultRandom(),
+  slug: varchar('slug', { length: 200 }).notNull().unique(),
   title: varchar('title', { length: 200 }).notNull(),
   type: listingTypeEnum('type').notNull(),
   price: varchar('price', { length: 50 }),
@@ -369,6 +372,7 @@ export const listings = pgTable('listings', {
  */
 export const articles = pgTable('articles', {
   id: uuid('id').primaryKey().defaultRandom(),
+  slug: varchar('slug', { length: 200 }).notNull().unique(),
   imageUrl: text('image_url').notNull(),
   title: varchar('title', { length: 200 }).notNull(),
   excerpt: text('excerpt').notNull(),

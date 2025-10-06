@@ -146,6 +146,7 @@ async function main() {
     eventIdMap[ev.id] = newEventId;
     await db.insert(schema.events).values({
       id: newEventId,
+      slug: ev.slug,
       title: ev.title,
       date: ev.date,
       location: ev.location,
@@ -170,6 +171,7 @@ async function main() {
       trailIdMap[trail.id] = newTrailId;
       return {
         id: newTrailId,
+        slug: trail.slug,
         name: trail.name,
         imageUrl: trail.imageUrl,
         distanceKm: trail.distanceKm,
@@ -209,6 +211,7 @@ async function main() {
     articleIdMap[article.id] = newArticleId;
     await db.insert(schema.articles).values({
       id: newArticleId,
+      slug: article.slug,
       imageUrl: article.imageUrl,
       title: article.title,
       excerpt: article.excerpt,
