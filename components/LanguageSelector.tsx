@@ -30,7 +30,7 @@ const LanguageSelector: React.FC = () => {
         <span className="hidden md:inline text-sm font-medium text-gray-700 dark:text-gray-300">
           {currentLanguage.code.toUpperCase()}
         </span>
-        <Icon name="chevron-down" className="w-4 h-4 text-gray-500" />
+        <Icon name="chevronDown" className="w-4 h-4 text-gray-500" />
       </button>
       
       <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 border border-gray-200 dark:border-gray-700">
