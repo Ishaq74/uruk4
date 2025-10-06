@@ -1,8 +1,24 @@
-# Système de Traduction Multilingue
+# Système de Traduction Multilingue - Complet
 
 ## Architecture
 
 Le système utilise des **tables de traduction séparées** avec clés étrangères pour une meilleure performance et administration.
+
+### Tables de Traduction Disponibles
+
+Le système supporte maintenant les traductions pour **TOUS** les types de contenu :
+
+1. ✅ **Events** (`event_translations`) - Événements
+2. ✅ **Trails** (`trail_translations`) - Sentiers
+3. ✅ **Articles** (`article_translations`) - Articles de blog
+4. ✅ **Listings** (`listing_translations`) - Annonces
+5. ✅ **Places** (`place_translations`) - Lieux (restaurants, hôtels, etc.)
+6. ✅ **Groups** (`group_translations`) - Groupes communautaires
+7. ✅ **Products** (`product_translations`) - Produits
+8. ✅ **Services** (`service_translations`) - Services
+9. ✅ **Static Pages** (`static_page_translations`) - Pages statiques
+
+**Total: 9 tables de traduction** pour une couverture complète du contenu.
 
 ### Avantages
 
@@ -109,6 +125,87 @@ Chaque type de contenu a sa table de traduction :
   updatedAt: timestamp
   
   UNIQUE(listingId, language)
+}
+```
+
+#### 5. Place Translations (`place_translations`)
+
+```typescript
+{
+  id: UUID (PK)
+  placeId: UUID (FK → places.id)
+  language: enum
+  name: varchar(200)
+  description: text
+  address: text
+  createdAt: timestamp
+  updatedAt: timestamp
+  
+  UNIQUE(placeId, language)
+}
+```
+
+#### 6. Group Translations (`group_translations`)
+
+```typescript
+{
+  id: UUID (PK)
+  groupId: UUID (FK → groups.id)
+  language: enum
+  name: varchar(100)
+  description: text
+  createdAt: timestamp
+  updatedAt: timestamp
+  
+  UNIQUE(groupId, language)
+}
+```
+
+#### 7. Product Translations (`product_translations`)
+
+```typescript
+{
+  id: UUID (PK)
+  productId: UUID (FK → products.id)
+  language: enum
+  name: varchar(200)
+  description: text
+  createdAt: timestamp
+  updatedAt: timestamp
+  
+  UNIQUE(productId, language)
+}
+```
+
+#### 8. Service Translations (`service_translations`)
+
+```typescript
+{
+  id: UUID (PK)
+  serviceId: UUID (FK → services.id)
+  language: enum
+  name: varchar(200)
+  description: text
+  createdAt: timestamp
+  updatedAt: timestamp
+  
+  UNIQUE(serviceId, language)
+}
+```
+
+#### 9. Static Page Translations (`static_page_translations`)
+
+```typescript
+{
+  id: UUID (PK)
+  pageId: UUID (FK → static_page_content.id)
+  language: enum
+  title: varchar(200)
+  content: text (HTML)
+  createdAt: timestamp
+  updatedAt: timestamp
+  
+  UNIQUE(pageId, language)
 }
 ```
 

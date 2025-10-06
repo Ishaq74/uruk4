@@ -488,6 +488,97 @@ export const listingTranslations = pgTable('listing_translations', {
   }
 }));
 
+/**
+ * Place Translations - Multilingual content for places
+ */
+export const placeTranslations = pgTable('place_translations', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  placeId: uuid('place_id').references(() => places.id, { onDelete: 'cascade' }).notNull(),
+  language: languageEnum('language').notNull(),
+  name: varchar('name', { length: 200 }).notNull(),
+  description: text('description').notNull(),
+  address: text('address').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (table) => ({
+  uniquePlaceLanguage: {
+    columns: [table.placeId, table.language],
+    name: 'place_translations_place_id_language_unique'
+  }
+}));
+
+/**
+ * Group Translations - Multilingual content for groups
+ */
+export const groupTranslations = pgTable('group_translations', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  groupId: uuid('group_id').references(() => groups.id, { onDelete: 'cascade' }).notNull(),
+  language: languageEnum('language').notNull(),
+  name: varchar('name', { length: 100 }).notNull(),
+  description: text('description').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (table) => ({
+  uniqueGroupLanguage: {
+    columns: [table.groupId, table.language],
+    name: 'group_translations_group_id_language_unique'
+  }
+}));
+
+/**
+ * Product Translations - Multilingual content for products
+ */
+export const productTranslations = pgTable('product_translations', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  productId: uuid('product_id').references(() => products.id, { onDelete: 'cascade' }).notNull(),
+  language: languageEnum('language').notNull(),
+  name: varchar('name', { length: 200 }).notNull(),
+  description: text('description').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (table) => ({
+  uniqueProductLanguage: {
+    columns: [table.productId, table.language],
+    name: 'product_translations_product_id_language_unique'
+  }
+}));
+
+/**
+ * Service Translations - Multilingual content for services
+ */
+export const serviceTranslations = pgTable('service_translations', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  serviceId: uuid('service_id').references(() => services.id, { onDelete: 'cascade' }).notNull(),
+  language: languageEnum('language').notNull(),
+  name: varchar('name', { length: 200 }).notNull(),
+  description: text('description').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (table) => ({
+  uniqueServiceLanguage: {
+    columns: [table.serviceId, table.language],
+    name: 'service_translations_service_id_language_unique'
+  }
+}));
+
+/**
+ * Static Page Translations - Multilingual content for static pages
+ */
+export const staticPageTranslations = pgTable('static_page_translations', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  pageId: uuid('page_id').references(() => staticPageContent.id, { onDelete: 'cascade' }).notNull(),
+  language: languageEnum('language').notNull(),
+  title: varchar('title', { length: 200 }).notNull(),
+  content: text('content').notNull(), // HTML content
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (table) => ({
+  uniquePageLanguage: {
+    columns: [table.pageId, table.language],
+    name: 'static_page_translations_page_id_language_unique'
+  }
+}));
+
 // ============================================================================
 // CONTENT MANAGEMENT - LIVE EVENTS
 // ============================================================================
@@ -851,6 +942,7 @@ export const placeRelations = relations(places, ({ one, many }) => ({
   reviews: many(reviews),
   favorites: many(userFavoritePlaces),
   claims: many(placeClaims),
+  translations: many(placeTranslations),
 }));
 
 // Organization Relations
@@ -887,6 +979,7 @@ export const forumThreadRelations = relations(forumThreads, ({ one, many }) => (
 // Group Relations
 export const groupRelations = relations(groups, ({ many }) => ({
   members: many(groupMembers),
+  translations: many(groupTranslations),
 }));
 
 // Conversation Relations
@@ -945,5 +1038,60 @@ export const listingTranslationRelations = relations(listingTranslations, ({ one
   listing: one(listings, {
     fields: [listingTranslations.listingId],
     references: [listings.id],
+  }),
+}));
+
+export const placeTranslationRelations = relations(placeTranslations, ({ one }) => ({
+  place: one(places, {
+    fields: [placeTranslations.placeId],
+    references: [places.id],
+  }),
+}));
+
+export const groupTranslationRelations = relations(groupTranslations, ({ one }) => ({
+  group: one(groups, {
+    fields: [groupTranslations.groupId],
+    references: [groups.id],
+  }),
+}));
+
+export const productRelations = relations(products, ({ one, many }) => ({
+  organization: one(organizations, {
+    fields: [products.organizationId],
+    references: [organizations.id],
+  }),
+  translations: many(productTranslations),
+}));
+
+export const productTranslationRelations = relations(productTranslations, ({ one }) => ({
+  product: one(products, {
+    fields: [productTranslations.productId],
+    references: [products.id],
+  }),
+}));
+
+export const serviceRelations = relations(services, ({ one, many }) => ({
+  organization: one(organizations, {
+    fields: [services.organizationId],
+    references: [organizations.id],
+  }),
+  translations: many(serviceTranslations),
+}));
+
+export const serviceTranslationRelations = relations(serviceTranslations, ({ one }) => ({
+  service: one(services, {
+    fields: [serviceTranslations.serviceId],
+    references: [services.id],
+  }),
+}));
+
+export const staticPageContentRelations = relations(staticPageContent, ({ many }) => ({
+  translations: many(staticPageTranslations),
+}));
+
+export const staticPageTranslationRelations = relations(staticPageTranslations, ({ one }) => ({
+  page: one(staticPageContent, {
+    fields: [staticPageTranslations.pageId],
+    references: [staticPageContent.id],
   }),
 }));
