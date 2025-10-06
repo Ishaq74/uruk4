@@ -12,7 +12,7 @@ const ListingItem: React.FC<{ listing: Listing, navigateTo: LatestListingsProps[
     const iconInfo = LISTING_ICONS[listing.type as ListingType];
     return (
         <li>
-            <a href={`/annonce/${listing.id}`} onClick={(e) => { e.preventDefault(); navigateTo('annonce-detail', listing.id); }} className="flex items-center p-4 -m-4 rounded-xl hover:bg-gray-100 transition-colors duration-200">
+            <a href={listing.slug ? `/annonce/${listing.slug}` : `/annonce/${listing.id}`} onClick={(e) => { e.preventDefault(); navigateTo('annonce-detail', listing.id, undefined, undefined, listing.slug); }} className="flex items-center p-4 -m-4 rounded-xl hover:bg-gray-100 transition-colors duration-200">
                 <div className="flex-shrink-0 w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center">
                     <Icon name={iconInfo.name} className={iconInfo.className} />
                 </div>

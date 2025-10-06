@@ -163,7 +163,7 @@ const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({ id, articles, pro
                         <h2 className="text-2xl font-bold text-gray-800 mb-6">À lire aussi</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             {similarArticles.map(item => (
-                                <a key={item.id} href={`/article/${item.id}`} onClick={(e) => { e.preventDefault(); navigateTo('article-detail', item.id); }} className="group block">
+                                <a key={item.id} href={item.slug ? `/article/${item.slug}` : `/article/${item.id}`} onClick={(e) => { e.preventDefault(); navigateTo('article-detail', item.id, undefined, undefined, item.slug); }} className="group block">
                                     <img src={item.imageUrl} alt={item.title} className="h-48 w-full object-cover rounded-lg shadow-md" />
                                     <h3 className="mt-4 font-bold text-lg text-gray-900 group-hover:text-sky-600">{item.title}</h3>
                                     <p className="text-sm text-gray-500 mt-1">{item.excerpt.substring(0, 80)}...</p>

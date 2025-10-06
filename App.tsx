@@ -496,26 +496,29 @@ const App: React.FC = () => {
 
    const handleAddEvent = useCallback((event: Omit<Event, 'id' | 'imageUrl' | 'coordinates' | 'status' | 'rejection_reason'>) => {
     if(!currentUser) return;
-    const newEvent: Event = { ...event, id: `event${Date.now()}`, status: 'pending_review', imageUrl: `https://picsum.photos/seed/${event.title}/400/300`, coordinates: { lat: 45.9, lng: 6.12 } };
+    const slug = generateSlug(event.title);
+    const newEvent: Event = { ...event, id: `event${Date.now()}`, slug, status: 'pending_review', imageUrl: `https://picsum.photos/seed/${event.title}/400/300`, coordinates: { lat: 45.9, lng: 6.12 } };
     setEvents(prev => [newEvent, ...prev]);
     alert(`${newEvent.title} a été soumis pour modération. Merci !`);
-    navigateTo('event-detail', newEvent.id);
+    navigateTo('event-detail', newEvent.id, undefined, undefined, slug);
   }, [currentUser]);
 
    const handleAddTrail = useCallback((trail: Omit<Trail, 'id' | 'imageUrl' | 'startPoint' | 'status' | 'rejection_reason'>) => {
     if(!currentUser) return;
-    const newTrail: Trail = { ...trail, id: `trail${Date.now()}`, status: 'pending_review', imageUrl: `https://picsum.photos/seed/${trail.name}/800/600`, startPoint: { lat: 45.9, lng: 6.12 } };
+    const slug = generateSlug(trail.name);
+    const newTrail: Trail = { ...trail, id: `trail${Date.now()}`, slug, status: 'pending_review', imageUrl: `https://picsum.photos/seed/${trail.name}/800/600`, startPoint: { lat: 45.9, lng: 6.12 } };
     setTrails(prev => [newTrail, ...prev]);
     alert(`${newTrail.name} a été soumis pour modération. Merci !`);
-    navigateTo('trail-detail', newTrail.id);
+    navigateTo('trail-detail', newTrail.id, undefined, undefined, slug);
   }, [currentUser]);
   
   const handleAddListing = useCallback((listing: Omit<Listing, 'id' | 'date' | 'userId' | 'status' | 'rejection_reason' | 'expires_at' | 'imageUrl' | 'metadata'>) => {
     if(!currentUser) return;
-    const newListing: Listing = { ...listing, id: `listing${Date.now()}`, status: 'pending_review', date: 'Aujourd\'hui', userId: currentUser.id };
+    const slug = generateSlug(listing.title);
+    const newListing: Listing = { ...listing, id: `listing${Date.now()}`, slug, status: 'pending_review', date: 'Aujourd\'hui', userId: currentUser.id };
     setAllListings(prev => [newListing, ...prev]);
     alert(`${newListing.title} a été soumis pour modération. Merci !`);
-    navigateTo('annonce-detail', newListing.id);
+    navigateTo('annonce-detail', newListing.id, undefined, undefined, slug);
   }, [currentUser]);
 
   const handleAddLiveEvent = useCallback((event: Omit<LiveEvent, 'id' | 'createdAt' | 'expiresAt' | 'upvotes' | 'downvotes'>) => {
