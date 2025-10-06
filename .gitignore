@@ -67,3 +67,6 @@ $RECYCLE.BIN/
 # Optional: ignore database dumps
 *.sql
 *.sqlite
+
+# But keep migration scripts
+!migrations/*.sql
