@@ -1,5 +1,7 @@
 # Critique Sévère et Préconisations - Salut Annecy
 
+> **📋 Plan d'Action** : Ce document d'analyse est accompagné d'un [ACTION_PLAN.md](./ACTION_PLAN.md) détaillant les étapes concrètes d'implémentation.
+
 ## 📊 Analyse Complète : Réel vs Supposé
 
 ### Ce qui est RÉELLEMENT implémenté ✅
@@ -384,3 +386,15 @@ jobs:
 **Version** : 1.0  
 **Auteur** : Analyse technique automatisée  
 **Statut** : ⚠️ Action requise
+
+---
+
+## 🔗 Documents Liés
+
+- **[ACTION_PLAN.md](./ACTION_PLAN.md)** - Plan d'action détaillé basé sur ce document
+  - Transforme les critiques en tâches concrètes
+  - Sprints définis avec jalons clairs
+  - Checklist de suivi de progression
+  - Timeline de 10 semaines pour production-ready
+
+**➡️ Prochaine étape : Consulter [ACTION_PLAN.md](./ACTION_PLAN.md) pour commencer l'implémentation**
