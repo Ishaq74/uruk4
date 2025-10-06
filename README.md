@@ -1,9 +1,16 @@
 # Salut Annecy - Guide Local Complet
 
+> 🚀 **NOUVEAU** : [PostgreSQL Integration Complete!](./POSTGRESQL_SETUP.md) - Full database setup with multi-language support (FR, EN, ES, DE, AR, ZH)  
 > 📚 **Navigation Documentation** : Voir [DOCUMENTATION_INDEX.md](./DOCUMENTATION_INDEX.md) pour un guide complet de toute la documentation  
 > ⚠️ **État du Projet** : Lire [CRITIQUE_ET_PRECONISATION.md](./CRITIQUE_ET_PRECONISATION.md) pour comprendre l'état actuel et [ACTION_PLAN.md](./ACTION_PLAN.md) pour le plan d'amélioration
 
 Une plateforme web complète pour découvrir et explorer Annecy, France. Ce guide local permet aux utilisateurs de découvrir les meilleurs endroits, événements, randonnées, et de participer à une communauté locale dynamique.
+
+## 🌐 Multi-Language Support
+
+**6 langues disponibles** : Français 🇫🇷 | English 🇬🇧 | Español 🇪🇸 | Deutsch 🇩🇪 | العربية 🇸🇦 | 中文 🇨🇳
+
+Changez de langue directement depuis l'interface utilisateur avec le sélecteur de langue dans le header.
 
 ## 🎯 Fonctionnalités Principales
 
@@ -107,7 +114,7 @@ Le projet dispose maintenant d'un système d'authentification complet et d'une a
 
 - ✅ **Better-Auth** - Authentification complète (email/password, vérification email)
 - ✅ **Better-Auth Admin Plugin** - Gestion avancée des utilisateurs et permissions
-- ✅ **PostgreSQL** - Base de données relationnelle
+- ✅ **PostgreSQL** - Base de données relationnelle avec **intégration complète**
 - ✅ **Drizzle ORM** - ORM type-safe pour TypeScript
 - ✅ **Express** - API server pour les endpoints d'authentification
 - ✅ **Système de rôles** - Admin, Modérateur, Utilisateur
@@ -116,8 +123,11 @@ Le projet dispose maintenant d'un système d'authentification complet et d'une a
 - ✅ **Ban system** - Suspension temporaire ou permanente des utilisateurs
 - ✅ **Impersonation** - Les admins peuvent se faire passer pour d'autres utilisateurs
 
+> **🚀 NOUVEAU** : L'intégration PostgreSQL est maintenant complète ! Consultez [POSTGRESQL_SETUP.md](./POSTGRESQL_SETUP.md) pour le guide de setup complet.
+
 > **📚 Documentation Admin Plugin** :
 > Consultez [ADMIN_PLUGIN_GUIDE.md](./ADMIN_PLUGIN_GUIDE.md) pour un guide complet sur l'utilisation du plugin d'administration Better Auth.
+
 > **📊 Documentation de la Base de Données** :
 
 Un schéma complet et intégral de la base de données est disponible. Consultez :
@@ -135,8 +145,9 @@ Un schéma complet et intégral de la base de données est disponible. Consultez
 
 - **Node.js** (version 18 ou supérieure)
 - **npm** ou **yarn**
+- **PostgreSQL** (version 12 ou supérieure) - [Guide de setup](./POSTGRESQL_SETUP.md)
 
-### Installation
+### Installation Rapide
 
 1. **Cloner le repository**
 
@@ -151,7 +162,33 @@ Un schéma complet et intégral de la base de données est disponible. Consultez
    npm install
    ```
 
-3. **Configurer les variables d'environnement**
+3. **Configurer PostgreSQL** (voir [POSTGRESQL_SETUP.md](./POSTGRESQL_SETUP.md) pour les détails)
+
+   ```bash
+   # Créer la base de données
+   createdb salut_annecy
+   
+   # Copier et configurer .env
+   cp .env.example .env
+   # Éditer .env avec vos paramètres
+   
+   # Setup database (push schema + seed data)
+   npm run db:setup
+   ```
+
+4. **Lancer l'application**
+
+   ```bash
+   # Terminal 1 - Backend API
+   npm run dev:server
+   
+   # Terminal 2 - Frontend
+   npm run dev
+   ```
+
+   Ouvrir `http://localhost:3000` dans votre navigateur
+
+### Variables d'Environnement
 
 Créer un fichier `.env` à la racine (voir `.env.example` pour référence) :
 

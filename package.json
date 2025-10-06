@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "db:seed": "ts-node seed.ts"
+    "db:seed": "tsx seed.ts",
+    "db:verify": "node verify-db.mjs",
+    "db:setup": "npm run db:push && npm run db:seed"
   },
   "dependencies": {
     "@google/genai": "^1.7.0",
