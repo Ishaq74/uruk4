@@ -120,7 +120,51 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentUser, onLogin, onLog
                     />
                 </form>
                 
-                <MobileCollapsible title="Découvrir">
+                <MobileCollapsible title="Restaurants">
+                    <DropdownItem isMobile onClick={() => navClick('restaurants')}>
+                        <div className="font-semibold">Tous les restaurants</div>
+                    </DropdownItem>
+                    {RESTAURATION_CATEGORIES.map(cat => (
+                        <DropdownItem key={cat.id} isMobile onClick={() => navToPath(`/restaurants/${generateCategorySlug(cat.label)}`)}>
+                            {cat.label}
+                        </DropdownItem>
+                    ))}
+                </MobileCollapsible>
+                
+                <MobileCollapsible title="Hébergements">
+                    <DropdownItem isMobile onClick={() => navClick('hebergements')}>
+                        <div className="font-semibold">Tous les hébergements</div>
+                    </DropdownItem>
+                    {HEBERGEMENT_CATEGORIES.map(cat => (
+                        <DropdownItem key={cat.id} isMobile onClick={() => navToPath(`/hebergements/${generateCategorySlug(cat.label)}`)}>
+                            {cat.label}
+                        </DropdownItem>
+                    ))}
+                </MobileCollapsible>
+                
+                <MobileCollapsible title="Activités">
+                    <DropdownItem isMobile onClick={() => navClick('activites')}>
+                        <div className="font-semibold">Toutes les activités</div>
+                    </DropdownItem>
+                    {ACTIVITES_CATEGORIES.map(cat => (
+                        <DropdownItem key={cat.id} isMobile onClick={() => navToPath(`/activites/${generateCategorySlug(cat.label)}`)}>
+                            {cat.label}
+                        </DropdownItem>
+                    ))}
+                </MobileCollapsible>
+                
+                <MobileCollapsible title="Shopping">
+                    <DropdownItem isMobile onClick={() => navClick('commerces')}>
+                        <div className="font-semibold">Tous les commerces</div>
+                    </DropdownItem>
+                    {COMMERCES_CATEGORIES.map(cat => (
+                        <DropdownItem key={cat.id} isMobile onClick={() => navToPath(`/commerces/${generateCategorySlug(cat.label)}`)}>
+                            {cat.label}
+                        </DropdownItem>
+                    ))}
+                </MobileCollapsible>
+                
+                <MobileCollapsible title="Plus">
                     <DropdownItem isMobile onClick={() => navClick('live')}>
                         <div className="flex items-center justify-between">
                             <span>En Direct</span>
@@ -133,57 +177,14 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentUser, onLogin, onLog
                             </span>
                         </div>
                     </DropdownItem>
-                    <DropdownItem isMobile onClick={() => navClick('restaurants')}>
-                        <div className="font-semibold">Où Manger ?</div>
-                    </DropdownItem>
-                    {RESTAURATION_CATEGORIES.map(cat => (
-                        <DropdownItem key={cat.id} isMobile onClick={() => navToPath(`/restaurants/${generateCategorySlug(cat.label)}`)}>
-                            <div className="pl-4 text-gray-600">• {cat.label}</div>
-                        </DropdownItem>
-                    ))}
-                    <DropdownItem isMobile onClick={() => navClick('hebergements')}>
-                        <div className="font-semibold">Où Dormir ?</div>
-                    </DropdownItem>
-                    {HEBERGEMENT_CATEGORIES.map(cat => (
-                        <DropdownItem key={cat.id} isMobile onClick={() => navToPath(`/hebergements/${generateCategorySlug(cat.label)}`)}>
-                            <div className="pl-4 text-gray-600">• {cat.label}</div>
-                        </DropdownItem>
-                    ))}
-                    <DropdownItem isMobile onClick={() => navClick('activites')}>
-                        <div className="font-semibold">Quoi Faire ?</div>
-                    </DropdownItem>
-                    {ACTIVITES_CATEGORIES.map(cat => (
-                        <DropdownItem key={cat.id} isMobile onClick={() => navToPath(`/activites/${generateCategorySlug(cat.label)}`)}>
-                            <div className="pl-4 text-gray-600">• {cat.label}</div>
-                        </DropdownItem>
-                    ))}
-                    <DropdownItem isMobile onClick={() => navClick('commerces')}>
-                        <div className="font-semibold">Shopping & Services</div>
-                    </DropdownItem>
-                    {COMMERCES_CATEGORIES.map(cat => (
-                        <DropdownItem key={cat.id} isMobile onClick={() => navToPath(`/commerces/${generateCategorySlug(cat.label)}`)}>
-                            <div className="pl-4 text-gray-600">• {cat.label}</div>
-                        </DropdownItem>
-                    ))}
                     <DropdownItem isMobile onClick={() => navClick('events')}>Agenda</DropdownItem>
                     <DropdownItem isMobile onClick={() => navClick('trails')}>Sentiers</DropdownItem>
                     <DropdownItem isMobile onClick={() => navClick('articles')}>Magazine</DropdownItem>
-                </MobileCollapsible>
-                
-                <MobileCollapsible title="Communauté">
+                    <DropdownItem isMobile onClick={() => navClick('annonces')}>Petites Annonces</DropdownItem>
                     <DropdownItem isMobile onClick={() => navClick('forums')}>Forums</DropdownItem>
                     <DropdownItem isMobile onClick={() => navClick('groupes')}>Groupes</DropdownItem>
                     <DropdownItem isMobile onClick={() => navClick('membres')}>Membres</DropdownItem>
                 </MobileCollapsible>
-
-                 <MobileCollapsible title="Petites Annonces">
-                    <DropdownItem isMobile onClick={() => navClick('annonces')}>Toutes les annonces</DropdownItem>
-                    {LISTING_CATEGORIES.map(cat => (
-                        <DropdownItem key={cat.id} isMobile onClick={() => navToPath(`/annonces/${generateCategorySlug(cat.label)}`)}>
-                            <div className="pl-4 text-gray-600">• {cat.label}</div>
-                        </DropdownItem>
-                    ))}
-                 </MobileCollapsible>
             </div>
             <div className="py-6 px-5 border-t border-gray-200">
                 {currentUser ? (
@@ -216,8 +217,60 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentUser, onLogin, onLog
               Salut <span className="text-sky-500">Annecy</span>
             </a>
             <nav className="hidden md:flex items-center space-x-2">
-                 {/* Discover Menu */}
-                <DropdownMenu title="Découvrir">
+                {/* Restaurants Dropdown */}
+                <DropdownMenu title="Restaurants">
+                    <DropdownItem onClick={() => navClick('restaurants')}>
+                        <div className="font-semibold">Tous les restaurants</div>
+                    </DropdownItem>
+                    <div className="border-t my-1"></div>
+                    {RESTAURATION_CATEGORIES.map(cat => (
+                        <DropdownItem key={cat.id} onClick={() => navToPath(`/restaurants/${generateCategorySlug(cat.label)}`)}>
+                            {cat.label}
+                        </DropdownItem>
+                    ))}
+                </DropdownMenu>
+
+                {/* Hébergements Dropdown */}
+                <DropdownMenu title="Hébergements">
+                    <DropdownItem onClick={() => navClick('hebergements')}>
+                        <div className="font-semibold">Tous les hébergements</div>
+                    </DropdownItem>
+                    <div className="border-t my-1"></div>
+                    {HEBERGEMENT_CATEGORIES.map(cat => (
+                        <DropdownItem key={cat.id} onClick={() => navToPath(`/hebergements/${generateCategorySlug(cat.label)}`)}>
+                            {cat.label}
+                        </DropdownItem>
+                    ))}
+                </DropdownMenu>
+
+                {/* Activités Dropdown */}
+                <DropdownMenu title="Activités">
+                    <DropdownItem onClick={() => navClick('activites')}>
+                        <div className="font-semibold">Toutes les activités</div>
+                    </DropdownItem>
+                    <div className="border-t my-1"></div>
+                    {ACTIVITES_CATEGORIES.map(cat => (
+                        <DropdownItem key={cat.id} onClick={() => navToPath(`/activites/${generateCategorySlug(cat.label)}`)}>
+                            {cat.label}
+                        </DropdownItem>
+                    ))}
+                </DropdownMenu>
+
+                {/* Shopping & Services Dropdown */}
+                <DropdownMenu title="Shopping">
+                    <DropdownItem onClick={() => navClick('commerces')}>
+                        <div className="font-semibold">Tous les commerces</div>
+                    </DropdownItem>
+                    <div className="border-t my-1"></div>
+                    {COMMERCES_CATEGORIES.map(cat => (
+                        <DropdownItem key={cat.id} onClick={() => navToPath(`/commerces/${generateCategorySlug(cat.label)}`)}>
+                            {cat.label}
+                        </DropdownItem>
+                    ))}
+                </DropdownMenu>
+
+                {/* Plus Menu - for other content */}
+                <DropdownMenu title="Plus">
                     <DropdownItem onClick={() => navClick('live')}>
                         <div className="flex items-center justify-between">
                             <span>En Direct</span>
@@ -230,65 +283,15 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentUser, onLogin, onLog
                             </span>
                         </div>
                     </DropdownItem>
-                    <div className="border-t my-1"></div>
-                    <DropdownItem onClick={() => navClick('restaurants')}>
-                        <div className="font-semibold">Où Manger ?</div>
-                    </DropdownItem>
-                    {RESTAURATION_CATEGORIES.map(cat => (
-                        <DropdownItem key={cat.id} onClick={() => navToPath(`/restaurants/${generateCategorySlug(cat.label)}`)}>
-                            <div className="pl-4 text-gray-600">• {cat.label}</div>
-                        </DropdownItem>
-                    ))}
-                    <div className="border-t my-1"></div>
-                    <DropdownItem onClick={() => navClick('hebergements')}>
-                        <div className="font-semibold">Où Dormir ?</div>
-                    </DropdownItem>
-                    {HEBERGEMENT_CATEGORIES.map(cat => (
-                        <DropdownItem key={cat.id} onClick={() => navToPath(`/hebergements/${generateCategorySlug(cat.label)}`)}>
-                            <div className="pl-4 text-gray-600">• {cat.label}</div>
-                        </DropdownItem>
-                    ))}
-                    <div className="border-t my-1"></div>
-                    <DropdownItem onClick={() => navClick('activites')}>
-                        <div className="font-semibold">Quoi Faire ?</div>
-                    </DropdownItem>
-                    {ACTIVITES_CATEGORIES.map(cat => (
-                        <DropdownItem key={cat.id} onClick={() => navToPath(`/activites/${generateCategorySlug(cat.label)}`)}>
-                            <div className="pl-4 text-gray-600">• {cat.label}</div>
-                        </DropdownItem>
-                    ))}
-                    <div className="border-t my-1"></div>
-                    <DropdownItem onClick={() => navClick('commerces')}>
-                        <div className="font-semibold">Shopping & Services</div>
-                    </DropdownItem>
-                    {COMMERCES_CATEGORIES.map(cat => (
-                        <DropdownItem key={cat.id} onClick={() => navToPath(`/commerces/${generateCategorySlug(cat.label)}`)}>
-                            <div className="pl-4 text-gray-600">• {cat.label}</div>
-                        </DropdownItem>
-                    ))}
-                    <div className="border-t my-1"></div>
                     <DropdownItem onClick={() => navClick('events')}>Agenda</DropdownItem>
                     <DropdownItem onClick={() => navClick('trails')}>Sentiers</DropdownItem>
                     <DropdownItem onClick={() => navClick('articles')}>Magazine</DropdownItem>
-                </DropdownMenu>
-
-                {/* Community Menu */}
-                <DropdownMenu title="Communauté">
+                    <div className="border-t my-1"></div>
+                    <DropdownItem onClick={() => navClick('annonces')}>Petites Annonces</DropdownItem>
+                    <div className="border-t my-1"></div>
                     <DropdownItem onClick={() => navClick('forums')}>Forums</DropdownItem>
                     <DropdownItem onClick={() => navClick('groupes')}>Groupes</DropdownItem>
                     <DropdownItem onClick={() => navClick('membres')}>Membres</DropdownItem>
-                </DropdownMenu>
-
-                {/* Listings Menu */}
-                 <DropdownMenu title="Petites Annonces">
-                    <DropdownItem onClick={() => navClick('annonces')}>
-                        <div className="font-semibold">Toutes les annonces</div>
-                    </DropdownItem>
-                    {LISTING_CATEGORIES.map(cat => (
-                        <DropdownItem key={cat.id} onClick={() => navToPath(`/annonces/${generateCategorySlug(cat.label)}`)}>
-                            <div className="pl-4 text-gray-600">• {cat.label}</div>
-                        </DropdownItem>
-                    ))}
                 </DropdownMenu>
             </nav>
           </div>
