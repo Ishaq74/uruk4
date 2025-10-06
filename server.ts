@@ -214,6 +214,222 @@ app.post('/api/admin/places/:placeId/reject', async (req, res) => {
   }
 });
 
+// Admin: Approve event
+app.post('/api/admin/events/:eventId/approve', async (req, res) => {
+  const start = Date.now();
+  console.log('[POST] /api/admin/events/:eventId/approve', { params: req.params });
+  try {
+    const session = await auth.api.getSession({ headers: req.headers as any });
+    
+    if (!session || (session.user.role !== 'admin' && session.user.role !== 'moderator')) {
+      return res.status(403).json({ error: 'Accès refusé' });
+    }
+
+    const { eventId } = req.params;
+
+    await db.update(schema.events)
+      .set({ status: 'published' })
+      .where(eq(schema.events.id, eventId));
+
+    res.json({ success: true });
+    console.log('[POST] /api/admin/events/:eventId/approve - OK', { duration: Date.now() - start });
+  } catch (error) {
+    console.error('Error approving event:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// Admin: Reject event
+app.post('/api/admin/events/:eventId/reject', async (req, res) => {
+  const start = Date.now();
+  console.log('[POST] /api/admin/events/:eventId/reject', { params: req.params, body: req.body });
+  try {
+    const session = await auth.api.getSession({ headers: req.headers as any });
+    
+    if (!session || (session.user.role !== 'admin' && session.user.role !== 'moderator')) {
+      return res.status(403).json({ error: 'Accès refusé' });
+    }
+
+    const { eventId } = req.params;
+    const { reason } = req.body;
+
+    await db.update(schema.events)
+      .set({ 
+        status: 'rejected',
+        rejectionReason: reason 
+      })
+      .where(eq(schema.events.id, eventId));
+
+    res.json({ success: true });
+    console.log('[POST] /api/admin/events/:eventId/reject - OK', { duration: Date.now() - start });
+  } catch (error) {
+    console.error('Error rejecting event:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// Admin: Approve trail
+app.post('/api/admin/trails/:trailId/approve', async (req, res) => {
+  const start = Date.now();
+  console.log('[POST] /api/admin/trails/:trailId/approve', { params: req.params });
+  try {
+    const session = await auth.api.getSession({ headers: req.headers as any });
+    
+    if (!session || (session.user.role !== 'admin' && session.user.role !== 'moderator')) {
+      return res.status(403).json({ error: 'Accès refusé' });
+    }
+
+    const { trailId } = req.params;
+
+    await db.update(schema.trails)
+      .set({ status: 'published' })
+      .where(eq(schema.trails.id, trailId));
+
+    res.json({ success: true });
+    console.log('[POST] /api/admin/trails/:trailId/approve - OK', { duration: Date.now() - start });
+  } catch (error) {
+    console.error('Error approving trail:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// Admin: Reject trail
+app.post('/api/admin/trails/:trailId/reject', async (req, res) => {
+  const start = Date.now();
+  console.log('[POST] /api/admin/trails/:trailId/reject', { params: req.params, body: req.body });
+  try {
+    const session = await auth.api.getSession({ headers: req.headers as any });
+    
+    if (!session || (session.user.role !== 'admin' && session.user.role !== 'moderator')) {
+      return res.status(403).json({ error: 'Accès refusé' });
+    }
+
+    const { trailId } = req.params;
+    const { reason } = req.body;
+
+    await db.update(schema.trails)
+      .set({ 
+        status: 'rejected',
+        rejectionReason: reason 
+      })
+      .where(eq(schema.trails.id, trailId));
+
+    res.json({ success: true });
+    console.log('[POST] /api/admin/trails/:trailId/reject - OK', { duration: Date.now() - start });
+  } catch (error) {
+    console.error('Error rejecting trail:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// Admin: Approve article
+app.post('/api/admin/articles/:articleId/approve', async (req, res) => {
+  const start = Date.now();
+  console.log('[POST] /api/admin/articles/:articleId/approve', { params: req.params });
+  try {
+    const session = await auth.api.getSession({ headers: req.headers as any });
+    
+    if (!session || (session.user.role !== 'admin' && session.user.role !== 'moderator')) {
+      return res.status(403).json({ error: 'Accès refusé' });
+    }
+
+    const { articleId } = req.params;
+
+    await db.update(schema.articles)
+      .set({ status: 'published' })
+      .where(eq(schema.articles.id, articleId));
+
+    res.json({ success: true });
+    console.log('[POST] /api/admin/articles/:articleId/approve - OK', { duration: Date.now() - start });
+  } catch (error) {
+    console.error('Error approving article:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// Admin: Reject article
+app.post('/api/admin/articles/:articleId/reject', async (req, res) => {
+  const start = Date.now();
+  console.log('[POST] /api/admin/articles/:articleId/reject', { params: req.params, body: req.body });
+  try {
+    const session = await auth.api.getSession({ headers: req.headers as any });
+    
+    if (!session || (session.user.role !== 'admin' && session.user.role !== 'moderator')) {
+      return res.status(403).json({ error: 'Accès refusé' });
+    }
+
+    const { articleId } = req.params;
+    const { reason } = req.body;
+
+    await db.update(schema.articles)
+      .set({ 
+        status: 'rejected',
+        rejectionReason: reason 
+      })
+      .where(eq(schema.articles.id, articleId));
+
+    res.json({ success: true });
+    console.log('[POST] /api/admin/articles/:articleId/reject - OK', { duration: Date.now() - start });
+  } catch (error) {
+    console.error('Error rejecting article:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// Admin: Approve listing
+app.post('/api/admin/listings/:listingId/approve', async (req, res) => {
+  const start = Date.now();
+  console.log('[POST] /api/admin/listings/:listingId/approve', { params: req.params });
+  try {
+    const session = await auth.api.getSession({ headers: req.headers as any });
+    
+    if (!session || (session.user.role !== 'admin' && session.user.role !== 'moderator')) {
+      return res.status(403).json({ error: 'Accès refusé' });
+    }
+
+    const { listingId } = req.params;
+
+    await db.update(schema.listings)
+      .set({ status: 'published' })
+      .where(eq(schema.listings.id, listingId));
+
+    res.json({ success: true });
+    console.log('[POST] /api/admin/listings/:listingId/approve - OK', { duration: Date.now() - start });
+  } catch (error) {
+    console.error('Error approving listing:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+// Admin: Reject listing
+app.post('/api/admin/listings/:listingId/reject', async (req, res) => {
+  const start = Date.now();
+  console.log('[POST] /api/admin/listings/:listingId/reject', { params: req.params, body: req.body });
+  try {
+    const session = await auth.api.getSession({ headers: req.headers as any });
+    
+    if (!session || (session.user.role !== 'admin' && session.user.role !== 'moderator')) {
+      return res.status(403).json({ error: 'Accès refusé' });
+    }
+
+    const { listingId } = req.params;
+    const { reason } = req.body;
+
+    await db.update(schema.listings)
+      .set({ 
+        status: 'rejected',
+        rejectionReason: reason 
+      })
+      .where(eq(schema.listings.id, listingId));
+
+    res.json({ success: true });
+    console.log('[POST] /api/admin/listings/:listingId/reject - OK', { duration: Date.now() - start });
+  } catch (error) {
+    console.error('Error rejecting listing:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
 // Organization CRUD
 
 // Get user's organizations
