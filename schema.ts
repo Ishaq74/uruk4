@@ -107,6 +107,15 @@ export const groupRoleEnum = pgEnum('group_role', [
   'member'
 ]);
 
+export const languageEnum = pgEnum('language', [
+  'fr',
+  'en',
+  'es',
+  'de',
+  'ar',
+  'zh'
+]);
+
 export const organizationRoleEnum = pgEnum('organization_role', [
   'owner',
   'admin',
@@ -397,6 +406,87 @@ export const comments = pgTable('comments', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
+
+// ============================================================================
+// TRANSLATIONS - Multilingual content support
+// ============================================================================
+
+/**
+ * Event Translations - Multilingual content for events
+ * Separate table for better performance and administration
+ */
+export const eventTranslations = pgTable('event_translations', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  eventId: uuid('event_id').references(() => events.id, { onDelete: 'cascade' }).notNull(),
+  language: languageEnum('language').notNull(),
+  title: varchar('title', { length: 200 }).notNull(),
+  description: text('description').notNull(),
+  location: text('location').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (table) => ({
+  // Unique constraint: one translation per event per language
+  uniqueEventLanguage: {
+    columns: [table.eventId, table.language],
+    name: 'event_translations_event_id_language_unique'
+  }
+}));
+
+/**
+ * Trail Translations - Multilingual content for trails
+ */
+export const trailTranslations = pgTable('trail_translations', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  trailId: uuid('trail_id').references(() => trails.id, { onDelete: 'cascade' }).notNull(),
+  language: languageEnum('language').notNull(),
+  name: varchar('name', { length: 200 }).notNull(),
+  excerpt: text('excerpt').notNull(),
+  description: text('description').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (table) => ({
+  uniqueTrailLanguage: {
+    columns: [table.trailId, table.language],
+    name: 'trail_translations_trail_id_language_unique'
+  }
+}));
+
+/**
+ * Article Translations - Multilingual content for articles
+ */
+export const articleTranslations = pgTable('article_translations', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  articleId: uuid('article_id').references(() => articles.id, { onDelete: 'cascade' }).notNull(),
+  language: languageEnum('language').notNull(),
+  title: varchar('title', { length: 200 }).notNull(),
+  excerpt: text('excerpt').notNull(),
+  content: text('content').notNull(), // Markdown content
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (table) => ({
+  uniqueArticleLanguage: {
+    columns: [table.articleId, table.language],
+    name: 'article_translations_article_id_language_unique'
+  }
+}));
+
+/**
+ * Listing Translations - Multilingual content for listings
+ */
+export const listingTranslations = pgTable('listing_translations', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  listingId: uuid('listing_id').references(() => listings.id, { onDelete: 'cascade' }).notNull(),
+  language: languageEnum('language').notNull(),
+  title: varchar('title', { length: 200 }).notNull(),
+  description: text('description').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+}, (table) => ({
+  uniqueListingLanguage: {
+    columns: [table.listingId, table.language],
+    name: 'listing_translations_listing_id_language_unique'
+  }
+}));
 
 // ============================================================================
 // CONTENT MANAGEMENT - LIVE EVENTS
@@ -803,4 +893,57 @@ export const groupRelations = relations(groups, ({ many }) => ({
 export const conversationRelations = relations(conversations, ({ many }) => ({
   participants: many(conversationParticipants),
   messages: many(messages),
+}));
+
+// Translation Relations
+export const eventRelations = relations(events, ({ many }) => ({
+  translations: many(eventTranslations),
+}));
+
+export const eventTranslationRelations = relations(eventTranslations, ({ one }) => ({
+  event: one(events, {
+    fields: [eventTranslations.eventId],
+    references: [events.id],
+  }),
+}));
+
+export const trailRelations = relations(trails, ({ many }) => ({
+  translations: many(trailTranslations),
+}));
+
+export const trailTranslationRelations = relations(trailTranslations, ({ one }) => ({
+  trail: one(trails, {
+    fields: [trailTranslations.trailId],
+    references: [trails.id],
+  }),
+}));
+
+export const articleRelations = relations(articles, ({ one, many }) => ({
+  author: one(profiles, {
+    fields: [articles.authorId],
+    references: [profiles.id],
+  }),
+  translations: many(articleTranslations),
+}));
+
+export const articleTranslationRelations = relations(articleTranslations, ({ one }) => ({
+  article: one(articles, {
+    fields: [articleTranslations.articleId],
+    references: [articles.id],
+  }),
+}));
+
+export const listingRelations = relations(listings, ({ one, many }) => ({
+  user: one(profiles, {
+    fields: [listings.userId],
+    references: [profiles.id],
+  }),
+  translations: many(listingTranslations),
+}));
+
+export const listingTranslationRelations = relations(listingTranslations, ({ one }) => ({
+  listing: one(listings, {
+    fields: [listingTranslations.listingId],
+    references: [listings.id],
+  }),
 }));
